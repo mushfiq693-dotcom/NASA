@@ -10,6 +10,7 @@
   min-width: 0;
   box-shadow: var(--shadow-sm);
   z-index: 100;
+  overflow: visible;
 }
 
 .nav-brand {
@@ -56,8 +57,17 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 20px;
-  overflow-x: auto;
+  gap: 18px;
+  overflow: visible;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .nav-links a {
@@ -72,6 +82,8 @@
   white-space: nowrap;
   position: relative;
   transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-links a:hover {
@@ -86,9 +98,9 @@
 .nav-links a.active::after {
   content: '';
   position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
+  bottom: 0px;
+  left: 4px;
+  right: 4px;
   height: 2px;
   background: var(--accent-gold);
   border-radius: 1px;
@@ -153,7 +165,8 @@
   flex: 1;
   width: 100%;
   position: relative;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
   min-width: 0;
   background-color: var(--background);
