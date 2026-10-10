@@ -1,0 +1,479 @@
+.live-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 2.5rem 3rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: var(--foreground);
+  box-sizing: border-box;
+  background: var(--background);
+}
+
+.live-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-rule);
+}
+
+.live-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(46, 125, 50, 0.1);
+  color: #2E7D32;
+  border: 1px solid rgba(46, 125, 50, 0.3);
+  text-transform: uppercase;
+}
+
+.live-header h1 {
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+
+.live-lead {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 900px;
+}
+
+/* CARDS */
+.live-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-rule);
+  border-top: 3px solid var(--accent-gold);
+  border-radius: 8px;
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* TOP GRID: HEARTBEAT & S-NPP COUNTDOWN */
+.live-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 860px) {
+  .live-top-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.status-pill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pill-active {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2E7D32;
+  border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.pill-syncing {
+  background: var(--accent-muted);
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold);
+  animation: pulseSync 1s infinite alternate;
+}
+
+@keyframes pulseSync {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.heartbeat-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heartbeat-counter {
+  display: flex;
+  flex-direction: column;
+}
+
+.counter-num {
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.counter-sub {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.sync-now-btn {
+  background: var(--accent-gold);
+  border: none;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 180ms ease;
+}
+
+.sync-now-btn:hover:not(:disabled) {
+  background: var(--accent-gold-light);
+  box-shadow: var(--shadow-accent);
+}
+
+.polling-progress-bar {
+  height: 5px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border-rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.polling-progress-fill {
+  height: 100%;
+  background: var(--accent-gold);
+  box-shadow: 0 0 6px var(--accent-gold);
+}
+
+.heartbeat-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* S-NPP CARD */
+.badge-snpp {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: rgba(197, 106, 16, 0.1);
+  color: #C56A10;
+  border: 1px solid rgba(197, 106, 16, 0.3);
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.countdown-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 8px 0;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.unit-val {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.unit-name {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.unit-sep {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: -12px;
+}
+
+.snpp-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* MAIN GRID */
+.live-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 960px) {
+  .live-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.det-count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.detections-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.detections-table th {
+  padding: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border-rule);
+}
+
+.detections-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--border-rule);
+}
+
+.det-row {
+  transition: background 300ms ease;
+}
+
+.new-arrival-row {
+  animation: slideInDown 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  background: var(--accent-muted);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sat-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.sat-noaa20, .sat-noaa21 {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2E7D32;
+}
+
+.sat-snpp {
+  background: rgba(197, 106, 16, 0.1);
+  color: #C56A10;
+}
+
+.sat-aqua {
+  background: var(--accent-muted);
+  color: var(--accent-gold);
+}
+
+.sat-terra {
+  background: rgba(168, 50, 38, 0.1);
+  color: #A83226;
+}
+
+.mono-text {
+  font-family: var(--font-mono);
+  color: var(--foreground);
+}
+
+.frp-cell {
+  font-family: var(--font-mono);
+  color: #C56A10;
+  font-weight: 700;
+}
+
+.conf-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.conf-high {
+  background: rgba(46, 125, 50, 0.12);
+  color: #2E7D32;
+}
+
+.conf-nominal {
+  background: var(--accent-muted);
+  color: var(--accent-gold);
+}
+
+.conf-low {
+  background: rgba(107, 107, 107, 0.12);
+  color: var(--text-muted);
+}
+
+/* RADAR CARD */
+.live-side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.radar-screen {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #111417;
+  border: 1px solid var(--border-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.radar-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at center, transparent 30%, rgba(184, 134, 11, 0.12) 31%, transparent 32%),
+    radial-gradient(circle at center, transparent 60%, rgba(184, 134, 11, 0.12) 61%, transparent 62%),
+    linear-gradient(to right, transparent 49.5%, rgba(184, 134, 11, 0.15) 50%, transparent 50.5%),
+    linear-gradient(to bottom, transparent 49.5%, rgba(184, 134, 11, 0.15) 50%, transparent 50.5%);
+}
+
+.radar-sweep-beam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  transform-origin: 0 0;
+  background: conic-gradient(from 0deg, rgba(184, 134, 11, 0.45) 0deg, transparent 60deg);
+  animation: radarRotate 4s linear infinite;
+  border-radius: 50%;
+}
+
+@keyframes radarRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-blip {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #A83226;
+  box-shadow: 0 0 8px #A83226;
+  transform: translate(-50%, -50%);
+}
+
+.blip-ripple::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 1px solid #A83226;
+  border-radius: 50%;
+  animation: rippleRing 1.5s ease-out infinite;
+}
+
+@keyframes rippleRing {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+.radar-caption {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+/* HEALTH CARD */
+.health-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.health-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--foreground);
+}
+
+.badge.healthy {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(46, 125, 50, 0.1);
+  color: #2E7D32;
+  border: 1px solid rgba(46, 125, 50, 0.3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+

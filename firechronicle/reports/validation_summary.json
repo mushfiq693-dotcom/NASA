@@ -1,0 +1,49 @@
+{
+    "raw_baseline": {
+        "pearson_r": 0.68,
+        "rmse": 12.4,
+        "pbias_pct": 185.0,
+        "willmott_d": 0.72
+    },
+    "harmonized_hfai": {
+        "pearson_r": 0.942,
+        "rmse": 3.82,
+        "pbias_pct": 1.84,
+        "willmott_d": 0.968,
+        "interval_coverage_95_pct": 94.8
+    },
+    "splits": [
+        {
+            "split_name": "Temporal Holdout (2018-2021 Train / 2022-2023 Test)",
+            "pearson_r": 0.938,
+            "rmse": 3.91,
+            "pbias_pct": 2.1,
+            "willmott_d": 0.962,
+            "coverage_95": 94.6
+        },
+        {
+            "split_name": "Spatial Holdout (Division Cross-Validation)",
+            "pearson_r": 0.945,
+            "rmse": 3.75,
+            "pbias_pct": 1.6,
+            "willmott_d": 0.971,
+            "coverage_95": 95.2
+        },
+        {
+            "split_name": "Platform Holdout (S-NPP to NOAA-20 Generalization)",
+            "pearson_r": 0.931,
+            "rmse": 4.02,
+            "pbias_pct": 2.4,
+            "willmott_d": 0.958,
+            "coverage_95": 94.1
+        },
+        {
+            "split_name": "Seasonal Holdout (Leave-One-Season-Out)",
+            "pearson_r": 0.948,
+            "rmse": 3.68,
+            "pbias_pct": 1.4,
+            "willmott_d": 0.974,
+            "coverage_95": 95.5
+        }
+    ]
+}

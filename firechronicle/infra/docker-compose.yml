@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - FIRMS_MAP_KEY=${FIRMS_MAP_KEY:-1f1f9a28bc8561f922237c272055e274}
+      - CARTO_API_KEY=${CARTO_API_KEY:-cb1_4ch7_1_81fd19172fba671567bc8fb7}
+    volumes:
+      - ../data:/app/data
+      - ../reports:/app/reports
+      - ../metadata:/app/metadata
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    restart: unless-stopped

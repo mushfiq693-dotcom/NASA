@@ -1,0 +1,216 @@
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+:root {
+  /* ==========================================================================
+     Design System: Editorial Serif Tokens
+     ========================================================================== */
+  
+  /* Color Strategy (Monochrome with Warmth) */
+  --background: #FAFAF8;
+  --bg-canvas: #FAFAF8;
+  --bg-surface: #FFFFFF;
+  --bg-muted: #F5F3F0;
+  --bg-panel: #FFFFFF;
+  --bg-core: #FAFAF8;
+  
+  --foreground: #1A1A1A;
+  --text-primary: #1A1A1A;
+  --text-main: #1A1A1A;
+  --text-muted: #6B6B6B;
+  --text-light: #8E8B85;
+  
+  /* Accent: Burnished Gold */
+  --accent: #B8860B;
+  --accent-gold: #B8860B;
+  --accent-secondary: #D4A84B;
+  --accent-gold-light: #D4A84B;
+  --accent-foreground: #FFFFFF;
+  --accent-muted: rgba(184, 134, 11, 0.08);
+  --accent-gold-dim: rgba(184, 134, 11, 0.15);
+  
+  /* Borders & Rules */
+  --border: #E8E4DF;
+  --border-rule: #E8E4DF;
+  --border-hover: #B8860B;
+  --border-cyan: #E8E4DF;
+  --ring: #B8860B;
+  --card: #FFFFFF;
+  
+  /* Scientific & Observation State Colors (Harmonized Editorial Palette) */
+  --cyan-bright: #B8860B;
+  --cyan-dim: #D4A84B;
+  --blue-muted: #F5F3F0;
+  
+  --thermal-none: #E8E4DF;
+  --thermal-low: #D4A84B;
+  --thermal-elevated: #C56A10;
+  --thermal-high: #A83226;
+  --thermal-extreme: #7A1A1A;
+  
+  --state-pass: #2E7D32;
+  --state-warning: #B8860B;
+  --state-fail: #A83226;
+  
+  /* Typography System */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  
+  font-family: var(--font-sans);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(26, 26, 26, 0.04), 0 1px 2px rgba(26, 26, 26, 0.02);
+  --shadow-md: 0 4px 14px rgba(26, 26, 26, 0.06), 0 2px 4px rgba(26, 26, 26, 0.02);
+  --shadow-lg: 0 10px 30px rgba(26, 26, 26, 0.08), 0 4px 8px rgba(26, 26, 26, 0.03);
+  --shadow-accent: 0 4px 16px rgba(184, 134, 11, 0.25);
+}
+
+/* Hard rule: Layout contract */
+html, body {
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: 
+    "nav nav"
+    "sidebar stage"
+    "dock dock";
+  background-color: var(--background);
+  position: relative;
+}
+
+/* Ambient Warm Glow */
+#root::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 400px;
+  background: radial-gradient(ellipse at center, rgba(184, 134, 11, 0.035) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure grid children have min-width/height 0 for flex/grid limits */
+#root > * {
+  min-width: 0;
+  min-height: 0;
+  z-index: 1;
+}
+
+/* Typography Utility Classes */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  color: var(--foreground);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-top: 0;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Small Caps Pattern */
+.small-caps,
+.section-tag,
+.spec-badge,
+.badge-tag,
+.chip-label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Editorial Rule Lines */
+.rule-line {
+  display: inline-block;
+  height: 1px;
+  background-color: var(--border-rule);
+  flex: 1;
+}
+
+.rule-line-gold {
+  display: inline-block;
+  height: 1px;
+  background-color: var(--accent-gold);
+  flex: 1;
+}
+
+.section-label-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-label-row .rule-line {
+  height: 1px;
+  background: var(--border-rule);
+}
+
+.section-label-row .section-name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  white-space: nowrap;
+}
+
+/* Focus Ring */
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar for Editorial Feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4CFC7;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold);
+}
