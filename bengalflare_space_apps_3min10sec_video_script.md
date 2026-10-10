@@ -1,23 +1,25 @@
 # BengalFlare — NASA Space Apps Challenge 2024 / 2026
-## 3:10 (190 Seconds) Local Phase Winning Video Pitch Deck, Script & Claude Master Prompt
+## 3:35 (215 Seconds) Winning Video Pitch Deck, Script & Claude Opus Master Prompt
 ### Challenge: MODIS–VIIRS Harmonization
 ### Team: Zen’in Clan | Gopalganj Science & Technology University (GSTU), Bangladesh
 ### Tagline: *“Connecting Satellite Data. Revealing Earth's Story.”*
+### Live Platform: https://bengalflare.vercel.app
 
 ---
 
 # PART 1: MASTER "GOD-LEVEL" PROMPT FOR CLAUDE OPUS 5.5
 
-> **How to use this prompt**: Copy and paste the entire block below directly into Claude Opus 5.5 (or any advanced video generator / multimodal director). It establishes absolute domain authority, technical depth, cinematic tone, team branding, and strict 190-second timeline parameters.
+> **How to use this prompt**: Copy and paste the entire prompt block below directly into Claude Opus 5.5. Claude will act as your end-to-end multimodal director and AI voiceover narrator, outputting the exact spoken lines, audio-visual synchronizations, camera choreography, and on-screen graphics.
 
 ```markdown
 You are an elite NASA aerospace communications director, cinematic documentary filmmaker, and senior Earth observation data scientist. 
 
-Your objective is to craft an extraordinary, judge-winning, 3-minute-and-10-second (exactly 190 seconds) presentation video script, scene-by-scene storyboard, and production playbook for the NASA Space Apps Challenge project titled "BengalFlare".
+Your objective is to direct and generate an extraordinary, judge-winning, 3-minute-and-35-second (exactly 215 seconds) presentation video script, scene-by-scene storyboard, and AI voiceover narration for the NASA Space Apps Challenge project titled "BengalFlare".
 
 ### OFFICIAL TEAM PROFILE & METADATA:
 - Project Name: BengalFlare (NASA Thermal Telemetry & Active-Fire Harmonization Engine)
 - Live Production URL: https://bengalflare.vercel.app
+- Open Source Repository: https://github.com/mushfiq693-dotcom/NASA
 - Challenge Topic: MODIS–VIIRS Harmonization (Official NASA Space Apps Challenge)
 - Team Name: Zen’in Clan
 - University / Institution: Gopalganj Science & Technology University (GSTU)
@@ -30,219 +32,227 @@ Your objective is to craft an extraordinary, judge-winning, 3-minute-and-10-seco
   2. Farhan Zaman Aurko — Team Support + Frontend Engineer
   3. Nasir A. Efty — Product Manager
   4. Shakib Al Hasan — Researcher
-  5. Anika Islam — Presenter (Voiceover & Presentation Lead)
-  6. Sadhin Roy — Video Editor (Motion Graphics, Editing & Audio Engineering)
+  5. Anika Islam — Presenter
+  6. Sadhin Roy — Video Editor
 
-### PROJECT CONTEXT & SCIENTIFIC REALITY:
+### SCIENTIFIC CONTEXT & TECHNICAL REALITY:
 - Problem Statement:
   NASA's FIRMS archive contains 24+ years of Earth observation fire telemetry across five polar-orbiting satellites and two sensor families:
   1. MODIS (Terra & Aqua, 1000m nadir resolution, operational 2000–present)
   2. VIIRS (Suomi-NPP, NOAA-20, NOAA-21, 375m I-band resolution, operational 2012–present)
   The Problem: When VIIRS came online in 2012, its 375m sensor detected ~3.8x more small agricultural and low-intensity fires than MODIS. Naive climate analysis creates a catastrophic artificial jump (+380%) in 2012, corrupting climate baselines, fire frequency records, and public policy decisions. Furthermore, monsoon cloud cover creates silent observability blindspots (false negatives), and Suomi-NPP is scheduled for retirement in late 2026.
 - The Solution (BengalFlare by Team Zen’in Clan):
-  A full-stack Earth science telemetry platform that harmonizes 24 years of MODIS and VIIRS records into an uncertainty-aware, sensor-agnostic burning chronicle. It uses a Two-Stage Quantile Regression Forest (QRF) to resolve the 2012 discontinuity (-72% gap reduction), computes a daily Observability Index accounting for cloud obscuration and diurnal orbit gaps, and provides real-time NRT FIRMS ingestion with countdown telemetry for constellation handovers.
+  A full-stack Earth science telemetry platform that harmonizes 24 years of MODIS and VIIRS records into an uncertainty-aware, sensor-agnostic burning chronicle. It benchmarks six mathematical models (B0 to B5) and deploys a Two-Stage Quantile Regression Forest (QRF) to resolve the 2012 discontinuity (-72% gap reduction), computes a daily Observability Index accounting for cloud obscuration and diurnal orbit gaps, and provides real-time NRT FIRMS ingestion with countdown telemetry for constellation handovers.
 - Tech Stack & Design System:
   - Frontend: React 19, TypeScript, MapLibre GL (WebGL GPU acceleration), Chart.js, GSAP.
   - Backend: FastAPI, DuckDB analytical engine, H3 hexagonal spatial indexing, NumPy/SciPy.
   - UI Aesthetics: "Cosmic Dusk & Solar Flare" Aerospace Glassmorphism (`rgba(10, 16, 28, 0.62)`, `backdrop-filter: blur(20px)`, Solar Flare `#FF5E00` and Corona Gold `#FFB800` accents, crystal-clear `#FFFFFF` and `#F8FAFC` typography).
 
-### VIDEO PRESENTATION REQUIREMENTS:
-- Total Time: Exactly 3 minutes 10 seconds (190 seconds).
-- Audience: NASA Space Apps judges, Earth Science program officers, geospatial AI engineers.
-- Tone: Cinematic, authoritative, emotionally captivating, scientifically rigorous.
-- Pace: ~140 words per minute (natural spoken English cadence by Presenter Anika Islam).
-- Story Arc (Judges-First Hook & Flow):
-  1. Act I (0:00 - 0:15 | 15s): The Planetary Dilemma (Eye-Catching Visual Hook: 24 Years of Fire Telemetry & The 2012 Sensor Cliff).
-  2. Act II (0:15 - 0:35 | 20s): Solution Reveal & Team Intro (BengalFlare Logo & Team Zen’in Clan Holographic Roster Card, GSTU Bangladesh).
-  3. Act III (0:35 - 1:00 | 25s): Spatial Telemetry in Action (Atlas Explorer: MapLibre GPU Engine, Sensor Disagreement Mapping).
-  4. Act IV (1:00 - 1:25 | 25s): The 24-Year Thermal Record (Activity Calendar: Uncertainty Matrix & Observability Blindspots).
-  5. Act V (1:25 - 1:50 | 25s): Granular Ground Truth & Constellation Sweeps (Day Detail: March 21, 2022, 5 Overpasses, Bayesian Bounds).
-  6. Act VI (1:50 - 2:20 | 30s): The Machine Learning Engine (Sensor Lab: B0 to B5 Quantile Forest Benchmark & Validation).
-  7. Act VII (2:20 - 2:45 | 25s): Real-Time Constellation Control & Future-Proofing (Live Telemetry: FIRMS NRT Ingestion & S-NPP Countdown).
-  8. Act VIII (2:45 - 3:10 | 25s): The Climate Truth, Team Legacy & Call to Action (Zen’in Clan Vision, Open Science, MIT & Vercel Demo).
+### VIDEO & AI VOICEOVER GENERATION INSTRUCTIONS:
+- Total Time: Exactly 3 minutes 35 seconds (215 seconds).
+- Voiceover Delivery: Write the exact, word-for-word spoken narration in natural, authoritative, cinematic English. Include explicit cadence markers, pause indications ([PAUSE 1s]), and emotional tone directives.
+- Structure & Narrative Arc:
+  1. Scene 1A (0:00 - 0:20 | 20s): The Planetary Dilemma (Eye-Catching Visual Hook: 24 Years of Fire Telemetry & The 2012 Sensor Cliff).
+  2. Scene 1B (0:20 - 0:45 | 25s): The Solution Reveal & Team Intro (BengalFlare Brandmark & Team Zen’in Clan Holographic Roster Card, GSTU Bangladesh).
+  3. Scene 2 (0:45 - 1:15 | 30s): Spatial Telemetry in Action (Atlas Explorer: MapLibre GPU Engine, Sensor Disagreement Mapping).
+  4. Scene 3 (1:15 - 1:45 | 30s): The 24-Year Thermal Record (Activity Calendar: Uncertainty Matrix & Observability Blindspots).
+  5. Scene 4 (1:45 - 2:15 | 30s): Granular Ground Truth & Constellation Sweeps (Day Detail: March 21, 2022, 5 Overpasses, Bayesian Bounds).
+  6. Scene 5 (2:15 - 2:50 | 35s): The Machine Learning Engine (Sensor Lab: B0 to B5 Quantile Forest Benchmark & Validation Matrix).
+  7. Scene 6 (2:50 - 3:15 | 25s): Real-Time Constellation Control & Future-Proofing (Live Telemetry: FIRMS NRT Ingestion & S-NPP Countdown).
+  8. Scene 7 (3:15 - 3:35 | 20s): Scientific Truth, Team Legacy & Call to Action (Zen’in Clan Vision, Open Science, MIT & Vercel Demo).
 
-Now generate the complete, second-by-second script, camera choreography, visual screen actions, on-screen text graphics (OST), audio design (BGM and SFX), and presenter delivery guidelines.
+Output the full, second-by-second multimodal script with synchronized visual prompts, UI interactions, on-screen text (OST), sound design (BGM & SFX), and spoken AI voiceover.
 ```
 
 ---
 
-# PART 2: SECOND-BY-SECOND CINEMATIC VIDEO SCRIPT (190 SECONDS)
+# PART 2: SECOND-BY-SECOND MULTIMODAL VIDEO SCRIPT & AI VOICEOVER (215 SECONDS)
 
 ### Master Timeline Overview:
 | Scene | Timestamp | Duration | Section / Focus | Core Message |
 |---|---|---|---|---|
-| **Scene 1A** | `0:00 – 0:15` | 15s | Planetary Dilemma (Hook) | The 2012 Sensor Cliff: Did Earth burn 4x more? |
-| **Scene 1B** | `0:15 – 0:35` | 20s | Solution Reveal & Team Intro | BengalFlare Reveal + Team Zen’in Clan (GSTU) Roster |
-| **Scene 2** | `0:35 – 1:00` | 25s | Atlas Explorer (`/atlas`) | Spatial Telemetry & Resolving Sensor Disagreements |
-| **Scene 3** | `1:00 – 1:25` | 25s | Activity Calendar (`/calendar`) | 24-Year Heatmap & Observability Blindspots |
-| **Scene 4** | `1:25 – 1:50` | 25s | Day Detail (`/day/:date`) | 24-Hour Satellite Overpass Schedule & Root Cause |
-| **Scene 5** | `1:50 – 2:20` | 30s | Sensor Lab (`/lab` & `/validation`) | The ML Engine: B0 to B5 Quantile Regression Forest |
-| **Scene 6** | `2:20 – 2:45` | 25s | Live Telemetry (`/live`) | Real-Time Ingestion, Radar & S-NPP 2026 Countdown |
-| **Scene 7** | `2:45 – 3:10` | 25s | Vision, Team Legacy & Outro | Scientific Truth, Open Source & Space Apps Impact |
+| **Scene 1A** | `0:00 – 0:20` | 20s | Planetary Dilemma (Hook) | The 2012 Sensor Cliff: Did Earth burn 4x more? |
+| **Scene 1B** | `0:20 – 0:45` | 25s | Solution Reveal & Team Intro | BengalFlare Reveal + Team Zen’in Clan (GSTU) Roster |
+| **Scene 2** | `0:45 – 1:15` | 30s | Atlas Explorer (`/atlas`) | Spatial Telemetry & Resolving Sensor Disagreements |
+| **Scene 3** | `1:15 – 1:45` | 30s | Activity Calendar (`/calendar`) | 24-Year Heatmap & Observability Blindspots |
+| **Scene 4** | `1:45 – 2:15` | 30s | Day Detail (`/day/:date`) | 24-Hour Satellite Overpass Schedule & Root Cause |
+| **Scene 5** | `2:15 – 2:50` | 35s | Sensor Lab (`/lab` & `/validation`) | The ML Engine: B0 to B5 Quantile Regression Forest |
+| **Scene 6** | `2:50 – 3:15` | 25s | Live Telemetry (`/live`) | Real-Time Ingestion, Radar & S-NPP 2026 Countdown |
+| **Scene 7** | `3:15 – 3:35` | 20s | Vision, Team Legacy & Outro | Scientific Truth, Open Source & Space Apps Impact |
 
 ---
 
 ## SCENE 1A: THE PLANETARY DILEMMA (THE EYE-CATCHING HOOK)
-- **Timestamp**: `0:00 – 0:15` (15 Seconds)
+- **Timestamp**: `0:00 – 0:20` (20 Seconds)
 - **Active Route / Visual Source**: `https://bengalflare.vercel.app/` (Overview Globe)
 - **Visual on Screen**:
-  - The video opens in deep space: an ominous, cinematic camera drift around a darkened 3D WebGL satellite globe focusing on South Asia and the Bengal basin shrouded in atmospheric dusk.
-  - At 0:04, a dramatic graphical overlay cuts in showing the raw fire detection curve from 2000 to present day: steady until 2012, then a violent, jagged vertical explosion of crimson data spikes (+380%).
-  - Glowing red text pulses over the screen: *"WAS OUR PLANET BURNING 400% MORE?"*
-  - The split screen shows a 1000-meter MODIS grid side-by-side with a 375-meter VIIRS grid, visually demonstrating the resolution disparity that baffled climate baselines.
-- **Audio / BGM**:
-  - Low ambient sci-fi drone that crescendos with a deep, resonant sub-bass drop at 0:08 as the 2012 spike hits.
-  - Distant radio telemetry crackle and satellite heartbeat ping.
+  - The video begins in deep space: an ominous, cinematic camera glide across the dark limb of the Earth, focusing on South Asia and the Bengal basin shrouded in atmospheric dusk.
+  - At 0:06, an intense graphical split cuts onto the screen: a 24-year timeline graph where fire detection lines run stable until 2012, then violently rupture upwards in glowing crimson (+380% explosion).
+  - Glowing question text pulses in center frame: *"WAS OUR PLANET BURNING 400% MORE?"*
+  - Side-by-side comparison overlays appear: a coarse 1000-meter MODIS footprint beside a high-resolution 375-meter VIIRS pixel grid, visually illustrating the sensor artifact that distorted climate science.
+- **Audio & Sound Design**:
+  - Low ambient sci-fi drone that builds tension.
+  - A deep, resonant sub-bass drop at 0:09 as the 2012 graph spikes.
+  - Satellite telemetry static and subtle radio frequency beeps.
 - **On-Screen Text (OST)**:
-  - `THE 2012 PARADOX // 24 YEARS OF CLIMATE DATA AT RISK`
+  - `THE 2012 PARADOX // 24 YEARS OF EARTH OBSERVATION AT RISK`
   - `MODIS (1000m) VS VIIRS (375m) // THE STATISTICAL ILLUSION`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"For over two decades, NASA has watched our planet burn from orbit. Over 24 years of thermal telemetry.*
+- **AI Voiceover Narration**:
+  > *"For over two decades, NASA has watched our planet burn from orbit. Over twenty-four years of thermal telemetry across five polar satellites. [PAUSE 0.8s]*
   >
-  > *But beneath this archive lies a dangerous statistical illusion. In 2012, when VIIRS came online, reported fire detections exploded by nearly 400 percent. Was our planet burning four times more? No. The sensors changed — but our historical records didn't."*
+  > *Yet beneath this massive archive lies a dangerous statistical illusion. In 2012, when VIIRS came online, reported fire detections exploded by nearly four hundred percent. Was our planet suddenly burning four times more? [PAUSE 0.5s] No. The sensors changed — but our historical records didn't."*
 
 ---
 
 ## SCENE 1B: SOLUTION REVEAL & TEAM ZEN’IN CLAN INTRODUCTION
-- **Timestamp**: `0:15 – 0:35` (20 Seconds)
+- **Timestamp**: `0:20 – 0:45` (25 Seconds)
 - **Active Route / Visual Source**: `https://bengalflare.vercel.app/` + Aerospace Team Card Overlay
 - **Visual on Screen**:
-  - The dramatic red glare smoothly dissolves into a radiant Corona Gold and Solar Flare Orange burst as the **BengalFlare** brandmark illuminates:
+  - The dark red hazard tones dissolve into a radiant burst of Corona Gold (`#FFB800`) and Solar Flare Orange (`#FF5E00`) as the **BengalFlare** brandmark ignites on screen:
     `BengalFlare // NASA Thermal Telemetry & Active-Fire Harmonization Engine`.
-  - The camera cuts seamlessly to an ultra-sleek, frosted aerospace glass HUD card showcasing **Team Zen’in Clan**:
-    - **Team Crest & Title**: `TEAM ZEN’IN CLAN`
-    - **University**: `Gopalganj Science & Technology University (GSTU), Bangladesh 🇧🇩`
+  - Camera glides seamlessly into an ultra-sleek, frosted aerospace glass HUD card showcasing **Team Zen’in Clan**:
+    - **Header**: `TEAM ZEN’IN CLAN`
+    - **Institution**: `Gopalganj Science & Technology University (GSTU), Bangladesh 🇧🇩`
     - **Challenge**: `NASA Space Apps Challenge · MODIS–VIIRS Harmonization`
     - **Team Tagline**: *“Connecting Satellite Data. Revealing Earth's Story.”*
-    - **6-Member High-Tech Badge Grid**:
-      1. `Kazi Mushfiqur Rahman` — Team Lead & Backend Engineer
-      2. `Farhan Zaman Aurko` — Team Support & Frontend Engineer
-      3. `Nasir A. Efty` — Product Manager
-      4. `Shakib Al Hasan` — Researcher
-      5. `Anika Islam` — Presenter
-      6. `Sadhin Roy` — Video Editor
-  - At 0:32, the team card elegantly minimizes into the top-right telemetry pill as the cursor glides onto the landing page HUD and clicks `[ Launch Atlas Explorer ]`.
-- **Audio / BGM**:
-  - Uplifting, high-tech synth harmony resolves the tension. 
+    - **The 6-Member High-Tech Roster Grid**:
+      - `Kazi Mushfiqur Rahman` — Team Lead + Backend Engineer
+      - `Farhan Zaman Aurko` — Team Support + Frontend Engineer
+      - `Nasir A. Efty` — Product Manager
+      - `Shakib Al Hasan` — Researcher
+      - `Anika Islam` — Presenter
+      - `Sadhin Roy` — Video Editor
+  - At 0:42, the team card smoothly docks into the top telemetry bar as the cursor clicks `[ Launch Atlas Explorer ]` on the landing page HUD.
+- **Audio & Sound Design**:
+  - Inspiring, high-tech synthesizer melody resolves the tension into confidence.
   - Crisp digital chime on team card appearance; smooth glass-whoosh transition.
 - **On-Screen Text (OST)**:
   - `BENGALFLARE // SENSOR-AGNOSTIC THERMAL INTELLIGENCE`
   - `TEAM ZEN’IN CLAN // GOPALGANJ SCIENCE & TECHNOLOGY UNIVERSITY (GSTU)`
   - `“CONNECTING SATELLITE DATA. REVEALING EARTH'S STORY.”`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"To solve this critical scientific dilemma, we are Team Zen’in Clan from Gopalganj Science and Technology University, Bangladesh.*
+- **AI Voiceover Narration**:
+  > *"To solve this critical scientific dilemma, we are Team Zen’in Clan from Gopalganj Science and Technology University, Bangladesh. [PAUSE 0.6s]*
   >
-  > *Driven by our mission to make satellite-derived Earth observation consistent, accessible, and actionable, we engineered BengalFlare — transforming 24 years of fragmented satellite passes into one unified, sensor-agnostic climate truth. Here is how it works."*
+  > *Guided by our mission to make satellite-derived Earth-observation data consistent, accessible, and actionable, we engineered BengalFlare — transforming twenty-four years of fragmented satellite passes into one unified, sensor-agnostic climate truth. [PAUSE 0.5s] Here is how it works."*
 
 ---
 
 ## SCENE 2: SPATIAL TELEMETRY IN ACTION (ATLAS EXPLORER)
-- **Timestamp**: `0:35 – 1:00` (25 Seconds)
+- **Timestamp**: `0:45 – 1:15` (30 Seconds)
 - **Active Route**: `https://bengalflare.vercel.app/atlas`
 - **Visual on Screen**:
-  - The UI transitions into the full-screen interactive MapLibre GPU Atlas running at 60 FPS.
-  - Basemap switches from Esri True Color Satellite to Carto Dark Matter; individual fire clusters illuminate like glowing embers across Bangladesh and the Sundarbans mangrove basin.
-  - Presenter toggles the Left Glass Sidebar from *Harmonized Heatmap* to *Sensor Disagreement Mode*.
-  - Points highlight in distinct luminous dots: Golden Amber (`Both Detected`), Solar Orange (`MODIS Only`), Crimson (`VIIRS Only`), and Cyan (`Obscured`).
-  - At the bottom dock, the presenter clicks **Play** (▶); the scrubber smoothly animates through historical fire seasons at 2x speed as active clusters pulse and crosshairs display real-time coordinates: `23.8103°N, 90.4125°E | FRP: 48.2 MW`.
-- **Audio / BGM**:
-  - Rhythmic, pulse-driven synth arpeggio kicks in, reflecting geospatial big data in motion.
-  - Soft interface sweep sounds when switching map layers.
+  - The viewport expands into the full-screen interactive MapLibre GPU Atlas running smoothly at 60 FPS.
+  - The basemap toggles from Esri True Color Satellite to Carto Dark Matter, revealing thousands of active fire vectors across Bangladesh, the Sundarbans, and South Asia.
+  - Presenter switches the left sidebar from *Harmonized Heatmap* to *Sensor Disagreement Mode*.
+  - Fire detections highlight in four luminous indicators:
+    - Golden Amber: `Both Detected (Consensus)`
+    - Solar Orange: `MODIS Only`
+    - Crimson: `VIIRS Only (Small Fire Detections)`
+    - Cyan: `Cloud Obscured`
+  - At the bottom dock, the presenter clicks **Play** (▶); the timeline scrubber animates through historical fire seasons at 2x speed as active clusters pulse and dynamic coordinate crosshairs display real-time FRP readings: `23.8103°N, 90.4125°E | FRP: 48.2 MW`.
+- **Audio & Sound Design**:
+  - Rhythmic, pulse-driven synth arpeggio reflecting big data processing.
+  - Soft interface click and sweep sounds when switching map layers.
 - **On-Screen Text (OST)**:
   - `ATLAS ENGINE // GPU-ACCELERATED H3 SPATIAL INDEXING`
-  - `DISAGREEMENT MAPPING // MODIS (1000m) VS VIIRS (375m)`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"This is the BengalFlare Atlas. Built on MapLibre and H3 hexagonal spatial indexing, it processes millions of observations at 60 frames per second.*
+  - `DISAGREEMENT MODE // MODIS (1000m) VS VIIRS (375m)`
+  - `60 FPS TEMPORAL PLAYBACK SCRUBBER`
+- **AI Voiceover Narration**:
+  > *"This is the BengalFlare Atlas. Built on MapLibre and H3 hexagonal spatial indexing, it renders millions of orbital observations at sixty frames per second. [PAUSE 0.6s]*
   >
-  > *Watch what happens when we isolate Sensor Disagreement. In red, VIIRS detects thousands of low-intensity agricultural burns that MODIS flew right over and missed. In yellow, both sensors agree. In cyan, dense cloud cover masked the thermal signature.*
+  > *Watch what happens when we activate Sensor Disagreement Mode. In red, VIIRS detects thousands of low-intensity agricultural burns that MODIS flew right over and missed. In yellow, both sensors agree. In cyan, dense clouds masked the thermal signature completely. [PAUSE 0.6s]*
   >
-  > *With our playback scrubber, researchers can rewind through 24 years of fire seasons with sub-kilometer fidelity."*
+  > *With our temporal playback scrubber, climate researchers can rewind through twenty-four years of burning seasons with sub-kilometer fidelity."*
 
 ---
 
 ## SCENE 3: THE 24-YEAR THERMAL RECORD (BURNING ACTIVITY CALENDAR)
-- **Timestamp**: `1:00 – 1:25` (25 Seconds)
+- **Timestamp**: `1:15 – 1:45` (30 Seconds)
 - **Active Route**: `https://bengalflare.vercel.app/calendar`
 - **Visual on Screen**:
-  - Smooth page wipe to the Burning Activity Calendar matrix spanning 2000 to present day.
-  - High activity days pulse in Supernova Crimson and Solar Flare Orange, while quiet days rest in deep Ion Cyan.
-  - Cursor hovers over a row of cells with diagonal striped hatching: tooltip pops up showing `Date: 2022-03-21 | Observed FRP: 142 MW | Observability Index: 0.38 (POOR - Heavy Cloud Cover)`.
-  - The presenter toggles between `Raw MODIS`, `Raw VIIRS`, and `Harmonized BAI` using the glass mode switcher, visually showing how jagged sensor jumps are smoothed into an uncertainty-bounded climate baseline.
+  - A fluid page transition opens the Burning Activity Calendar matrix, displaying daily observations from 2000 to present day.
+  - High-intensity burning days glow in Supernova Crimson and Solar Flare Orange; quiet days rest in deep Ion Cyan.
+  - The cursor hovers over diagonal striped hatched cells: a glass tooltip appears displaying:
+    `Date: 2022-03-21 | Observed FRP: 142 MW | Observability Index: 0.38 (POOR - Heavy Cloud Cover)`.
+  - The presenter toggles the top switcher between `Raw MODIS`, `Raw VIIRS`, and `Harmonized BAI`, visually demonstrating how erratic sensor jumps are harmonized into an uncertainty-bounded climate record.
   - Cursor clicks directly on `March 21, 2022` to drill down.
-- **Audio / BGM**:
-  - Warm ambient pads enter, signaling deep scientific analysis.
+- **Audio & Sound Design**:
+  - Warm ambient pads enter, conveying analytical depth.
   - Crisp glass click sound on cell selection.
 - **On-Screen Text (OST)**:
   - `ACTIVITY MATRIX // 24-YEAR UNCERTAINTY-AWARE CALENDAR`
   - `OBSERVABILITY INDEX // ELIMINATING CLOUD FALSE NEGATIVES`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"To analyze climate trends, you cannot just count fire dots. You must understand observability.*
+  - `HARMONIZED BURNING ACTIVITY INDEX (BAI)`
+- **AI Voiceover Narration**:
+  > *"To analyze long-term climate trends, you cannot simply count fire detections. You must understand observability. [PAUSE 0.6s]*
   >
-  > *This 24-year calendar matrix solves the silent trap of false negatives. Notice these hatched cells? When monsoon clouds shroud the delta or satellite orbits leave a temporal gap, traditional models assume zero fires.*
+  > *This twenty-four-year calendar matrix solves the silent trap of false negatives. Notice these hatched cells? When monsoon clouds shroud the delta or satellite orbits leave a temporal gap, traditional algorithms assume zero fires. [PAUSE 0.6s]*
   >
-  > *BengalFlare’s Observability Index flags these blindspots as uncertain, preventing false negatives from distorting climate records.*
+  > *BengalFlare’s Observability Index flags these blindspots as uncertain, preventing missing data from being mistaken for an unburned landscape.*
   >
-  > *Let's drill down into an extreme anomaly: March 21, 2022."*
+  > *Now, let's drill down into an extreme anomaly: March 21st, 2022."*
 
 ---
 
 ## SCENE 4: GRANULAR GROUND TRUTH & ORBIT CYCLES (DAY DETAIL DEEP-DIVE)
-- **Timestamp**: `1:25 – 1:50` (25 Seconds)
+- **Timestamp**: `1:45 – 2:15` (30 Seconds)
 - **Active Route**: `https://bengalflare.vercel.app/day/2022-03-21`
 - **Visual on Screen**:
-  - Page loads instantly with the high-resolution day map on the left and telemetry analytics on the right.
-  - Presenter clicks `[ ▶ REPLAY OVERPASS SWEEP ]`: an animated optical radar swath sweeps across the delta, sequentially revealing Terra at 10:30 AM, Aqua at 1:30 PM, and Suomi-NPP at 2:15 PM.
-  - Zoom into the *24-Hour Pass Timeline*: individual satellite chip cards show sensor, exact UTC timestamp, and detection count.
-  - Cursor scrolls right to show:
+  - Page loads instantly with the high-resolution day map on the left and comprehensive telemetry panels on the right.
+  - Presenter clicks `[ ▶ REPLAY OVERPASS SWEEP ]`: an optical radar swath animates across Bangladesh, sequentially revealing Terra at 10:30 AM, Aqua at 1:30 PM, and Suomi-NPP at 2:15 PM.
+  - Zoom into the *24-Hour Pass Timeline*: individual satellite chip cards show sensor type, exact UTC timestamp, and detection count.
+  - Cursor highlights key telemetry modules:
     1. Dual Telemetry Gauges (`Activity Index: 88/100`, `Observability: 94%`).
-    2. The *Uncertainty Whisker Box* displaying 5th–95th percentile credible bounds.
-    3. The *"Why? Root Cause Diagnostic Panel"* isolating diurnal agricultural rhythms from cloud interference.
-- **Audio / BGM**:
-  - Precision percussion and digital scanner sweep.
+    2. The *Uncertainty Whisker Box* displaying 5th–95th percentile Bayesian credible bounds.
+    3. The *"Why? Root Cause Diagnostic Panel"* isolating diurnal agricultural rhythms from cloud obscuration.
+- **Audio & Sound Design**:
+  - Precision percussion with digital scanner sweep SFX.
+  - Light radar ping when satellite overpasses illuminate.
 - **On-Screen Text (OST)**:
   - `DAY TELEMETRY // 5 CONSTELLATION OVERPASS SWEEPS`
   - `BAYESIAN CREDIBLE BOUNDS // 5TH TO 95TH PERCENTILE`
   - `AI ROOT CAUSE DIAGNOSTICS`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"Every single day tells a forensic satellite story.*
+- **AI Voiceover Narration**:
+  > *"Every single day tells a forensic satellite story. [PAUSE 0.6s]*
   >
-  > *Here, on March 21st, our overpass sweep recreates the exact constellation trajectory. Terra passes at 10:30 AM with modest readings. Three hours later, Aqua and Suomi-NPP catch the peak diurnal fire flare-up.*
+  > *Here, on March 21st, our Overpass Sweep recreates the exact constellation trajectory. Terra passes at 10:30 AM with modest readings. Three hours later, Aqua and Suomi-NPP catch the peak afternoon fire flare-up. [PAUSE 0.6s]*
   >
-  > *Instead of giving scientists a single vulnerable number, BengalFlare generates rigorous Bayesian credible bounds with uncertainty whiskers, while our automated diagnostics isolate diurnal fire rhythms from orbital geometry."*
+  > *Rather than giving decision-makers a single brittle number, BengalFlare generates rigorous Bayesian credible bounds with uncertainty whiskers, while our automated diagnostics isolate diurnal fire rhythms from orbital geometry."*
 
 ---
 
-## SCENE 5: THE ML ENGINE & HARMONIZATION (SENSOR LAB & VALIDATION)
-- **Timestamp**: `1:50 – 2:20` (30 Seconds)
+## SCENE 5: THE MACHINE LEARNING ENGINE (SENSOR LAB & VALIDATION)
+- **Timestamp**: `2:15 – 2:50` (35 Seconds)
 - **Active Route**: `https://bengalflare.vercel.app/lab` and `https://bengalflare.vercel.app/validation`
 - **Visual on Screen**:
   - Presenter navigates to `Sensor Lab`.
   - The *Baseline Model Stepper* is shown: B0 (Raw Concatenation), B1 (Global Scale), B2 (Context Ratio), B3 (Log-Linear), B4 (Quantile Mapping), and B5 (Quantile Regression Forest).
-  - Presenter clicks `▶ AUTO-PLAY (B0 → B5)`: live Chart.js scatter plots and distribution curves morph dynamically before our eyes.
-  - Watch the KPI cards update:
+  - Presenter clicks `▶ AUTO-PLAY (B0 → B5)`: live Chart.js scatter plots and distribution curves morph dynamically in real time.
+  - KPI cards update with glowing numbers:
     - `Discontinuity Gap: Drops from +148% (B0) to -0.8% (B5 Champion)`.
-    - `R²: Climbs to 0.94`.
+    - `R² Correlation: Climbs to 0.94`.
     - `Synthetic Gap Recovery: 96.4% Recall`.
-  - Quick 5-second cut to the `/validation` page showing the glowing circular SVG progress ring: `96.4% Synthetic Gap Recovery` and the Leave-One-Year-Out validation matrix.
-- **Audio / BGM**:
-  - Uplifting cinematic orchestral swell layered over electronic beats. The high point of technical triumph.
+  - Smooth cut to the `/validation` page displaying the glowing circular SVG progress ring: `96.4% Synthetic Gap Recovery` alongside the Leave-One-Year-Out validation matrix.
+- **Audio & Sound Design**:
+  - Uplifting cinematic orchestral swell layered over an electronic groove. The high point of technical triumph.
 - **On-Screen Text (OST)**:
   - `SENSOR LAB // 6 MATHEMATICAL BASELINES BENCHMARKED`
   - `CHAMPION: TWO-STAGE QUANTILE REGRESSION FORESTS`
   - `-72% SENSOR STEP DISCONTINUITY ELIMINATED`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"How do we mathematically achieve this? We engineered the Sensor Harmonization Lab.*
+  - `LEAVE-ONE-YEAR-OUT (LOYO) VALIDATION MATRIX`
+- **AI Voiceover Narration**:
+  > *"How do we mathematically achieve this? We engineered the Sensor Harmonization Lab. [PAUSE 0.6s]*
   >
-  > *We didn't just pick an algorithm — we benchmarked six distinct scientific models, from raw concatenation to Log-Linear transforms.*
+  > *Instead of blindly adopting a black box, we benchmarked six distinct scientific models — from raw concatenation to Log-Linear transforms. [PAUSE 0.6s]*
   >
-  > *Our champion model — a Two-Stage Quantile Regression Forest — predicts the full conditional distribution of VIIRS fire equivalent counts from MODIS inputs, incorporating land cover, solar zenith, and vapor pressure.*
+  > *Our champion model — a Two-Stage Quantile Regression Forest — predicts the full conditional distribution of VIIRS fire equivalent counts from MODIS inputs, incorporating land cover, solar zenith, and vapor pressure. [PAUSE 0.6s]*
   >
-  > *The result? We eliminate 72 percent of the 2012 sensor step-discontinuity while preserving genuine ecological anomalies, validated through Leave-One-Year-Out testing."*
+  > *The result? We eliminate 72 percent of the 2012 sensor step-discontinuity while preserving genuine ecological anomalies, validated through Leave-One-Year-Out testing with 96.4 percent recall."*
 
 ---
 
 ## SCENE 6: REAL-TIME CONSTELLATION CONTROL & FUTURE-PROOFING
-- **Timestamp**: `2:20 – 2:45` (25 Seconds)
+- **Timestamp**: `2:50 – 3:15` (25 Seconds)
 - **Active Route**: `https://bengalflare.vercel.app/live`
 - **Visual on Screen**:
   - Presenter switches to the `Live Telemetry` page.
@@ -250,143 +260,102 @@ Now generate the complete, second-by-second script, camera choreography, visual 
   - Presenter clicks `[ POLL NOW ]` — counter resets with a green flash as fresh telemetry rows slide into the detection stream with glowing timestamps.
   - The *Active Orbit Radar* screen features a spinning green/gold sweep beam with real-time blip ripples over South Asia.
   - Focus shifts to the prominent **S-NPP Retirement Countdown Clock**: `Days: 21 | Hours: 14 | Mins: 38 | Secs: 53`.
-  - Shows health badges for NOAA-20 and NOAA-21 indicating operational readiness for seamless sensor handover.
-- **Audio / BGM**:
+  - Shows operational health badges for NOAA-20 and NOAA-21 indicating readiness for seamless sensor handover.
+- **Audio & Sound Design**:
   - High-tempo, mission-control atmosphere. Sonar ping sound when the radar sweeps across a blip.
 - **On-Screen Text (OST)**:
   - `LIVE MISSION CONTROL // REAL-TIME NASA FIRMS NRT STREAM`
   - `FUTURE-PROOFING // S-NPP RETIREMENT COUNTDOWN (NOV 2026)`
   - `NOAA-20 & NOAA-21 SEAMLESS CONSTELLATION HANDOVER`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"BengalFlare isn't just an archive — it's an active Mission Control.*
+- **AI Voiceover Narration**:
+  > *"BengalFlare isn't just an archive — it is an active Mission Control. [PAUSE 0.5s]*
   >
-  > *Directly connected to NASA's FIRMS Near-Real-Time stream, our live engine ingests, spatializes, and harmonizes orbital downlinks within 180 seconds.*
+  > *Directly connected to NASA's FIRMS Near-Real-Time stream, our live engine ingests, spatializes, and harmonizes orbital downlinks within 180 seconds. [PAUSE 0.6s]*
   >
   > *And we are already future-proofed. Suomi-NPP, the pioneer of VIIRS, will retire in November 2026. Our live countdown and calibration pipelines ensure that as NOAA-20 and NOAA-21 take over, the global fire record remains unbroken. Zero gaps. Zero drift."*
 
 ---
 
 ## SCENE 7: SCIENTIFIC IMPACT, TEAM LEGACY & CLOSING HERO
-- **Timestamp**: `2:45 – 3:10` (25 Seconds)
+- **Timestamp**: `3:15 – 3:35` (20 Seconds)
 - **Active Route**: Return to `https://bengalflare.vercel.app/` (Overview / Dark Earth)
 - **Visual on Screen**:
-  - Camera pulls out to a cinematic wide shot of the dark Earth with glowing active fire vectors and constellation orbits circling above.
+  - The camera pulls out to a cinematic wide shot of the dark Earth with glowing active fire vectors and constellation orbits circling above.
   - The BengalFlare vector logo illuminates in pure gold and solar orange.
   - The final presentation hero slide fades in with crisp aerospace glass styling:
     - **Team**: `ZEN’IN CLAN`
-    - **University**: `Gopalganj Science & Technology University (GSTU), Bangladesh`
+    - **University**: `Gopalganj Science & Technology University (GSTU), Bangladesh 🇧🇩`
     - **Challenge**: `NASA Space Apps Challenge · MODIS–VIIRS Harmonization`
     - **Tagline**: *“Connecting Satellite Data. Revealing Earth's Story.”*
     - **Live Demo Link**: `bengalflare.vercel.app`
     - **Open Source Code**: `github.com/mushfiq693-dotcom/NASA`
     - **License**: `MIT Open Source License`
-  - Team credits roll cleanly on the bottom ribbon:
+  - Team roster credits roll cleanly on the bottom ribbon:
     `Lead: Kazi Mushfiqur Rahman · Frontend: Farhan Zaman Aurko · PM: Nasir A. Efty · Research: Shakib Al Hasan · Presenter: Anika Islam · Editor: Sadhin Roy`
-- **Audio / BGM**:
+- **Audio & Sound Design**:
   - Grand musical resolution; inspiring, triumphant final chord fading out gently into ambient space resonance.
 - **On-Screen Text (OST)**:
   - `BENGALFLARE // RECONCILING 24 YEARS OF EARTH OBSERVATION`
   - `NASA SPACE APPS CHALLENGE // MODIS–VIIRS HARMONIZATION`
   - `TEAM ZEN’IN CLAN // GOPALGANJ SCIENCE & TECHNOLOGY UNIVERSITY (GSTU), BANGLADESH`
   - `“CONNECTING SATELLITE DATA. REVEALING EARTH'S STORY.”`
-  - `LIVE PLATFORM // BENGALFLARE.VERCEL.APP`
-  - `OPEN SOURCE // MIT LICENSE // GITHUB.COM/MUSHFIQ693-DOTCOM/NASA`
-- **Voiceover Script (English — Anika Islam)**:
-  > *"Five satellites. Two sensor families. One unshakeable climate truth.*
+  - `LIVE PLATFORM: BENGALFLARE.VERCEL.APP // GITHUB.COM/MUSHFIQ693-DOTCOM/NASA`
+- **AI Voiceover Narration**:
+  > *"Five satellites. Two sensor families. One unshakeable climate truth. [PAUSE 0.6s]*
   >
-  > *Team Zen’in Clan from Gopalganj Science and Technology University is proud to deliver BengalFlare — transforming fragmented satellite passes into the most reliable thermal telemetry record ever created for our planet.*
-  >
-  > *Empowering climate scientists, protecting vulnerable ecosystems, and advancing NASA's mission of open science for all humankind.*
+  > *Team Zen’in Clan from Gopalganj Science and Technology University is proud to present BengalFlare — empowering climate scientists, protecting vulnerable ecosystems, and advancing NASA's mission of open science for all humankind. [PAUSE 0.5s]*
   >
   > *Connecting satellite data. Revealing Earth's story. Thank you."*
 
 ---
 
-# PART 3: JUDGE-WINNING RUBRIC CHECKLIST (WHY ZEN’IN CLAN WINS)
+# PART 3: NASA SPACE APPS JUDGE-WINNING RUBRIC CHECKLIST
 
-When the NASA Space Apps judges evaluate your submission, they look for 5 key criteria. Here is how Team Zen’in Clan directly addresses every single one:
+When NASA Space Apps judges evaluate your submission, they grade across 5 critical criteria. Here is how BengalFlare and Team Zen’in Clan secure top marks in every category:
 
 ### 1. Relevance to NASA Data & Mission (Score: 10/10)
-- **What judges look for**: Deep, meaningful use of official NASA data rather than surface-level wrappers.
-- **How Team Zen’in Clan proves it**:
-  - Uses 5 real satellites across two eras (Terra, Aqua, S-NPP, NOAA-20, NOAA-21).
-  - Integrates both MODIS (MOD14/MYD14) and VIIRS (VNP14IMGTDL) products.
-  - Active NASA FIRMS API integration with operational credentials.
-  - Direct connection to NASA EOSDIS satellite imagery basemaps.
+- **Official Satellite Products**: Integrates MODIS (MOD14/MYD14 on Terra & Aqua) and VIIRS (VNP14IMGTDL on Suomi-NPP, NOAA-20, NOAA-21).
+- **Direct NASA Infrastructure**: Uses live NASA FIRMS API with automated polling within 180 seconds of satellite downlink.
+- **Earth Observation Imagery**: Features NASA EOSDIS GIBS satellite imagery basemaps.
 
 ### 2. Scientific & Mathematical Rigor (Score: 10/10)
-- **What judges look for**: Addressing real Earth science challenges, not superficial or fake AI.
-- **How Team Zen’in Clan proves it**:
-  - Solves the documented 2012 sensor transition step-change.
-  - Benchmarks 6 mathematical models (B0 to B5) rather than claiming an unverified black box.
-  - Two-Stage Quantile Regression Forest with genuine Bayesian credible intervals.
-  - Explicit Observability Index addressing cloud obscuration and diurnal orbit gaps.
+- **Sensor Transition Gap**: Explicitly resolves the documented 2012 MODIS-to-VIIRS step-change discontinuity.
+- **Benchmarked Models**: Evaluates six distinct baselines (B0 to B5) with transparent mathematical formulations.
+- **Uncertainty Quantification**: Two-Stage Quantile Regression Forest outputs 5th–95th percentile Bayesian credible intervals rather than arbitrary point estimates.
+- **Observability Index**: Accounts for cloud obscuration and diurnal orbital gaps, eliminating false negatives.
 
 ### 3. Technical Execution & Engineering (Score: 10/10)
-- **What judges look for**: Working software, high performance, robust architecture.
-- **How Team Zen’in Clan proves it**:
-  - Blazing fast MapLibre WebGL GPU rendering with H3 hexagonal spatial indexing.
-  - Real-time polling within 180 seconds of satellite downlink.
-  - Clean separation: FastAPI backend + DuckDB analytical engine + React 19 frontend.
-  - 100% automated test coverage with passing pytest and Playwright suites.
-  - Live, production-ready Vercel deployment: `https://bengalflare.vercel.app`.
+- **High-Performance Architecture**: FastAPI backend + DuckDB analytical engine + React 19 frontend + H3 spatial indexing.
+- **GPU-Accelerated Visualization**: MapLibre GL rendering thousands of thermal points at 60 FPS.
+- **Automated Testing**: 100% test coverage with automated pytest and Playwright suites.
+- **Live Production Deployment**: Fully deployed and operational on Vercel at `https://bengalflare.vercel.app`.
 
 ### 4. User Experience & Design Excellence (Score: 10/10)
-- **What judges look for**: Engaging, professional, intuitive interface.
-- **How Team Zen’in Clan proves it**:
-  - Bespoke "Cosmic Dusk & Solar Flare" aerospace glassmorphism theme.
-  - High-contrast, WCAG AA-compliant typography and neon status indicators.
-  - Interactive scrollytelling globe, playback scrubber, and responsive design for desktop and mobile.
+- **Aerospace Glassmorphism Theme**: Custom "Cosmic Dusk & Solar Flare" aesthetic with WCAG AA-compliant contrast.
+- **Interactive Scrollytelling**: 3D satellite globe, temporal playback scrubbers, and responsive layouts for desktop and mobile.
 
 ### 5. Future Impact & Operational Continuity (Score: 10/10)
-- **What judges look for**: Beyond a 48-hour hackathon demo — long-term utility.
-- **How Team Zen’in Clan proves it**:
-  - Anticipates the late 2026 Suomi-NPP retirement.
-  - Prepares automated calibration handovers to NOAA-20 and NOAA-21.
-  - Fully open-source under MIT license from Gopalganj Science & Technology University, Bangladesh.
+- **Anticipating Sensor Retirement**: Specifically addresses the late 2026 Suomi-NPP decommissioning with automated NOAA-20/21 handover pipelines.
+- **Open Science Commitment**: Fully open-source under the MIT license with comprehensive reproducibility documentation.
 
 ---
 
-# PART 4: PRODUCTION & RECORDING PLAYBOOK FOR TEAM ZEN’IN CLAN
+# PART 4: AI VIDEO GENERATION & TEXT-TO-SPEECH (TTS) PLAYBOOK
 
-### Role-Specific Production Responsibilities:
+Use this guide when rendering the video and voiceover using Claude Opus, ElevenLabs, or automated multimodal AI tools:
 
-#### 1. Anika Islam (Presenter & Voiceover Lead)
-- **Vocal Delivery Tone**: Authoritative, articulate, scientifically confident, warm.
-- **Speaking Pacing**: Strictly ~140 words per minute. Practice with a metronome or stopwatch to hit scene timestamps within ±1 second.
-- **Key Pronunciation Guide**:
-  - *MODIS*: "MOH-dis" (Moderate Resolution Imaging Spectroradiometer)
-  - *VIIRS*: "VEERZ" (Visible Infrared Imaging Radiometer Suite)
-  - *FRP*: "Fire Radiative Power"
-  - *Nadir*: "NAY-deer" (downward satellite pointing angle)
-  - *Quantile*: "KWAN-tyle"
-  - *Observability*: "Ob-zer-va-BIL-ih-tee"
-  - *Zen’in*: "ZEN-in"
+### 1. AI Voiceover Configuration
+- **Voice Profile**: Deep, warm, articulate, authoritative documentary narrator (e.g., ElevenLabs "Adam", "Antoni", or "George").
+- **Speed & Cadence**: Set speech rate to `1.0x` (~135–140 words per minute). The script contains explicit `[PAUSE]` tags that ensure synchronization with the 215-second visual timeline.
+- **Audio Post-Processing**: Apply light compression, de-essing, and a -14 LUFS loudness target.
 
-#### 2. Sadhin Roy (Video Editor & Motion Designer)
-- **Resolution & Frame Rate**: `1920x1080` (Full HD, 60fps) or `4K 60fps`.
-- **Screen Recording**: Use OBS Studio (Bitrate: 30,000 Kbps, NVENC/Apple Silicon ProRes) capturing `https://bengalflare.vercel.app`. Press `F11` (or `Cmd+Shift+F`) to hide browser bars.
-- **Scene 1A VFX**: Add subtle camera push-in and slight chromatic aberration when the red 2012 spike graph cuts in.
-- **Scene 1B VFX**: Create the **Team Zen’in Clan** holographic glass roster card using After Effects / Premiere:
-  - Frosted glass backing (`rgba(10, 16, 28, 0.75)`, blur: 24px) with glowing border `#FFB800`.
-  - Six member photo chips or avatar badges with role titles.
-  - Include the GSTU emblem and Bangladesh flag badge cleanly in the upper corner.
-- **Audio Engineering**:
-  - Voiceover track normalized to -14 LUFS, with light compression and de-essing.
-  - Background music ducked to -22dB whenever Anika is speaking.
-  - High-tech sound effects: sub-bass drop at 0:08, glass ping at 0:15, radar sweeps in Scene 6.
+### 2. Screen Capture & Visual Generation
+- **Primary Footage**: Screen record the live web application directly at `https://bengalflare.vercel.app` in Google Chrome (press `F11` or `Cmd+Shift+F` for clean full-screen mode at 1080p 60fps).
+- **Scene 1A Opening Visual**: If using AI generative video (e.g., Runway Gen-3, Pika, Kling, or Sora), use this prompt:
+  > *"Cinematic photorealistic slow zoom out of Earth from low orbit at atmospheric dusk, glowing red thermal fire hotspots illuminating across South Asia and Bengal delta, aerospace telemetry heads-up display overlay, sci-fi documentary aesthetic, 8k resolution, 60fps."*
+- **Scene 1B Team Graphic**: Render an aerospace frosted glass HUD card displaying the Team Zen'in Clan roster and Gopalganj Science & Technology University credentials.
 
-#### 3. Kazi Mushfiqur Rahman (Team Lead & Backend Engineer) & Farhan Zaman Aurko (Team Support & Frontend Engineer)
-- **Deployment Quality**: Ensure `https://bengalflare.vercel.app` loads instantaneously with zero asset lag.
-- **Atlas Cache**: Pre-load map tiles in the browser cache before recording so zoom/pan transitions are butter-smooth at 60 FPS.
-
-#### 4. Nasir A. Efty (Product Manager) & Shakib Al Hasan (Researcher)
-- **Timing QA**: Verify that the video playback timer clocks in at exactly **3 minutes and 10 seconds (190.0s)**.
-- **Rubric QA**: Ensure all 5 Space Apps scoring criteria are unmistakably visible on screen.
-
----
-
-### Master Video Credits Slide (Final Frame at 3:10):
+### 3. Master Final Credits Slide (At 3:35):
 ```
 ===================================================================
                        B E N G A L F L A R E
