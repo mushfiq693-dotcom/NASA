@@ -133,13 +133,16 @@ export const DayDetail: React.FC = () => {
           }
         ]
       },
-      center: [90.4125, 23.8103],
-      zoom: 6.0,
-      pitch: 20,
+      center: [90.3563, 23.6850],
+      zoom: 5.85,
+      pitch: 15,
       interactive: true
     });
 
     map.on('load', () => {
+      setTimeout(() => {
+        map.resize();
+      }, 100);
       // 1. Bangladesh High-Resolution National Boundary
       map.addSource('bgd-boundary', {
         type: 'geojson',
