@@ -142,14 +142,7 @@ export const Calendar: React.FC = () => {
     return summaries;
   }, [allRecords, availableYears]);
 
-  // Maximum annual HFAI for normalizing the 24-year timeline sparkline
-  const maxAnnualHfai = useMemo(() => {
-    let maxVal = 1;
-    Object.values(yearlySummaries).forEach(s => {
-      if (s.totalHfai > maxVal) maxVal = s.totalHfai;
-    });
-    return maxVal;
-  }, [yearlySummaries]);
+
 
   // Construct complete, aligned 365/366 day annual calendar for the selected year
   const yearDays = useMemo<CalendarDay[]>(() => {
@@ -296,53 +289,6 @@ export const Calendar: React.FC = () => {
         </div>
       </header>
 
-      {/* 24-Year Macro Timeline Bar Strip (2001–2026) */}
-      <section className="macro-timeline-card">
-        <div className="macro-timeline-header">
-          <div className="macro-title-group">
-            <span className="macro-title">24-YEAR MULTI-DECADAL RECORD (2001–2026)</span>
-            <span className="macro-subtitle">Click any year bar to view its complete 365-day annual heatmap</span>
-          </div>
-          <div className="macro-era-badges">
-            <span className="era-badge modis-era">2001–2011: MODIS Era</span>
-            <span className="era-badge shift-era">2012: Sensor Step Shift</span>
-            <span className="era-badge viirs-era">2013–2026: VIIRS Era</span>
-          </div>
-        </div>
-
-        <div className="macro-bars-scroll">
-          <div className="macro-bars-container">
-            {availableYears.map(yr => {
-              const summary = yearlySummaries[yr];
-              const hfai = summary?.totalHfai || 0;
-              const barHeightPct = Math.max(12, Math.round((hfai / maxAnnualHfai) * 100));
-              const isSelected = yr === selectedYear;
-              const isShift = yr === '2012';
-              const isEarly = Number(yr) < 2012;
-
-              return (
-                <button
-                  key={yr}
-                  type="button"
-                  className={`macro-year-bar-item ${isSelected ? 'active' : ''} ${isShift ? 'is-shift-year' : ''}`}
-                  onClick={() => setSelectedYear(yr)}
-                  title={`Year ${yr} · Total HFAI: ${hfai.toLocaleString()} · Hotspots: ${summary?.totalRawCount.toLocaleString() || 0}`}
-                >
-                  <div className="bar-track">
-                    <div
-                      className={`bar-fill ${isEarly ? 'modis-color' : isShift ? 'shift-color' : 'viirs-color'}`}
-                      style={{ height: `${barHeightPct}%` }}
-                    />
-                  </div>
-                  <span className="bar-year-label">{yr.slice(2)}</span>
-                  {isShift && <span className="shift-dot" title="2012 Sensor Transition" />}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Selected Year Navigation & Controls */}
       <div className="calendar-year-nav-card">
         <div className="year-selector-main">
@@ -381,53 +327,6 @@ export const Calendar: React.FC = () => {
               title="Next Year"
             >
               Next Year ▶
-            </button>
-          </div>
-
-          {/* Quick-Jump Era Pills */}
-          <div className="quick-era-pills">
-            <span className="pills-label">KEY MILESTONES:</span>
-            <button
-              type="button"
-              className={`era-pill ${selectedYear === '2001' ? 'active' : ''}`}
-              onClick={() => setSelectedYear('2001')}
-            >
-              2001 (Early MODIS)
-            </button>
-            <button
-              type="button"
-              className={`era-pill shift-pill ${selectedYear === '2012' ? 'active' : ''}`}
-              onClick={() => setSelectedYear('2012')}
-            >
-              2012 (Sensor Step-Change)
-            </button>
-            <button
-              type="button"
-              className={`era-pill ${selectedYear === '2018' ? 'active' : ''}`}
-              onClick={() => setSelectedYear('2018')}
-            >
-              2018 (NOAA-20 VIIRS)
-            </button>
-            <button
-              type="button"
-              className={`era-pill anomaly-pill ${selectedYear === '2022' ? 'active' : ''}`}
-              onClick={() => setSelectedYear('2022')}
-            >
-              2022 (Severe Delta Anomaly)
-            </button>
-            <button
-              type="button"
-              className={`era-pill ${selectedYear === '2024' ? 'active' : ''}`}
-              onClick={() => setSelectedYear('2024')}
-            >
-              2024 (Consolidated)
-            </button>
-            <button
-              type="button"
-              className={`era-pill live-pill ${selectedYear === '2026' ? 'active' : ''}`}
-              onClick={() => setSelectedYear('2026')}
-            >
-              2026 (Present / S-NPP Countdown)
             </button>
           </div>
         </div>
