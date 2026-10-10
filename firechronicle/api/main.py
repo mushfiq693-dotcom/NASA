@@ -83,6 +83,7 @@ def get_calendar(
     aoi: str = Query("national", description="national, division, district, or cell"),
     start: Optional[str] = Query(None),
     end: Optional[str] = Query(None),
+    year: Optional[str] = Query(None),
     mode: str = Query("common_index", description="common_index or modis_equivalent")
 ):
     ts_path = REPORTS_DIR / "time_series.json"
@@ -95,6 +96,15 @@ def get_calendar(
     elif (FIXTURES_DIR / "time_series.json").exists():
         with open(FIXTURES_DIR / "time_series.json", 'r') as f:
             data = json.load(f).get("data", [])
+
+    # Filter by year if specified
+    if year:
+        data = [item for item in data if str(item.get("local_date", "")).startswith(str(year))]
+    elif start or end:
+        if start:
+            data = [item for item in data if str(item.get("local_date", "")) >= start]
+        if end:
+            data = [item for item in data if str(item.get("local_date", "")) <= end]
             
     # Process into daily calendar records with anomaly bands and observability
     calendar_records = []
