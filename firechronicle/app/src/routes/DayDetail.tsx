@@ -18,6 +18,11 @@ import './DayDetail.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
+// Fix Vite Web Worker loading in MapLibre GL JS
+if (typeof window !== 'undefined') {
+  maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
+}
+
 interface SatellitePass {
   satellite: string;
   sensor: string;
@@ -95,7 +100,7 @@ export const DayDetail: React.FC = () => {
 
   // Mini Map setup with Esri World Imagery (True Color Satellite)
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current || !dayData) return;
     const map = new maplibregl.Map({
       container: mapContainer.current,
       style: {
@@ -134,15 +139,17 @@ export const DayDetail: React.FC = () => {
         ]
       },
       center: [90.3563, 23.6850],
-      zoom: 5.85,
+      zoom: 6.25,
       pitch: 15,
       interactive: true
     });
 
     map.on('load', () => {
+      map.resize();
       setTimeout(() => {
         map.resize();
-      }, 100);
+      }, 150);
+
       // 1. Bangladesh High-Resolution National Boundary
       map.addSource('bgd-boundary', {
         type: 'geojson',
@@ -155,7 +162,7 @@ export const DayDetail: React.FC = () => {
         source: 'bgd-boundary',
         paint: {
           'line-color': '#ffffff',
-          'line-width': 1.6,
+          'line-width': 1.8,
           'line-opacity': 0.95
         }
       });
@@ -190,7 +197,7 @@ export const DayDetail: React.FC = () => {
         filter: ['==', ['get', 'date'], date as string],
         paint: {
           'circle-color': '#ff3700',
-          'circle-radius': 9,
+          'circle-radius': 10,
           'circle-opacity': 0.45,
           'circle-blur': 0.7
         }
@@ -210,17 +217,27 @@ export const DayDetail: React.FC = () => {
             'VIIRS', '#ffa600',
             '#ff3700'
           ],
-          'circle-radius': 4.5,
+          'circle-radius': 5.0,
           'circle-opacity': 0.98,
-          'circle-stroke-width': 1,
+          'circle-stroke-width': 1.2,
           'circle-stroke-color': '#ffe853'
         }
       });
     });
 
+    const ro = new ResizeObserver(() => {
+      map.resize();
+    });
+    if (mapContainer.current) {
+      ro.observe(mapContainer.current);
+    }
+
     mapRef.current = map;
-    return () => map.remove();
-  }, [date]);
+    return () => {
+      ro.disconnect();
+      map.remove();
+    };
+  }, [date, Boolean(dayData)]);
 
   // Replay Passes Animation Controller
   const handleReplayPasses = () => {
@@ -325,7 +342,12 @@ export const DayDetail: React.FC = () => {
             </button>
           </div>
 
-          <div className="mini-map" ref={mapContainer} />
+          <div className="mini-map" ref={mapContainer}>
+            <div className="mini-map-badge">
+              <span className="badge-pulse-dot"></span>
+              <span>NASA EOSDIS · TRUE COLOR SATELLITE VIEW</span>
+            </div>
+          </div>
 
           {/* 24-Hour Pass Timeline (Spec Section 5) */}
           <div className="pass-timeline-panel">
