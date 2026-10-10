@@ -30,9 +30,9 @@
   letter-spacing: 0.15em;
   padding: 4px 10px;
   border-radius: 4px;
-  background: rgba(46, 125, 50, 0.1);
-  color: #2E7D32;
-  border: 1px solid rgba(46, 125, 50, 0.3);
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  border: 1px solid rgba(0, 230, 118, 0.4);
   text-transform: uppercase;
 }
 
@@ -41,26 +41,29 @@
   font-size: 2.1rem;
   font-weight: 700;
   margin: 0;
-  color: var(--foreground);
+  color: #FFFFFF;
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 .live-lead {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: #CBD5E1;
   margin: 0;
   max-width: 900px;
 }
 
 /* CARDS */
 .live-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-rule);
-  border-top: 3px solid var(--accent-gold);
-  border-radius: 8px;
+  background: rgba(10, 16, 28, 0.62);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 3px solid #FF5E00;
+  border-radius: 10px;
   padding: 22px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -76,9 +79,10 @@
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--accent-gold);
+  color: #FFB800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(255, 184, 0, 0.4);
 }
 
 /* TOP GRID: HEARTBEAT & S-NPP COUNTDOWN */
@@ -105,15 +109,15 @@
 }
 
 .pill-active {
-  background: rgba(46, 125, 50, 0.1);
-  color: #2E7D32;
-  border: 1px solid rgba(46, 125, 50, 0.3);
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  border: 1px solid rgba(0, 230, 118, 0.4);
 }
 
 .pill-syncing {
-  background: var(--accent-muted);
-  color: var(--accent-gold);
-  border: 1px solid var(--accent-gold);
+  background: rgba(255, 94, 0, 0.2);
+  color: #FFB800;
+  border: 1px solid #FF5E00;
   animation: pulseSync 1s infinite alternate;
 }
 
@@ -137,18 +141,18 @@
   font-size: 2.2rem;
   font-weight: 700;
   font-family: var(--font-serif);
-  color: var(--foreground);
+  color: #FFFFFF;
   font-variant-numeric: tabular-nums;
 }
 
 .counter-sub {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-family: var(--font-mono);
-  color: var(--text-muted);
+  color: #CBD5E1;
 }
 
 .sync-now-btn {
-  background: var(--accent-gold);
+  background: linear-gradient(135deg, #FF5E00 0%, #FF9E00 100%);
   border: none;
   color: #ffffff;
   padding: 8px 18px;
@@ -158,13 +162,13 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 14px rgba(255, 94, 0, 0.4);
   transition: all 180ms ease;
 }
 
 .sync-now-btn:hover:not(:disabled) {
-  background: var(--accent-gold-light);
-  box-shadow: var(--shadow-accent);
+  background: linear-gradient(135deg, #FF6A00 0%, #FFB800 100%);
+  box-shadow: 0 6px 20px rgba(255, 106, 0, 0.6);
 }
 
 .polling-progress-bar {
@@ -194,9 +198,9 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   padding: 2px 8px;
-  background: rgba(197, 106, 16, 0.1);
-  color: #C56A10;
-  border: 1px solid rgba(197, 106, 16, 0.3);
+  background: rgba(255, 184, 0, 0.15);
+  color: #FFB800;
+  border: 1px solid rgba(255, 184, 0, 0.4);
   border-radius: 4px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -220,13 +224,13 @@
   font-size: 2rem;
   font-weight: 700;
   font-family: var(--font-serif);
-  color: var(--foreground);
+  color: #FFFFFF;
   font-variant-numeric: tabular-nums;
 }
 
 .unit-name {
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: #CBD5E1;
   font-family: var(--font-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -235,13 +239,13 @@
 .unit-sep {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--text-muted);
+  color: #CBD5E1;
   margin-top: -12px;
 }
 
 .snpp-note {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #CBD5E1;
   margin: 0;
   line-height: 1.5;
 }
@@ -262,7 +266,7 @@
 .det-count {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--accent-gold);
+  color: #FFB800;
   font-weight: 700;
 }
 
@@ -277,15 +281,15 @@
   padding: 10px;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--text-muted);
+  color: #CBD5E1;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border-bottom: 1px solid var(--border-rule);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .detections-table td {
   padding: 11px 10px;
-  border-bottom: 1px solid var(--border-rule);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .det-row {
@@ -294,7 +298,7 @@
 
 .new-arrival-row {
   animation: slideInDown 500ms cubic-bezier(0.22, 1, 0.36, 1);
-  background: var(--accent-muted);
+  background: rgba(255, 94, 0, 0.15);
 }
 
 @keyframes slideInDown {
@@ -318,33 +322,37 @@
 }
 
 .sat-noaa20, .sat-noaa21 {
-  background: rgba(46, 125, 50, 0.1);
-  color: #2E7D32;
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  border: 1px solid rgba(0, 230, 118, 0.35);
 }
 
 .sat-snpp {
-  background: rgba(197, 106, 16, 0.1);
-  color: #C56A10;
+  background: rgba(255, 184, 0, 0.15);
+  color: #FFB800;
+  border: 1px solid rgba(255, 184, 0, 0.35);
 }
 
 .sat-aqua {
-  background: var(--accent-muted);
-  color: var(--accent-gold);
+  background: rgba(0, 229, 255, 0.15);
+  color: #00E5FF;
+  border: 1px solid rgba(0, 229, 255, 0.35);
 }
 
 .sat-terra {
-  background: rgba(168, 50, 38, 0.1);
-  color: #A83226;
+  background: rgba(255, 82, 82, 0.15);
+  color: #FF5252;
+  border: 1px solid rgba(255, 82, 82, 0.35);
 }
 
 .mono-text {
   font-family: var(--font-mono);
-  color: var(--foreground);
+  color: #FFFFFF;
 }
 
 .frp-cell {
   font-family: var(--font-mono);
-  color: #C56A10;
+  color: #FF5E00;
   font-weight: 700;
 }
 
@@ -358,18 +366,21 @@
 }
 
 .conf-high {
-  background: rgba(46, 125, 50, 0.12);
-  color: #2E7D32;
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  border: 1px solid rgba(0, 230, 118, 0.35);
 }
 
 .conf-nominal {
-  background: var(--accent-muted);
-  color: var(--accent-gold);
+  background: rgba(255, 184, 0, 0.15);
+  color: #FFB800;
+  border: 1px solid rgba(255, 184, 0, 0.35);
 }
 
 .conf-low {
-  background: rgba(107, 107, 107, 0.12);
-  color: var(--text-muted);
+  background: rgba(148, 163, 184, 0.15);
+  color: #CBD5E1;
+  border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 /* RADAR CARD */
@@ -383,8 +394,8 @@
   position: relative;
   width: 100%;
   height: 180px;
-  background: #111417;
-  border: 1px solid var(--border-rule);
+  background: #080A14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -393,10 +404,10 @@
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(circle at center, transparent 30%, rgba(184, 134, 11, 0.12) 31%, transparent 32%),
-    radial-gradient(circle at center, transparent 60%, rgba(184, 134, 11, 0.12) 61%, transparent 62%),
-    linear-gradient(to right, transparent 49.5%, rgba(184, 134, 11, 0.15) 50%, transparent 50.5%),
-    linear-gradient(to bottom, transparent 49.5%, rgba(184, 134, 11, 0.15) 50%, transparent 50.5%);
+    radial-gradient(circle at center, transparent 30%, rgba(255, 94, 0, 0.12) 31%, transparent 32%),
+    radial-gradient(circle at center, transparent 60%, rgba(255, 94, 0, 0.12) 61%, transparent 62%),
+    linear-gradient(to right, transparent 49.5%, rgba(255, 94, 0, 0.15) 50%, transparent 50.5%),
+    linear-gradient(to bottom, transparent 49.5%, rgba(255, 94, 0, 0.15) 50%, transparent 50.5%);
 }
 
 .radar-sweep-beam {
@@ -406,7 +417,7 @@
   width: 120px;
   height: 120px;
   transform-origin: 0 0;
-  background: conic-gradient(from 0deg, rgba(184, 134, 11, 0.45) 0deg, transparent 60deg);
+  background: conic-gradient(from 0deg, rgba(255, 94, 0, 0.45) 0deg, transparent 60deg);
   animation: radarRotate 4s linear infinite;
   border-radius: 50%;
 }
@@ -421,8 +432,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #A83226;
-  box-shadow: 0 0 8px #A83226;
+  background: #FF5E00;
+  box-shadow: 0 0 10px #FF5E00;
   transform: translate(-50%, -50%);
 }
 
@@ -430,7 +441,7 @@
   content: '';
   position: absolute;
   inset: -6px;
-  border: 1px solid #A83226;
+  border: 1px solid #FF5E00;
   border-radius: 50%;
   animation: rippleRing 1.5s ease-out infinite;
 }
@@ -442,7 +453,7 @@
 
 .radar-caption {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: #CBD5E1;
   text-align: center;
   font-family: var(--font-mono);
 }
@@ -462,7 +473,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
-  color: var(--foreground);
+  color: #F8FAFC;
 }
 
 .badge.healthy {
@@ -471,10 +482,34 @@
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 4px;
-  background: rgba(46, 125, 50, 0.1);
-  color: #2E7D32;
-  border: 1px solid rgba(46, 125, 50, 0.3);
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  border: 1px solid rgba(0, 230, 118, 0.35);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .live-container {
+    padding: 1.25rem 1rem 3rem;
+  }
+  .live-header h1 {
+    font-size: 1.6rem;
+  }
+  .counter-num {
+    font-size: 1.8rem;
+  }
+  .countdown-display {
+    gap: 8px;
+  }
+  .unit-val {
+    font-size: 1.5rem;
+  }
+  .detections-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
 

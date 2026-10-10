@@ -227,7 +227,7 @@ export const Lab: React.FC = () => {
         <span className="scene-tag">HARMONIZATION BENCHMARK & CALIBRATION SUITE</span>
         <h1>Sensor Harmonization & Model Evolution Lab</h1>
         <p className="lab-subtitle">
-          Step through historical model baselines (B0 $\rightarrow$ B5) to inspect how the 2012 VIIRS sensor discontinuity is resolved via Quantile Regression Forests.
+          Step through historical model baselines (B0 → B5) to inspect how the 2012 VIIRS sensor discontinuity is resolved via Quantile Regression Forests.
         </p>
       </header>
 
@@ -245,7 +245,7 @@ export const Lab: React.FC = () => {
             className={`auto-step-btn ${isAutoStepping ? 'active' : ''}`}
             onClick={() => setIsAutoStepping(!isAutoStepping)}
           >
-            {isAutoStepping ? '⏸ PAUSE STEPPER' : '▶ AUTO-PLAY (B0 $\rightarrow$ B5)'}
+            {isAutoStepping ? '⏸ PAUSE STEPPER' : '▶ AUTO-PLAY (B0 → B5)'}
           </button>
           <button
             className="stepper-btn"
@@ -328,20 +328,20 @@ export const Lab: React.FC = () => {
                 animation: { duration: 700, easing: 'easeOutQuart' },
                 scales: {
                   x: {
-                    title: { display: true, text: 'MODIS Collocated Detections (1 km)', color: '#1A1A1A', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
-                    grid: { color: 'rgba(232, 228, 223, 0.8)' },
-                    ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } },
+                    title: { display: true, text: 'MODIS Collocated Detections (1 km)', color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } },
                     max: 120
                   },
                   y: {
-                    title: { display: true, text: `${activeBaseline.code} Calibrated Value`, color: '#1A1A1A', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
-                    grid: { color: 'rgba(232, 228, 223, 0.8)' },
-                    ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } },
+                    title: { display: true, text: `${activeBaseline.code} Calibrated Value`, color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } },
                     max: 150
                   }
                 },
                 plugins: {
-                  legend: { labels: { color: '#1A1A1A', font: { family: "'Source Sans 3', sans-serif", size: 12 } } }
+                  legend: { labels: { color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12 } } }
                 }
               }}
             />
@@ -361,11 +361,11 @@ export const Lab: React.FC = () => {
                 maintainAspectRatio: false,
                 animation: { duration: 600 },
                 scales: {
-                  x: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
+                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
                   y: {
-                    title: { display: true, text: 'Absolute Bias (%)', color: '#1A1A1A', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
-                    grid: { color: 'rgba(232, 228, 223, 0.8)' },
-                    ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } }
+                    title: { display: true, text: 'Absolute Bias (%)', color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } }
                   }
                 },
                 plugins: { legend: { display: false } }
@@ -402,8 +402,8 @@ export const Lab: React.FC = () => {
                 maintainAspectRatio: false,
                 animation: { duration: 500 },
                 scales: {
-                  x: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
-                  y: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } }, max: 110 }
+                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
+                  y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } }, max: 110 }
                 },
                 plugins: { legend: { display: false } }
               }}

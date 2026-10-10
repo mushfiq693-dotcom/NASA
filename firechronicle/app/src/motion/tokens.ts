@@ -1,5 +1,5 @@
 /**
- * FireChronicle Motion Design Tokens
+ * BengalFlare Motion Design Tokens
  * Spec from animation_prompt_all_pages.md Section 1
  */
 

@@ -355,8 +355,8 @@ export const DayDetail: React.FC = () => {
       {
         label: 'Daily HFAI',
         data: recentSeries.map(d => d.total_hfai),
-        borderColor: '#B8860B',
-        backgroundColor: 'rgba(184, 134, 11, 0.12)',
+        borderColor: '#FF6A00',
+        backgroundColor: 'rgba(255, 106, 0, 0.20)',
         fill: true,
         tension: 0.2,
         pointRadius: 2,
@@ -365,7 +365,7 @@ export const DayDetail: React.FC = () => {
       {
         label: 'Climatology Baseline Mean',
         data: recentSeries.map(() => 45),
-        borderColor: '#6B6B6B',
+        borderColor: '#00E5FF',
         borderDash: [5, 5],
         pointRadius: 0
       }
@@ -504,10 +504,10 @@ export const DayDetail: React.FC = () => {
                 data={chartData}
                 options={{
                   maintainAspectRatio: false,
-                  plugins: { legend: { position: 'top', labels: { color: '#1A1A1A', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } } } },
+                  plugins: { legend: { position: 'top', labels: { color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } } } },
                   scales: {
-                    x: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
-                    y: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 10 } } }
+                    x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } }
                   }
                 }}
               />

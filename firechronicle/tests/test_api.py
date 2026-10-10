@@ -8,7 +8,7 @@ def test_api_root():
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
-    assert data["service"] == "FireChronicle API"
+    assert data["service"] == "BengalFlare API"
     assert data["status"] == "operational"
 
 def test_api_availability():

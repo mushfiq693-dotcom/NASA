@@ -11,9 +11,9 @@ const VIEWPORTS = [
   { name: 'mobile', width: 390, height: 844 }
 ];
 
-test.describe('FireChronicle Motion & Performance Acceptance (motion:check)', () => {
+test.describe('BengalFlare Motion & Performance Acceptance (motion:check)', () => {
   let motionSummary: string[] = [
-    '# FireChronicle Motion & Animation Pass Verification Report',
+    '# BengalFlare Motion & Animation Pass Verification Report',
     '',
     '| Route | Viewport | Motion Check | Median FPS | Result |',
     '|---|---|---|---|---|'

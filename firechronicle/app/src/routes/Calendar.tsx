@@ -78,11 +78,11 @@ export const Calendar: React.FC = () => {
 
   const getColor = (hfai: number | undefined, mode: string) => {
     const val = typeof hfai === 'number' ? (mode === 'modis_equivalent' ? hfai * 1.4 : hfai) : 0;
-    if (val <= 0) return 'var(--thermal-none, #E8E4DF)';
-    if (val < 40) return '#45a29e'; // Normal baseline
-    if (val < 90) return '#ffeb3b'; // Elevated
-    if (val < 200) return '#ff9800'; // High
-    return '#f44336'; // Extreme thermal
+    if (val <= 0) return 'rgba(255, 255, 255, 0.08)';
+    if (val < 40) return '#00E5FF'; // Ion Cyan (Normal baseline)
+    if (val < 90) return '#FFB800'; // Corona Gold (Elevated)
+    if (val < 200) return '#FF5E00'; // Solar Flare Orange (High)
+    return '#FF1744'; // Supernova Crimson (Extreme)
   };
 
   return (

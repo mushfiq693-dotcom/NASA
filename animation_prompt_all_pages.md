@@ -1,4 +1,4 @@
-# FireChronicle — Motion & Animation Pass (all pages)
+# BengalFlare — Motion & Animation Pass (all pages)
 
 Scope: frontend only. Do not change pipeline, models, API contracts, or the layout contract from recovery_prompt_ui_first_slice.md (R3: `100dvh`, `min-width:0`, internal scroll, no horizontal overflow). Read master_prompt_firechronicle_v3.md Section 11 (UI rules, copy rules) and keep every rule there.
 

@@ -1933,12 +1933,12 @@ sensor disagreement
 
 # 52. Final Project Concept
 
-## FireChronicle
+## BengalFlare
 ### A Harmonized, Observation-Aware Burning Activity Calendar
 
 ### One-line pitch
 
-> **FireChronicle transforms NASA's MODIS and VIIRS active-fire observations into a common uncertainty-aware historical activity record, explicitly accounting for sensor differences and observation gaps, then turns that record into a calendar showing when and where burning is normal, unusual, persistent, or potentially critical.**
+> **BengalFlare transforms NASA's MODIS and VIIRS active-fire observations into a common uncertainty-aware historical activity record, explicitly accounting for sensor differences and observation gaps, then turns that record into a calendar showing when and where burning is normal, unusual, persistent, or potentially critical.**
 
 ### Scientific novelty
 

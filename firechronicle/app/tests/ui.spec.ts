@@ -12,11 +12,11 @@ const VIEWPORTS = [
 ];
 
 const BANNED_PHRASES = [
-  "NASA confirmed", "proven by NASA", "NASA's FireChronicle", "FireChronicle model is",
+  "NASA confirmed", "proven by NASA", "NASA's BengalFlare", "BengalFlare model is",
   "predicts", "real-time fire detection", "prevents fires"
 ];
 
-test.describe('FireChronicle UI Acceptance', () => {
+test.describe('BengalFlare UI Acceptance', () => {
   let summary: string[] = ['| Route | Viewport | Result |', '|---|---|---|'];
 
   test.afterAll(() => {

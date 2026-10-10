@@ -1,4 +1,4 @@
-# FireChronicle — Master Build Prompt v3
+# BengalFlare — Master Build Prompt v3
 NASA Space Apps Challenge 2026 · Harmonization of MODIS and VIIRS Hot Spots
 (Merged from: master_prompt_firechronicle_system_build.md + MODIS_VIIRS_Harmonization_Research_Report_v2.md. Where they conflicted, this file wins.)
 
@@ -20,10 +20,10 @@ Operating rules:
 
 ## 1. Mission and identity
 
-Build **FireChronicle**: a web application that harmonizes NASA MODIS and VIIRS active-fire records (2000–present) into a common, uncertainty-aware, observability-aware **Burning Activity Calendar**, with Bangladesh as the primary demonstration region and South Asia as the expansion target.
+Build **BengalFlare**: a web application that harmonizes NASA MODIS and VIIRS active-fire records (2000–present) into a common, uncertainty-aware, observability-aware **Burning Activity Calendar**, with Bangladesh as the primary demonstration region and South Asia as the expansion target.
 
 One-line pitch (use verbatim in README header):
-> FireChronicle turns NASA's MODIS and VIIRS active-fire observations into one uncertainty-aware historical activity record that separates "no fire" from "no visibility", then shows when and where burning is normal, unusual, persistent, or critical.
+> BengalFlare turns NASA's MODIS and VIIRS active-fire observations into one uncertainty-aware historical activity record that separates "no fire" from "no visibility", then shows when and where burning is normal, unusual, persistent, or critical.
 
 Intended users: early-warning and emergency-response staff, scientists, land managers.
 
@@ -49,7 +49,7 @@ P7. **Preserve raw data.** Deduplication produces `cluster_count` alongside `raw
 
 P8. **No hard-coded sensor corrections.** Do not hard-code "scale VIIRS by 65%" or a fixed bow-tie geometry. Learn adjustments from overlap data per context; derive pixel area from each record's `scan` and `track` fields.
 
-P9. **Project-defined thresholds are labelled as such.** Z-score/percentile bands are "FireChronicle thresholds", never "NASA thresholds".
+P9. **Project-defined thresholds are labelled as such.** Z-score/percentile bands are "BengalFlare thresholds", never "NASA thresholds".
 
 P10. **Availability is read at runtime**, not from static pages (see 3.3).
 
@@ -186,7 +186,7 @@ Metric | Raw disagreement | Harmonized | Improvement — for each split type.
 - Baseline: per cell-group and calendar-day, windowed climatology (default ±5 days → 11-day window) built only from observable cell-days.
 - Because fire data are zero-inflated and skewed, compute **both** the classic Z = (x − μ)/σ and a robust version (median/MAD) plus empirical percentile; use the robust/percentile version when σ ≈ 0 or zero fraction > configurable limit.
 - STL decomposition (seasonal-trend, Loess) on aggregated weekly/daily series; handle zero inflation (ZIP or hurdle) when modelling counts.
-- FireChronicle bands (project-defined, configurable): Normal Z ≤ 1; Elevated 1–2; High 2–3; Extreme > 3 (and/or percentile ≥ P95). Show the band **and** the observability label together.
+- BengalFlare bands (project-defined, configurable): Normal Z ≤ 1; Elevated 1–2; High 2–3; Extreme > 3 (and/or percentile ≥ P95). Show the band **and** the observability label together.
 - Critical-period logic: anomaly band ≥ High for ≥ N consecutive days with Observability ≥ Medium, or Extreme regardless of observability with a "low-visibility" annotation.
 
 ---

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { MotionMode } from './tokens';
 
-const STORAGE_KEY = 'firechronicle_motion_mode';
+const STORAGE_KEY = 'bengalflare_motion_mode';
 
 export function getInitialMotionMode(): MotionMode {
   const saved = localStorage.getItem(STORAGE_KEY) as MotionMode | null;

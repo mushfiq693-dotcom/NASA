@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="FireChronicle API",
+    title="BengalFlare API",
     version="1.0.0",
     description="Harmonization of NASA MODIS and VIIRS Active-Fire Observations (2000-Present)"
 )
@@ -37,7 +37,7 @@ FIRMS_MAP_KEY = os.environ.get("FIRMS_MAP_KEY", "1f1f9a28bc8561f922237c272055e27
 @app.get("/")
 def get_root():
     return {
-        "service": "FireChronicle API",
+        "service": "BengalFlare API",
         "version": "1.0.0",
         "region": "Bangladesh (Primary) · South Asia (Target)",
         "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),

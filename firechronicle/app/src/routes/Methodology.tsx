@@ -334,7 +334,7 @@ export const Methodology: React.FC = () => {
             <span className="spec-tag">Continuous FRP Surface</span>
           </div>
           <p>
-            Instead of treating fires as isolated dimensionless points, FireChronicle constructs a continuous 
+            Instead of treating fires as isolated dimensionless points, BengalFlare constructs a continuous 
             kernel density surface using sensor-specific Gaussian kernels with bandwidth parameter <code>σ</code> 
             proportional to the instantaneous field of view (IFOV).
           </p>

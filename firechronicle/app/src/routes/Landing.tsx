@@ -30,6 +30,7 @@ export const Landing: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [activeViirsPixel, setActiveViirsPixel] = useState<number>(0);
   const [missingMode, setMissingMode] = useState<'normal' | 'missing'>('normal');
+  const [isHudMinimized, setIsHudMinimized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -100,8 +101,8 @@ export const Landing: React.FC = () => {
       {
         label: 'Raw Detections (Discontinuity at 2012 VIIRS Entry)',
         data: rawData,
-        borderColor: '#A83226',
-        backgroundColor: 'rgba(168, 50, 38, 0.06)',
+        borderColor: '#FF1744',
+        backgroundColor: 'rgba(255, 23, 68, 0.15)',
         tension: 0.1,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -109,8 +110,8 @@ export const Landing: React.FC = () => {
       {
         label: 'Harmonized HFAI (Continuous Baseline)',
         data: harmonizedData,
-        borderColor: '#B8860B',
-        backgroundColor: 'rgba(184, 134, 11, 0.1)',
+        borderColor: '#FF9E00',
+        backgroundColor: 'rgba(255, 158, 0, 0.2)',
         tension: 0.2,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -143,41 +144,69 @@ export const Landing: React.FC = () => {
         
         {/* Scene 1: Constellation */}
         <section className="scene scene-1">
-          <div className="scene-content">
-            <div className="clip-reveal-title">
-              <h1 className="reveal-line line-1">Five satellites, two sensor families,</h1>
-              <h1 className="reveal-line line-2">one continuous burning record.</h1>
-            </div>
-            <p className="subtitle-text">
-              Harmonizing 24+ years of NASA MODIS (Terra & Aqua) and VIIRS (S-NPP, NOAA-20 & NOAA-21) active-fire observations into an uncertainty-aware historical activity calendar.
-            </p>
-            
-            <div className="cta-row">
-              <button className="primary-btn" onClick={() => navigate('/atlas')}>
-                Launch Atlas Explorer
-              </button>
-              <button className="secondary-btn" onClick={() => navigate('/calendar')}>
-                Burning Activity Calendar
-              </button>
-            </div>
-            
-            <div className="stats-chips">
-              <div className="stat-chip" title="MODIS Collection 6.1 (1km)">
-                <span className="chip-badge modis-badge">MODIS</span>
-                <strong>{modisCount.toLocaleString()}</strong>
-                <span className="chip-label">Filtered Detections</span>
+          <div className={`scene-content ${isHudMinimized ? 'hud-minimized' : ''}`}>
+            {isHudMinimized ? (
+              <div className="hud-minimized-bar">
+                <span className="hud-minimized-title">
+                  <span className="hud-pulse-dot"></span>
+                  BENGALFLARE · CONSTELLATION HUD
+                </span>
+                <button
+                  className="hud-toggle-btn"
+                  onClick={() => setIsHudMinimized(false)}
+                  title="Expand mission control panel"
+                >
+                  <span className="hud-icon">⤢</span> Expand Panel
+                </button>
               </div>
-              <div className="stat-chip" title="VIIRS 375m Active Fire (VNP14 / VJ114 / VJ214)">
-                <span className="chip-badge viirs-badge">VIIRS</span>
-                <strong>{viirsCount.toLocaleString()}</strong>
-                <span className="chip-label">High-Resolution Detections</span>
-              </div>
-              <div className="stat-chip" title="Accounting for unobservable passes">
-                <span className="chip-badge obs-badge">STATUS</span>
-                <strong>{missingDays.toLocaleString()}</strong>
-                <span className="chip-label">Observability Gaps Accounted</span>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="scene-content-header">
+                  <span className="scene-tag">BENGALFLARE · ORBITAL THERMAL INTELLIGENCE</span>
+                  <button
+                    className="hud-toggle-btn"
+                    onClick={() => setIsHudMinimized(true)}
+                    title="Minimize panel to inspect full 3D satellite globe"
+                  >
+                    <span className="hud-icon">👁</span> View Full Globe
+                  </button>
+                </div>
+                <div className="clip-reveal-title">
+                  <h1 className="reveal-line line-1">Five satellites, two sensor families,</h1>
+                  <h1 className="reveal-line line-2">one continuous burning record.</h1>
+                </div>
+                <p className="subtitle-text">
+                  Harmonizing 24+ years of NASA MODIS (Terra & Aqua) and VIIRS (S-NPP, NOAA-20 & NOAA-21) active-fire observations into an uncertainty-aware historical activity calendar.
+                </p>
+                
+                <div className="cta-row">
+                  <button className="primary-btn" onClick={() => navigate('/atlas')}>
+                    Launch Atlas Explorer
+                  </button>
+                  <button className="secondary-btn" onClick={() => navigate('/calendar')}>
+                    Burning Activity Calendar
+                  </button>
+                </div>
+                
+                <div className="stats-chips">
+                  <div className="stat-chip" title="MODIS Collection 6.1 (1km)">
+                    <span className="chip-badge modis-badge">MODIS</span>
+                    <strong>{modisCount.toLocaleString()}</strong>
+                    <span className="chip-label">Filtered Detections</span>
+                  </div>
+                  <div className="stat-chip" title="VIIRS 375m Active Fire (VNP14 / VJ114 / VJ214)">
+                    <span className="chip-badge viirs-badge">VIIRS</span>
+                    <strong>{viirsCount.toLocaleString()}</strong>
+                    <span className="chip-label">High-Resolution Detections</span>
+                  </div>
+                  <div className="stat-chip" title="Accounting for unobservable passes">
+                    <span className="chip-badge obs-badge">STATUS</span>
+                    <strong>{missingDays.toLocaleString()}</strong>
+                    <span className="chip-label">Observability Gaps Accounted</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
@@ -219,7 +248,7 @@ export const Landing: React.FC = () => {
             <span className="scene-tag">2012 SENSOR TRANSITION</span>
             <h2>The step in the historical record.</h2>
             <p>
-              Raw detection counts jumped dramatically (+210%) when VIIRS launched in 2012. FireChronicle's two-stage harmonizer restores a continuous, uncertainty-bounded baseline.
+              Raw detection counts jumped dramatically (+210%) when VIIRS launched in 2012. BengalFlare's two-stage harmonizer restores a continuous, uncertainty-bounded baseline.
             </p>
             
             <div className="chart-container">
@@ -231,7 +260,7 @@ export const Landing: React.FC = () => {
                   plugins: {
                     legend: {
                       position: 'top',
-                      labels: { color: '#1A1A1A', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } }
+                      labels: { color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } }
                     },
                     tooltip: {
                       callbacks: {
@@ -240,8 +269,8 @@ export const Landing: React.FC = () => {
                     }
                   },
                   scales: {
-                    x: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 11 } } },
-                    y: { grid: { color: 'rgba(232, 228, 223, 0.8)' }, ticks: { color: '#6B6B6B', font: { family: "'IBM Plex Mono', monospace", size: 11 } } }
+                    x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 11 } } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 11 } } }
                   }
                 }}
               />
@@ -258,7 +287,7 @@ export const Landing: React.FC = () => {
             <span className="scene-tag">OBSERVABILITY PRINCIPLE</span>
             <h2>Observed Zero ≠ Absence of Fire.</h2>
             <p>
-              When a satellite pass is obscured by monsoon clouds or missing due to an orbital outage, FireChronicle explicitly flags <code>POTENTIALLY_OBSCURED</code> or <code>MISSING_PRODUCT</code> rather than falsely claiming zero fire activity.
+              When a satellite pass is obscured by monsoon clouds or missing due to an orbital outage, BengalFlare explicitly flags <code>POTENTIALLY_OBSCURED</code> or <code>MISSING_PRODUCT</code> rather than falsely claiming zero fire activity.
             </p>
 
             <div className="mode-toggle-demo">

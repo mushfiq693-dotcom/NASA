@@ -1,4 +1,4 @@
-# FireChronicle Motion & Animation Pass Verification Report
+# BengalFlare Motion & Animation Pass Verification Report
 
 | Route | Viewport | Motion Check | Median FPS | Result |
 |---|---|---|---|---|
