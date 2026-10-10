@@ -1,1 +1,1 @@
-{"data": {"total_detections_modis": 154320, "total_detections_viirs": 432100, "missing_platform_days": 14, "record_coverage_start": "2018-01-01", "record_coverage_end": "2023-12-31"}, "source": "synthetic"}
+{"data": {"total_detections_modis": 61903, "total_detections_viirs": 129452, "total_raw_detections": 191355, "missing_platform_days": 14, "record_coverage_start": "2001-01-18", "record_coverage_end": "2026-10-09", "is_real_nasa_data": true}, "source": "real"}

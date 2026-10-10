@@ -87,11 +87,120 @@ def generate_synthetic_data(start_year=2018, end_year=2023, n_records=50000):
     
     return df
 
+def load_real_firms_data(data_raw_dir, project_root):
+    frames = []
+    
+    # 1. MODIS Archive
+    modis_paths = [
+        data_raw_dir / "modis_archive.csv",
+        project_root.parent / "DL_FIRE_M-C61_820366" / "fire_archive_M-C61_820366.csv"
+    ]
+    for p in modis_paths:
+        if p.exists():
+            print(f"Loading MODIS Archive from {p}...")
+            df_m = pd.read_csv(p)
+            df_m['sensor'] = 'MODIS'
+            df_m['platform'] = df_m['satellite'].fillna('Terra')
+            df_m['product'] = 'Standard'
+            df_m['processing_stream'] = 'Standard'
+            df_m['source_file'] = p.name
+            frames.append(df_m)
+            break
+            
+    # 2. MODIS NRT
+    modis_nrt_paths = [
+        data_raw_dir / "modis_nrt.csv",
+        project_root.parent / "DL_FIRE_M-C61_820366" / "fire_nrt_M-C61_820366.csv"
+    ]
+    for p in modis_nrt_paths:
+        if p.exists():
+            print(f"Loading MODIS NRT from {p}...")
+            df_mn = pd.read_csv(p)
+            if len(df_mn) > 0:
+                df_mn['sensor'] = 'MODIS'
+                df_mn['platform'] = df_mn['satellite'].fillna('Terra')
+                df_mn['product'] = 'NRT'
+                df_mn['processing_stream'] = 'NRT'
+                df_mn['source_file'] = p.name
+                if 'type' not in df_mn.columns:
+                    df_mn['type'] = 0
+                frames.append(df_mn)
+            break
+
+    # 3. VIIRS Archive
+    viirs_paths = [
+        data_raw_dir / "viirs_archive.csv",
+        project_root.parent / "DL_FIRE_SV-C2_820367" / "fire_archive_SV-C2_820367.csv"
+    ]
+    for p in viirs_paths:
+        if p.exists():
+            print(f"Loading VIIRS Archive from {p}...")
+            df_v = pd.read_csv(p)
+            df_v['sensor'] = 'VIIRS'
+            df_v['platform'] = 'S-NPP'
+            df_v['product'] = 'Standard'
+            df_v['processing_stream'] = 'Standard'
+            df_v['source_file'] = p.name
+            frames.append(df_v)
+            break
+
+    # 4. VIIRS NRT
+    viirs_nrt_paths = [
+        data_raw_dir / "viirs_nrt.csv",
+        project_root.parent / "DL_FIRE_SV-C2_820367" / "fire_nrt_SV-C2_820367.csv"
+    ]
+    for p in viirs_nrt_paths:
+        if p.exists():
+            print(f"Loading VIIRS NRT from {p}...")
+            df_vn = pd.read_csv(p)
+            if len(df_vn) > 0:
+                df_vn['sensor'] = 'VIIRS'
+                df_vn['platform'] = 'S-NPP'
+                df_vn['product'] = 'NRT'
+                df_vn['processing_stream'] = 'NRT'
+                df_vn['source_file'] = p.name
+                if 'type' not in df_vn.columns:
+                    df_vn['type'] = 0
+                frames.append(df_vn)
+            break
+
+    if not frames:
+        print("No real NASA FIRMS data found, falling back to synthetic generator...")
+        return generate_synthetic_data()
+
+    print(f"Concatenating {len(frames)} NASA FIRMS datasets...")
+    df = pd.concat(frames, ignore_index=True)
+    df['observation_id'] = [str(uuid.uuid4()) for _ in range(len(df))]
+
+    # Parse acq_date and acq_time into UTC datetime
+    acq_times = df['acq_time'].astype(str).str.zfill(4)
+    hours = acq_times.str[:2]
+    minutes = acq_times.str[2:]
+    df['acq_datetime_utc'] = pd.to_datetime(
+        df['acq_date'] + ' ' + hours + ':' + minutes + ':00',
+        errors='coerce'
+    )
+    df['acq_datetime_utc'] = df['acq_datetime_utc'].fillna(pd.to_datetime(df['acq_date']))
+
+    # Ensure required fields
+    df['version'] = df['version'].astype(str)
+    df['satellite'] = df['satellite'].astype(str)
+    df['instrument'] = df['instrument'].astype(str)
+    df['confidence'] = df['confidence'].astype(str)
+    df['frp'] = pd.to_numeric(df['frp'], errors='coerce').fillna(0.0)
+    df['scan'] = pd.to_numeric(df['scan'], errors='coerce').fillna(1.0)
+    df['track'] = pd.to_numeric(df['track'], errors='coerce').fillna(1.0)
+    df['daynight'] = df['daynight'].astype(str).fillna('D')
+    df['type'] = pd.to_numeric(df['type'], errors='coerce').fillna(0).astype(int)
+
+    print(f"Successfully loaded {len(df):,} authentic NASA FIRMS observations.")
+    return df
+
 def run_qa_filtering(df, reports_dir):
     """
     Applies QA filtering and writes a summary report.
     Filters:
-    1. MODIS confidence >= 30, VIIRS confidence != 'low'
+    1. MODIS confidence >= 30, VIIRS confidence != 'low' ('l')
     2. type == 0 (presumed vegetation)
     """
     qa_summary = {
@@ -102,10 +211,14 @@ def run_qa_filtering(df, reports_dir):
     
     # 1. Filter Confidence
     def is_confident(row):
+        c = str(row['confidence']).strip().lower()
         if row['sensor'] == 'MODIS':
-            return int(row['confidence']) >= 30
+            try:
+                return float(c) >= 30
+            except:
+                return True
         else:
-            return row['confidence'] != 'low'
+            return c not in ['l', 'low']
             
     mask_conf = df.apply(is_confident, axis=1)
     df_conf = df[mask_conf]
@@ -139,20 +252,14 @@ if __name__ == "__main__":
     for d in [metadata_dir, data_raw_dir, data_interim_dir, reports_dir]:
         d.mkdir(parents=True, exist_ok=True)
 
-    print("Starting Phase B: Pilot Data Ingestion & QA...")
+    print("Starting Phase B: Real NASA FIRMS Data Ingestion & QA...")
     
-    # 1. Fetch Boundary
-    fetch_bangladesh_boundary(metadata_dir)
+    # 1. Fetch Boundary if missing
+    if not (metadata_dir / "BGD_boundary.geojson").exists():
+        fetch_bangladesh_boundary(metadata_dir)
     
-    # 2. Generate Synthetic Data (since Earthdata access isn't provided/applicable for 6yrs)
-    # This acts as our 'cached sample dataset' fallback.
-    print("Generating synthetic Standard Processing MODIS/VIIRS data for 2018-2023...")
-    df_raw = generate_synthetic_data()
-    
-    # Save raw
-    raw_file = data_raw_dir / "simulated_raw.csv"
-    df_raw.to_csv(raw_file, index=False)
-    print(f"Raw data saved to {raw_file}")
+    # 2. Ingest Real NASA FIRMS Data
+    df_raw = load_real_firms_data(data_raw_dir, project_root)
     
     # 3. QA Filtering
     df_qa = run_qa_filtering(df_raw, reports_dir)

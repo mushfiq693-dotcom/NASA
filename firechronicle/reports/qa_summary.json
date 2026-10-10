@@ -1,13 +1,13 @@
 {
-    "timestamp": "2026-10-07T17:08:53.242687",
-    "total_rows_in": 50000,
+    "timestamp": "2026-10-10T12:05:20.945836",
+    "total_rows_in": 214085,
     "filters": {
         "low_confidence": {
-            "removed": 8872
+            "removed": 18475
         },
         "non_vegetation_type": {
-            "removed": 4120
+            "removed": 4255
         }
     },
-    "total_rows_out": 37008
+    "total_rows_out": 191355
 }

@@ -1,9 +1,9 @@
 {
     "raw_baseline": {
-        "pearson_r": 0.68,
-        "rmse": 12.4,
-        "pbias_pct": 185.0,
-        "willmott_d": 0.72
+        "pearson_r": 0.035,
+        "rmse": 1.55,
+        "pbias_pct": 83.5,
+        "willmott_d": 0.066
     },
     "harmonized_hfai": {
         "pearson_r": 0.942,

@@ -33,9 +33,10 @@ def process_grid(interim_dir, processed_dir, metadata_dir):
     # 4. Aggregation per cell-day
     # Ensure confidence is numeric where possible for aggregation
     def numeric_conf(c):
-        if c == 'low': return 10
-        if c == 'nominal': return 50
-        if c == 'high': return 100
+        c_str = str(c).strip().lower()
+        if c_str in ['l', 'low']: return 10
+        if c_str in ['n', 'nominal']: return 50
+        if c_str in ['h', 'high']: return 100
         try:
             return float(c)
         except:
