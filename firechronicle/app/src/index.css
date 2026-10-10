@@ -83,13 +83,8 @@ html, body {
 #root {
   height: 100%;
   width: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: 
-    "nav nav"
-    "sidebar stage"
-    "dock dock";
+  display: flex;
+  flex-direction: column;
   background-color: var(--background);
   position: relative;
 }

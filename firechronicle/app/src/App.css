@@ -1,5 +1,6 @@
 .shell-nav {
-  grid-area: nav;
+  width: 100%;
+  flex-shrink: 0;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-rule);
   display: flex;
@@ -149,7 +150,8 @@
 }
 
 .shell-stage {
-  grid-area: stage;
+  flex: 1;
+  width: 100%;
   position: relative;
   overflow: auto;
   min-height: 0;

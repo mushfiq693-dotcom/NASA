@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { Routes, Route, NavLink } from 'react-router-dom';
 import './App.css';
 
 import { Landing } from './routes/Landing';
@@ -16,10 +16,8 @@ import { RouteWipe } from './motion/RouteWipe';
 import { useMotionMode } from './motion/useReducedMotion';
 
 function App() {
-  const location = useLocation();
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isSampleData, setIsSampleData] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const { motionMode, setMotionMode } = useMotionMode();
   
   useEffect(() => {
@@ -76,20 +74,6 @@ function App() {
         </div>
       </nav>
 
-      {!['/', '/atlas'].includes(location.pathname) && (
-        <aside className={`shell-sidebar enter-from-left ${sidebarOpen ? 'open' : 'closed'}`}>
-          <button className="toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            {sidebarOpen ? '◀' : '▶'}
-          </button>
-          {sidebarOpen && (
-            <div className="sidebar-content">
-              <h3>Controls</h3>
-              <p className="text-muted">Observation parameters & filters.</p>
-            </div>
-          )}
-        </aside>
-      )}
-
       <main className="shell-stage">
         <RouteWipe>
           <Routes>
@@ -104,14 +88,6 @@ function App() {
           </Routes>
         </RouteWipe>
       </main>
-
-      {!['/', '/atlas'].includes(location.pathname) && (
-        <footer className="shell-dock enter-from-bottom">
-          <div className="timeline-placeholder">
-            <span>NASA Observation Timeline Active</span>
-          </div>
-        </footer>
-      )}
     </>
   );
 }

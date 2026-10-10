@@ -30,3 +30,6 @@ env/
 
 # Logs
 *.log
+
+# Raw FIRMS zip extracts
+DL_FIRE_*/
