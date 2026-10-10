@@ -62,7 +62,7 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 1: THE PLANETARY DILEMMA & THE REVEAL
 - **Timestamp**: `0:00 – 0:25` (25 Seconds)
-- **Active Route**: `http://localhost:5173/` (Overview / Landing Page)
+- **Active Route**: `https://bengalflare.vercel.app/` (Overview / Landing Page)
 - **Visual on Screen**:
   - Starts with a smooth auto-rotating 3D WebGL satellite globe showing South Asia and the Bengal basin shrouded in atmospheric dusk.
   - Camera pans smoothly as the glowing frosted glass HUD card fades in: *"Five satellites, two sensor families, one continuous burning record."*
@@ -85,7 +85,7 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 2: SPATIAL TELEMETRY IN ACTION (ATLAS EXPLORER)
 - **Timestamp**: `0:25 – 0:55` (30 Seconds)
-- **Active Route**: `http://localhost:5173/atlas`
+- **Active Route**: `https://bengalflare.vercel.app/atlas`
 - **Visual on Screen**:
   - The UI transitions into the full-screen interactive MapLibre GPU Atlas. 
   - The cursor switches basemaps from Esri True Color Satellite to Carto Dark Matter, showing individual fire clusters illuminating like glowing embers across Bangladesh and the Sundarbans.
@@ -109,7 +109,7 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 3: THE 24-YEAR THERMAL RECORD (BURNING ACTIVITY CALENDAR)
 - **Timestamp**: `0:55 – 1:25` (30 Seconds)
-- **Active Route**: `http://localhost:5173/calendar`
+- **Active Route**: `https://bengalflare.vercel.app/calendar`
 - **Visual on Screen**:
   - Smooth page transition to the Burning Activity Calendar.
   - The camera reveals the multi-year calendar matrix (from 2000 to present day).
@@ -136,7 +136,7 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 4: GRANULAR GROUND TRUTH & ORBIT CYCLES (DAY DETAIL DEEP-DIVE)
 - **Timestamp**: `1:25 – 1:55` (30 Seconds)
-- **Active Route**: `http://localhost:5173/day/2022-03-21`
+- **Active Route**: `https://bengalflare.vercel.app/day/2022-03-21`
 - **Visual on Screen**:
   - Page loads instantly with the high-resolution day map on the left and telemetry analytics on the right.
   - Presenter clicks `[ ▶ REPLAY OVERPASS SWEEP ]`: an animated optical radar swath sweeps across the delta, sequentially revealing Terra at 10:30 AM, Aqua at 1:30 PM, and Suomi-NPP at 2:15 PM.
@@ -164,7 +164,7 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 5: THE ML ENGINE & HARMONIZATION (SENSOR LAB & VALIDATION)
 - **Timestamp**: `1:55 – 2:25` (30 Seconds)
-- **Active Route**: `http://localhost:5173/lab` and `/validation`
+- **Active Route**: `https://bengalflare.vercel.app/lab` and `https://bengalflare.vercel.app/validation`
 - **Visual on Screen**:
   - Presenter navigates to `Sensor Lab`.
   - The *Baseline Model Stepper* is shown: B0 (Raw Concatenation), B1 (Global Scale), B2 (Context Ratio), B3 (Log-Linear), B4 (Quantile Mapping), and B5 (Quantile Regression Forest).
@@ -193,7 +193,7 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 6: REAL-TIME CONSTELLATION CONTROL & FUTURE-PROOFING
 - **Timestamp**: `2:25 – 2:50` (25 Seconds)
-- **Active Route**: `http://localhost:5173/live`
+- **Active Route**: `https://bengalflare.vercel.app/live`
 - **Visual on Screen**:
   - Presenter switches to the `Live Telemetry` page.
   - The live ingestion heartbeat counts down: `Next Poll in 14s | FIRMS Key: Active (US NASA)`.
@@ -218,16 +218,17 @@ Now generate the complete, second-by-second script, camera choreography, visual 
 
 ## SCENE 7: SCIENTIFIC IMPACT & CLOSING VISION
 - **Timestamp**: `2:50 – 3:10` (20 Seconds)
-- **Active Route**: Return to `http://localhost:5173/` or zoom out to the illuminated globe
+- **Active Route**: Return to `https://bengalflare.vercel.app/` or zoom out to the illuminated globe
 - **Visual on Screen**:
   - Camera pulls out to a cinematic wide shot of the dark Earth with glowing active fire vectors and constellation orbits circling above.
   - The BengalFlare vector logo illuminates in pure gold and solar orange.
-  - GitHub repository link, live demo URL, and team credits fade in cleanly.
+  - GitHub repository link, live demo URL (`https://bengalflare.vercel.app`), and team credits fade in cleanly.
 - **Audio / BGM**:
   - Grand musical resolution; inspiring, triumphant final chord fading out gently into ambient space.
 - **On-Screen Text (OST)**:
   - `BENGALFLARE // RECONCILING 24 YEARS OF EARTH OBSERVATION`
   - `NASA SPACE APPS CHALLENGE 2024`
+  - `LIVE PLATFORM // BENGALFLARE.VERCEL.APP`
   - `OPEN SOURCE // MIT LICENSE // GITHUB.COM/MUSHFIQ693-DOTCOM/NASA`
 - **Voiceover Script (English)**:
   > *"Five satellites. Two sensor families. One unshakeable climate truth.*
@@ -288,7 +289,7 @@ When the NASA Space Apps judges evaluate your submission, they look for 5 key cr
 1. **Resolution**: Record your screen at `1920x1080` (1080p, 60fps) in Google Chrome or OBS Studio.
 2. **Browser Window**: Press `F11` (or `Cmd+Shift+F` on Mac) for clean full-screen without bookmarks or address bar.
 3. **Cursor Speed**: Keep mouse movements slow, smooth, and deliberate. Avoid erratic clicking.
-4. **Dev Server**: Ensure `npm run dev` is running on `http://localhost:5173` and backend on `http://127.0.0.1:8000`.
+4. **Live App / Production URL**: Record directly on the live production deployment `https://bengalflare.vercel.app` (or your local environment).
 5. **Audio / Voiceover**:
    - Use a clear USB microphone or generate speech using ElevenLabs (Voice: "Adam" or "Antoni" or "Rachel" with authoritative, warm narrative tone).
    - Set pacing to ~140 words per minute so each second matches the timestamps above exactly.
