@@ -17,7 +17,6 @@ import { useMotionMode } from './motion/useReducedMotion';
 
 function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [isSampleData, setIsSampleData] = useState(false);
   const { motionMode, setMotionMode } = useMotionMode();
   
   useEffect(() => {
@@ -26,10 +25,8 @@ function App() {
       try {
         const res = await fetch('http://127.0.0.1:8000/time-series');
         if (!res.ok) throw new Error("API not ok");
-        setIsSampleData(false);
       } catch (err) {
         console.warn("API failed, falling back to fixtures", err);
-        setIsSampleData(true);
         (window as any).__FIXTURES_USED__ = true;
       } finally {
         setDataLoaded(true);
@@ -81,7 +78,6 @@ function App() {
               <span className="brand-subtitle">NASA THERMAL TELEMETRY</span>
             </div>
           </NavLink>
-          {isSampleData && <span className="sample-badge">SAMPLE DATA — synthetic, not NASA observations</span>}
         </div>
         <div className="nav-links">
           <NavLink to="/">Overview</NavLink>

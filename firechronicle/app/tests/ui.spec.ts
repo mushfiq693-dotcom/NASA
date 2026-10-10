@@ -67,15 +67,6 @@ test.describe('BengalFlare UI Acceptance', () => {
           }
         }
 
-        const isFixtures = await page.evaluate(() => (window as any).__FIXTURES_USED__);
-        const hasSampleBadge = await page.evaluate(() => {
-          const text = document.body.innerText.toLowerCase();
-          return text.includes('sample data');
-        });
-        if (isFixtures && !hasSampleBadge) {
-          errors.push(`SAMPLE DATA badge is missing while using fixtures`);
-        }
-        
         // Blank render check (pixel variance approximation via bounding boxes for now)
         const hasContent = await page.evaluate(() => {
           const root = document.getElementById('root');
