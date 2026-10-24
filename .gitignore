@@ -31,5 +31,7 @@ env/
 # Logs
 *.log
 
-# Raw FIRMS zip extracts
+# Raw FIRMS zip extracts (allow primary NASA FIRMS archives for full reproducibility)
 DL_FIRE_*/
+!DL_FIRE_M-C61_820366/
+!DL_FIRE_SV-C2_820367/

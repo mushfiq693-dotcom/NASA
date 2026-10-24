@@ -45,8 +45,10 @@ When VIIRS became operational in 2012, recorded fire hotspots suddenly exploded 
 
 - 🌐 **Live Web Application:** [https://bengalflare.vercel.app](https://bengalflare.vercel.app)
 - 📁 **Open Source Repository:** [https://github.com/mushfiq693-dotcom/NASA](https://github.com/mushfiq693-dotcom/NASA)
-- 🎬 **Video Script & Claude Opus Pitch:** [`bengalflare_space_apps_3min10sec_video_script.md`](bengalflare_space_apps_3min10sec_video_script.md)
-- 📑 **Comprehensive Scientific Research Report:** [`MODIS_VIIRS_Harmonization_Research_Report_v2.md`](MODIS_VIIRS_Harmonization_Research_Report_v2.md)
+- 🎬 **Video Script & Presentation Pitch:** [`docs/media/bengalflare_space_apps_3min10sec_video_script.md`](docs/media/bengalflare_space_apps_3min10sec_video_script.md)
+- 📑 **Comprehensive Scientific Research Report:** [`docs/research/MODIS_VIIRS_Harmonization_Research_Report_v2.md`](docs/research/MODIS_VIIRS_Harmonization_Research_Report_v2.md)
+- 🛡️ **Technical Review & Mentor Q&A Defense Guide:** [`Mentor_QnA_Defense_Guide.md`](Mentor_QnA_Defense_Guide.md)
+- 📚 **Full Project Documentation Index:** [`docs/README.md`](docs/README.md)
 
 ---
 
