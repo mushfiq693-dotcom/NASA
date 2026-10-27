@@ -156,7 +156,7 @@
 /* Basemap Switcher Grid */
 .basemap-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
 }
 
@@ -165,31 +165,50 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 8px 10px;
+  padding: 10px 14px;
   border-radius: 6px;
-  cursor: pointer;
+  cursor: default;
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%;
 }
 
 .basemap-btn:hover {
   background: rgba(26, 36, 64, 0.75);
-  border-color: #FF5E00;
-  transform: translateY(-1px);
+  border-color: #00e5ff;
 }
 
 .basemap-btn.active {
   background: rgba(26, 36, 64, 0.85);
   border-color: #00e5ff;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.35);
+}
+
+.basemap-btn-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.basemap-status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.14);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 700;
 }
 
 .basemap-btn .bm-label {
   font-family: var(--font-sans);
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #FFFFFF;
 }
@@ -200,7 +219,7 @@
 
 .basemap-btn .bm-meta {
   font-family: var(--font-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   color: #CBD5E1;
 }
 

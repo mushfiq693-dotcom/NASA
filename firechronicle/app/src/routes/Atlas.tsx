@@ -51,19 +51,6 @@ export const Atlas: React.FC = () => {
   const [pointerInfo, setPointerInfo] = useState<{ lat: number; lon: number; cellId: string } | null>(null);
   const [revealedCategories, setRevealedCategories] = useState<string[]>(['both', 'modis-only', 'viirs-only', 'obscured']);
   const [dailyFireCount, setDailyFireCount] = useState<number>(0);
-  const [selectedBasemap, setSelectedBasemap] = useState<'satellite' | 'clarity' | 'dark' | 'topo'>('satellite');
-
-  const handleBasemapSwitch = (bm: 'satellite' | 'clarity' | 'dark' | 'topo') => {
-    setSelectedBasemap(bm);
-    if (!mapRef.current) return;
-    const layers = ['satellite', 'clarity', 'dark', 'topo'];
-    layers.forEach(l => {
-      const layerId = `layer-${l}`;
-      if (mapRef.current?.getLayer(layerId)) {
-        mapRef.current.setLayoutProperty(layerId, 'visibility', l === bm ? 'visible' : 'none');
-      }
-    });
-  };
 
   // Fetch GeoJSON and time-series
   useEffect(() => {
@@ -151,7 +138,7 @@ export const Atlas: React.FC = () => {
   useEffect(() => {
     if (!mapContainer.current || mapRef.current) return;
 
-    // Composite Multi-Basemap Specification (Satellite True Color as Default)
+    // True Color Satellite Basemap Specification (Esri World Imagery + Reference)
     const compositeMapStyle: maplibregl.StyleSpecification = {
       version: 8,
       sources: {
@@ -162,30 +149,6 @@ export const Atlas: React.FC = () => {
           ],
           tileSize: 256,
           attribution: '&copy; Esri, Maxar, Earthstar Geographics'
-        },
-        'esri-clarity': {
-          type: 'raster',
-          tiles: [
-            'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-          ],
-          tileSize: 256,
-          attribution: '&copy; Esri, Earthstar Geographics'
-        },
-        'esri-dark': {
-          type: 'raster',
-          tiles: [
-            'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-          ],
-          tileSize: 256,
-          attribution: '&copy; Esri'
-        },
-        'esri-topo': {
-          type: 'raster',
-          tiles: [
-            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-          ],
-          tileSize: 256,
-          attribution: '&copy; Esri, USGS'
         },
         'esri-reference': {
           type: 'raster',
@@ -203,30 +166,6 @@ export const Atlas: React.FC = () => {
           layout: { visibility: 'visible' },
           minzoom: 0,
           maxzoom: 19
-        },
-        {
-          id: 'layer-clarity',
-          type: 'raster',
-          source: 'esri-clarity',
-          layout: { visibility: 'none' },
-          minzoom: 0,
-          maxzoom: 19
-        },
-        {
-          id: 'layer-dark',
-          type: 'raster',
-          source: 'esri-dark',
-          layout: { visibility: 'none' },
-          minzoom: 0,
-          maxzoom: 18
-        },
-        {
-          id: 'layer-topo',
-          type: 'raster',
-          source: 'esri-topo',
-          layout: { visibility: 'none' },
-          minzoom: 0,
-          maxzoom: 18
         },
         {
           id: 'layer-reference',
@@ -562,22 +501,17 @@ export const Atlas: React.FC = () => {
           <span className="section-tag">IMAGERY & BASEMAP</span>
           <h3>Satellite Background</h3>
           <div className="basemap-grid">
-            {[
-              { id: 'satellite', label: 'True Color Satellite', meta: 'Esri / NASA Imagery' },
-              { id: 'clarity', label: 'Satellite Clarity HD', meta: 'High-Res Archival' },
-              { id: 'dark', label: 'Dark Canvas', meta: 'Scientific Mode' },
-              { id: 'topo', label: 'Topographic Terrain', meta: 'USGS Relief' }
-            ].map(bm => (
-              <button
-                key={bm.id}
-                type="button"
-                className={`basemap-btn ${selectedBasemap === bm.id ? 'active' : ''}`}
-                onClick={() => handleBasemapSwitch(bm.id as any)}
-              >
-                <span className="bm-label">{bm.label}</span>
-                <span className="bm-meta">{bm.meta}</span>
-              </button>
-            ))}
+            <button
+              type="button"
+              className="basemap-btn active"
+              title="NASA EOSDIS / True Color Satellite View"
+            >
+              <div className="basemap-btn-header">
+                <span className="bm-label">True Color Satellite</span>
+                <span className="basemap-status-badge">ACTIVE</span>
+              </div>
+              <span className="bm-meta">Esri / NASA Imagery</span>
+            </button>
           </div>
         </div>
 
