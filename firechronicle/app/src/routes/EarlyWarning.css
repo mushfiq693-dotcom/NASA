@@ -749,4 +749,162 @@
   color: #94A3B8;
 }
 
+/* ==========================================================================
+   Actionable Intelligence & Multi-Channel Incident Directives
+   ========================================================================== */
+.actionable-directives-panel {
+  background: rgba(12, 17, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.directives-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 14px;
+}
+
+.directives-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: #FFB800;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dispatch-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dispatch-action-btn {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-copy {
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  color: #00E5FF;
+}
+
+.btn-copy:hover {
+  background: rgba(0, 229, 255, 0.22);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.25);
+}
+
+.btn-cap {
+  background: rgba(255, 184, 0, 0.12);
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  color: #FFB800;
+}
+
+.btn-cap:hover {
+  background: rgba(255, 184, 0, 0.22);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 184, 0, 0.25);
+}
+
+.btn-send {
+  background: linear-gradient(135deg, rgba(255, 23, 68, 0.8), rgba(255, 94, 0, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+.btn-send:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 23, 68, 1), rgba(255, 94, 0, 1));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255, 23, 68, 0.35);
+}
+
+.btn-send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.directives-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.directive-card {
+  background: rgba(18, 25, 48, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-forestry {
+  border-top: 3px solid #00E676;
+}
+
+.card-fire-service {
+  border-top: 3px solid #FF1744;
+}
+
+.card-public-admin {
+  border-top: 3px solid #FFB800;
+}
+
+.directive-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: #FFFFFF;
+}
+
+.role-icon {
+  font-size: 1.1rem;
+}
+
+.directive-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #CBD5E1;
+}
+
+@media (max-width: 900px) {
+  .directives-grid {
+    grid-template-columns: 1fr;
+  }
+  .directives-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
 

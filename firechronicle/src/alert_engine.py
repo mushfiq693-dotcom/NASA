@@ -131,6 +131,202 @@ def assess_settlement_exposure(
         
     return sorted(exposed, key=lambda x: x["distance_km"])
 
+def degrees_to_compass(deg: float) -> str:
+    """Converts 0-360 degrees to 16-point cardinal compass direction."""
+    val = int((deg / 22.5) + 0.5)
+    arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    return arr[(val % 16)]
+
+def format_actionable_intelligence(threat: Dict[str, Any], exposed: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Transforms raw telemetry & physical parameters into 5-pillar Actionable Intelligence:
+    1. Pinpoint Location (GPS, landmark, administrative zone)
+    2. Severity Assessment (Level 1-3, FDI score, danger class)
+    3. Meteorological Drivers (temperature, humidity, fuel moisture, wind vector)
+    4. Threat Corridor & Impact Timeline (downwind communities, population, ETA)
+    5. Role-Specific Directives (Forestry, Fire Service, Administration, Public)
+    Plus ready-to-dispatch SMS and Telegram formatted payloads.
+    """
+    coords = threat["coordinates"]
+    lat, lon = coords["latitude"], coords["longitude"]
+    env = threat["environmental_risk"]
+    comp = env.get("components", {})
+    spread = threat["spread_prediction"]
+    alert_info = threat["alert"]
+    level = alert_info["level"]
+
+    # 1. Location Breakdown
+    nearest_dist = 999.0
+    nearest_name = "Remote Forest Sector"
+    for rec in SETTLEMENT_RECEPTORS:
+        d = calculate_haversine_km(lat, lon, rec["lat"], rec["lon"])
+        if d < nearest_dist:
+            nearest_dist = d
+            nearest_name = rec["name"]
+
+    location_desc = f"{nearest_name} ({nearest_dist} km away) · Lat {lat:.3f}°N, Lon {lon:.3f}°E"
+
+    # 2. Severity Classification
+    if level == "WARNING":
+        tier_title = "LEVEL 3: RED FLAG WARNING (EMERGENCY)"
+        color_code = "#FF0033"
+    elif level == "WATCH":
+        tier_title = "LEVEL 2: WILDFIRE WATCH (ELEVATED)"
+        color_code = "#FF5E00"
+    else:
+        tier_title = "LEVEL 1: FIRE WEATHER ADVISORY (MONITORING)"
+        color_code = "#FFAA00"
+
+    # 3. Meteorological Drivers
+    temp = comp.get("temperature_c", 30.0)
+    rh = comp.get("relative_humidity_pct", 40.0)
+    wind_spd = comp.get("wind_speed_kmh", 15.0)
+    wind_dir = comp.get("wind_direction_deg", 180.0)
+    mf = env.get("fuel_moisture_pct", 8.0)
+    wind_from = degrees_to_compass(wind_dir)
+    wind_toward = degrees_to_compass(spread.get("spread_azimuth_deg", (wind_dir + 180.0) % 360.0))
+
+    if mf <= 6.0 and wind_spd >= 30.0:
+        met_summary = f"CRITICAL: Extreme dry winds ({wind_spd} km/h from {wind_from}) with tinder-dry fuel moisture ({mf}%). Explosive combustion risk."
+    elif mf <= 8.0 or wind_spd >= 20.0:
+        met_summary = f"ELEVATED: Warm dry air ({temp}°C, {rh}% RH) with brisk winds ({wind_spd} km/h from {wind_from}). Surface fuels ignite readily."
+    else:
+        met_summary = f"MODERATE: Seasonal dry conditions ({temp}°C, {rh}% RH) with wind speed of {wind_spd} km/h."
+
+    # 4. Threat Corridor & Impact Timeline
+    rate = spread.get("forward_rate_kmh", 1.0)
+    dist_3h = spread.get("forward_distance_km", 3.0)
+    downwind_communities = [
+        {
+            "name": e["name"],
+            "distance_km": e["distance_km"],
+            "eta_hours": e.get("eta_hours", round(e["distance_km"] / max(0.1, rate), 1)),
+            "population": e.get("population", 0),
+            "threat_severity": e.get("threat_severity", "ELEVATED")
+        }
+        for e in exposed if e.get("is_downwind", False)
+    ]
+
+    if downwind_communities:
+        top_c = downwind_communities[0]
+        corridor_summary = f"Active spread toward {wind_toward}. Direct threat to {top_c['name']} (Pop: ~{top_c['population']:,}) in ~{top_c['eta_hours']} hrs ({top_c['distance_km']} km downwind)."
+    else:
+        corridor_summary = f"Propagation corridor extends {dist_3h} km towards {wind_toward} over uninhabited forest buffer."
+
+    # 5. Role-Specific Directives
+    if level == "WARNING":
+        forest_directives = [
+            "Establish defensive fire lines and fuel breaks along the downwind sector.",
+            "Deploy all available motorized patrol units and notify Beat Officers immediately.",
+            "Wet critical perimeter boundaries and monitor for long-range ember spotting."
+        ]
+        fire_service_directives = [
+            f"Pre-position water tenders along nearest motorable roads toward {location_desc}.",
+            "Coordinate with local forest department for water extraction points.",
+            "Prepare high-pressure brush hoses and foam dispersal units."
+        ]
+        admin_and_public_directives = [
+            "Issue immediate Red Flag Warning: Strictly prohibit all open-air agricultural burning.",
+            "Prepare downwind settlements for potential preventive evacuation if within 5 km.",
+            "Instruct residents to clear dry leaves and combustible materials within 50 meters of homes."
+        ]
+    elif level == "WATCH":
+        forest_directives = [
+            "Increase watchtower vigilance and patrol frequency along known fire corridors.",
+            "Verify all ground radio communications and GPS tracking equipment.",
+            "Check water reservoir levels and pump readiness at local beats."
+        ]
+        fire_service_directives = [
+            "Place standby crews on heightened alertness.",
+            "Verify road access routes leading to the coordinates.",
+            "Review water tender availability for rapid rural dispatch."
+        ]
+        admin_and_public_directives = [
+            "Advise farmers and plantation workers to avoid any debris burning during windy afternoon hours.",
+            "Broadcast localized fire advisory over community loudspeakers and Union Parishad channels."
+        ]
+    else:
+        forest_directives = [
+            "Routine seasonal forest monitoring. Report any unseasonal smoke columns.",
+            "Maintain access tracks clear of fallen timber."
+        ]
+        fire_service_directives = [
+            "Standard operational standby."
+        ]
+        admin_and_public_directives = [
+            "Routine public awareness on wildfire prevention in rural areas."
+        ]
+
+    # 6. Formatted Dispatch Messages
+    sms_text = (
+        f"[{tier_title.split(':')[1].strip()}]\n"
+        f"Location: {nearest_name} ({lat:.3f}N,{lon:.3f}E)\n"
+        f"Weather: {wind_spd}km/h {wind_from}, {temp}C, RH {rh}%\n"
+        f"Spread: {rate}km/h toward {wind_toward}\n"
+        f"Threat: {corridor_summary[:90]}..."
+    )
+
+    telegram_markdown = (
+        f"🚨 *BENGALFLARE WILDFIRE EARLY WARNING*\n"
+        f"*{tier_title}*\n\n"
+        f"📍 *Location:* `{lat:.4f}°N, {lon:.4f}°E`\n"
+        f"Near: {location_desc}\n\n"
+        f"🌪️ *Weather Drivers:*\n"
+        f"• Wind: `{wind_spd} km/h` blowing from *{wind_from}* towards *{wind_toward}*\n"
+        f"• Temp / RH: `{temp}°C` / `{rh}%` (Fuel Moisture: `{mf}%`)\n"
+        f"• Fire Danger Index: `{env.get('fdi', 0)}/100` (*{env.get('danger_class', 'Moderate')}*)\n\n"
+        f"🔥 *Spread Prediction:*\n"
+        f"• Forward Rate: `{rate} km/h`\n"
+        f"• 3-Hour Burn Reach: `{dist_3h} km`\n\n"
+        f"🏘️ *Threat Corridor:*\n"
+        f"{corridor_summary}\n\n"
+        f"📋 *Tactical Directive:* {forest_directives[0]}\n\n"
+        f"ℹ️ _Official emergency response coordinates via BengalFlare Open Data Architecture._"
+    )
+
+    return {
+        "pillar_1_pinpoint_location": {
+            "coordinates": {"latitude": lat, "longitude": lon},
+            "nearest_landmark": nearest_name,
+            "distance_to_landmark_km": round(nearest_dist, 2),
+            "description": location_desc
+        },
+        "pillar_2_severity": {
+            "tier": tier_title,
+            "level": level,
+            "color": color_code,
+            "fdi_score": env.get("fdi", 0.0),
+            "danger_class": env.get("danger_class", "Moderate"),
+            "is_red_flag": env.get("is_red_flag", False)
+        },
+        "pillar_3_meteorological_drivers": {
+            "temperature_c": temp,
+            "relative_humidity_pct": rh,
+            "dead_fuel_moisture_pct": mf,
+            "wind_speed_kmh": wind_spd,
+            "wind_from_direction": f"{wind_from} ({wind_dir}°)",
+            "wind_spread_direction": f"{wind_toward} ({spread.get('spread_azimuth_deg', 0)}°)",
+            "summary": met_summary
+        },
+        "pillar_4_threat_corridor": {
+            "forward_spread_rate_kmh": rate,
+            "forward_reach_3h_km": dist_3h,
+            "propagation_bearing_deg": spread.get("spread_azimuth_deg", 0),
+            "propagation_compass": wind_toward,
+            "downwind_communities": downwind_communities,
+            "corridor_summary": corridor_summary
+        },
+        "pillar_5_tactical_directives": {
+            "forest_department": forest_directives,
+            "fire_service": fire_service_directives,
+            "local_administration_and_public": admin_and_public_directives
+        },
+        "dispatch_payloads": {
+            "sms_text": sms_text,
+            "telegram_markdown": telegram_markdown
+        }
+    }
+
 def generate_wildfire_alert(
     hotspot_id: str,
     lat: float,
@@ -185,6 +381,9 @@ def generate_wildfire_alert(
     threat["alert"]["headline"] = headline
     threat["exposed_receptors"] = exposed
     threat["timestamp_utc"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    
+    # 4. Attach 5-Pillar Actionable Intelligence Package
+    threat["actionable_intelligence"] = format_actionable_intelligence(threat, exposed)
     
     return threat
 

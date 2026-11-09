@@ -503,6 +503,9 @@ from src.environmental import (
     REGIONAL_PROFILES
 )
 from src.alert_engine import generate_wildfire_alert, scan_active_anomalies_for_alerts
+from src.cap_formatter import build_oasis_cap_xml
+from src.dispatcher import dispatch_all_channels
+from fastapi import Response
 
 @app.get("/weather/live")
 def get_live_weather_api(lat: float = 23.81, lon: float = 90.41):
@@ -571,4 +574,107 @@ def get_wildfire_alerts(mode: str = "all"):
         "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "disclaimer": "Automated decision-support system. Official emergency evacuation orders are issued exclusively by designated local civil protection authorities.",
         "alerts": alerts
+    }
+
+@app.get("/alerts/cap.xml")
+def get_cap_xml_feed(hotspot_id: Optional[str] = None):
+    """
+    OASIS Common Alerting Protocol (CAP v1.2) XML endpoint.
+    Used by Google Public Alerts, WMO, and civil emergency dashboards.
+    """
+    p_camp = REGIONAL_PROFILES["camp_fire_paradise_ignition"]
+    alert = generate_wildfire_alert(
+        hotspot_id=hotspot_id or "CAMP-FIRE-BENCHMARK-2018",
+        lat=p_camp["latitude"],
+        lon=p_camp["longitude"],
+        frp_mw=450.0,
+        confidence="high",
+        hfai_anomaly_band="Extreme",
+        weather_override=p_camp,
+        slope_deg=p_camp["slope_deg"]
+    )
+    xml_str = build_oasis_cap_xml(alert)
+    return Response(content=xml_str, media_type="application/xml")
+
+@app.get("/alerts/actionable")
+def get_actionable_alerts():
+    """
+    Returns 5-pillar Actionable Intelligence for incident commanders:
+    1. Pinpoint Location
+    2. Severity Assessment
+    3. Meteorological Drivers
+    4. Threat Corridor & Settlements
+    5. Role-Specific Directives (Forestry, Fire Service, Public)
+    """
+    p_camp = REGIONAL_PROFILES["camp_fire_paradise_ignition"]
+    camp_alert = generate_wildfire_alert(
+        hotspot_id="CAMP-FIRE-BENCHMARK-2018",
+        lat=p_camp["latitude"],
+        lon=p_camp["longitude"],
+        frp_mw=450.0,
+        confidence="high",
+        hfai_anomaly_band="Extreme",
+        weather_override=p_camp,
+        slope_deg=p_camp["slope_deg"]
+    )
+    bd_alerts = scan_active_anomalies_for_alerts(top_n=3)
+    all_alerts = [camp_alert] + bd_alerts
+    
+    actionable_list = [
+        {
+            "hotspot_id": a["hotspot_id"],
+            "headline": a["alert"]["headline"],
+            "severity_level": a["alert"]["level"],
+            "actionable_intelligence": a.get("actionable_intelligence")
+        }
+        for a in all_alerts
+    ]
+    
+    return {
+        "status": "success",
+        "total_active": len(actionable_list),
+        "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "alerts": actionable_list
+    }
+
+@app.post("/alerts/dispatch")
+async def dispatch_wildfire_alert_endpoint(
+    hotspot_id: Optional[str] = "EMERGENCY-DISPATCH-01",
+    lat: float = 22.35,
+    lon: float = 92.20,
+    frp_mw: float = 75.0,
+    wind_kmh: float = 35.0,
+    wind_dir: float = 210.0,
+    temp_c: float = 34.0,
+    rh_pct: float = 25.0
+):
+    """
+    Triggers multi-channel automated alert dispatch (Telegram, SMS, Webhook).
+    """
+    weather = {
+        "temperature_c": temp_c,
+        "relative_humidity_pct": rh_pct,
+        "wind_speed_kmh": wind_kmh,
+        "wind_direction_deg": wind_dir,
+        "drought_factor": 7.5
+    }
+    alert = generate_wildfire_alert(
+        hotspot_id=hotspot_id,
+        lat=lat,
+        lon=lon,
+        frp_mw=frp_mw,
+        confidence="high",
+        hfai_anomaly_band="Extreme",
+        weather_override=weather,
+        slope_deg=3.0
+    )
+    dispatch_report = await dispatch_all_channels(alert)
+    return {
+        "status": "success",
+        "alert_summary": {
+            "hotspot_id": alert["hotspot_id"],
+            "level": alert["alert"]["level"],
+            "headline": alert["alert"]["headline"]
+        },
+        "dispatch_report": dispatch_report
     }
