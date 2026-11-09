@@ -179,14 +179,7 @@ export const Calendar: React.FC = () => {
     return summaries;
   }, [allRecords, availableYears]);
 
-  // Maximum annual HFAI for normalizing the 24-year timeline sparkline
-  const maxAnnualHfai = useMemo(() => {
-    let maxVal = 1;
-    Object.values(yearlySummaries).forEach(s => {
-      if (s.totalHfai > maxVal) maxVal = s.totalHfai;
-    });
-    return maxVal;
-  }, [yearlySummaries]);
+
 
 
 
@@ -334,53 +327,6 @@ export const Calendar: React.FC = () => {
           </div>
         </div>
       </header>
-
-      {/* 24-Year Macro Timeline Bar Strip (2001–2026) */}
-      <section className="macro-timeline-card">
-        <div className="macro-timeline-header">
-          <div className="macro-title-group">
-            <span className="macro-title">24-YEAR MULTI-DECADAL RECORD (2001–2026)</span>
-            <span className="macro-subtitle">Click any year bar to view its complete 365-day annual heatmap</span>
-          </div>
-          <div className="macro-era-badges">
-            <span className="era-badge modis-era">2001–2011: MODIS Era</span>
-            <span className="era-badge shift-era">2012: Sensor Step Shift</span>
-            <span className="era-badge viirs-era">2013–2026: VIIRS Era</span>
-          </div>
-        </div>
-
-        <div className="macro-bars-scroll">
-          <div className="macro-bars-container">
-            {availableYears.map(yr => {
-              const summary = yearlySummaries[yr];
-              const hfai = summary?.totalHfai || 0;
-              const barHeightPct = Math.max(12, Math.round((hfai / maxAnnualHfai) * 100));
-              const isSelected = yr === selectedYear;
-              const isShift = yr === '2012';
-              const isEarly = Number(yr) < 2012;
-
-              return (
-                <button
-                  key={yr}
-                  type="button"
-                  className={`macro-year-bar-item ${isSelected ? 'active' : ''} ${isShift ? 'is-shift-year' : ''}`}
-                  onClick={() => setSelectedYear(yr)}
-                  title={`Year ${yr} · Total HFAI: ${Math.round(hfai).toLocaleString()} · Hotspots: ${summary?.totalRawCount.toLocaleString() || 0}`}
-                >
-                  <div className="bar-track">
-                    <div
-                      className={`bar-fill ${isEarly ? 'modis-color' : isShift ? 'shift-color' : 'viirs-color'}`}
-                      style={{ height: `${barHeightPct}%` }}
-                    />
-                  </div>
-                  <span className="bar-year-label">{yr.slice(2)}</span>
-                  {isShift && <span className="shift-dot" title="2012 Sensor Transition" />}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* Selected Year Navigation & Controls */}
       <div className="calendar-year-nav-card">

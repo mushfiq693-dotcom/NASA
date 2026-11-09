@@ -91,8 +91,6 @@ function App() {
           <NavLink to="/atlas">Atlas</NavLink>
           <NavLink to="/calendar">Calendar</NavLink>
           <NavLink to="/lab">Sensor Lab</NavLink>
-          <NavLink to="/validation">Validation</NavLink>
-          <NavLink to="/methodology">Methodology</NavLink>
           <NavLink to="/live">Live</NavLink>
           <NavLink to="/early-warning">Early Warning</NavLink>
         </div>
@@ -126,6 +124,23 @@ function App() {
           </Routes>
         </RouteWipe>
       </main>
+
+      <footer className="shell-footer enter-from-bottom">
+        <div className="footer-left">
+          <span className="footer-telemetry-tag">NASA EARTH OBSERVATION</span>
+          <span className="footer-sep">·</span>
+          <span className="footer-archive-info">2001–2026 Telemetry Archive</span>
+        </div>
+        <div className="footer-center">
+          <span className="footer-docs-label">SCIENTIFIC RIGOR:</span>
+          <NavLink to="/methodology" className="footer-link">Methodology</NavLink>
+          <span className="footer-link-sep">·</span>
+          <NavLink to="/validation" className="footer-link">Validation</NavLink>
+        </div>
+        <div className="footer-right">
+          <span className="footer-sensor-badge">MODIS + VIIRS Harmonized</span>
+        </div>
+      </footer>
     </>
   );
 }

@@ -504,10 +504,10 @@ export const DayDetail: React.FC = () => {
                 data={chartData}
                 options={{
                   maintainAspectRatio: false,
-                  plugins: { legend: { position: 'top', labels: { color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } } } },
+                  plugins: { legend: { position: 'top', labels: { color: '#FFFFFF', font: { family: "'Inter', sans-serif", size: 12, weight: 600 } } } },
                   scales: {
-                    x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
-                    y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } }
+                    x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } } }
                   }
                 }}
               />

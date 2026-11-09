@@ -52,10 +52,11 @@
   --state-warning: #FFB800;
   --state-fail: #FF5252;
   
-  /* Typography System */
-  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  /* Typography System: Inter + JetBrains Mono (SaaS / Productivity / Scientific Dashboard) */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   
   font-family: var(--font-sans);
   
@@ -121,15 +122,16 @@ html, body {
 
 /* Typography Utility Classes */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   color: var(--foreground);
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   margin-top: 0;
+  font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'cv11' 1;
 }
 
 .font-serif {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
 }
 
 .font-sans {
@@ -138,6 +140,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .font-mono {
   font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Small Caps Pattern */
@@ -149,8 +153,23 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+/* Tabular Numbers for Data-Heavy Metrics, Telemetry, and Tables */
+.metric-big,
+.metric-val,
+.metric-number,
+.stat-value,
+.telemetry-card .metric-big,
+table th,
+table td,
+.tabular-nums {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Editorial Rule Lines */

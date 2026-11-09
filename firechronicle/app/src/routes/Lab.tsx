@@ -328,20 +328,20 @@ export const Lab: React.FC = () => {
                 animation: { duration: 700, easing: 'easeOutQuart' },
                 scales: {
                   x: {
-                    title: { display: true, text: 'MODIS Collocated Detections (1 km)', color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
+                    title: { display: true, text: 'MODIS Collocated Detections (1 km)', color: '#FFFFFF', font: { family: "'Inter', sans-serif", size: 12, weight: 600 } },
                     grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } },
+                    ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } },
                     max: 120
                   },
                   y: {
-                    title: { display: true, text: `${activeBaseline.code} Calibrated Value`, color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
+                    title: { display: true, text: `${activeBaseline.code} Calibrated Value`, color: '#FFFFFF', font: { family: "'Inter', sans-serif", size: 12, weight: 600 } },
                     grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } },
+                    ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } },
                     max: 150
                   }
                 },
                 plugins: {
-                  legend: { labels: { color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12 } } }
+                  legend: { labels: { color: '#FFFFFF', font: { family: "'Inter', sans-serif", size: 12 } } }
                 }
               }}
             />
@@ -361,11 +361,11 @@ export const Lab: React.FC = () => {
                 maintainAspectRatio: false,
                 animation: { duration: 600 },
                 scales: {
-                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
+                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } } },
                   y: {
-                    title: { display: true, text: 'Absolute Bias (%)', color: '#FFFFFF', font: { family: "'Source Sans 3', sans-serif", size: 12, weight: 600 } },
+                    title: { display: true, text: 'Absolute Bias (%)', color: '#FFFFFF', font: { family: "'Inter', sans-serif", size: 12, weight: 600 } },
                     grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } }
+                    ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } }
                   }
                 },
                 plugins: { legend: { display: false } }
@@ -402,8 +402,8 @@ export const Lab: React.FC = () => {
                 maintainAspectRatio: false,
                 animation: { duration: 500 },
                 scales: {
-                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
-                  y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'IBM Plex Mono', monospace", size: 10 } }, max: 110 }
+                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } } },
+                  y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8', font: { family: "'JetBrains Mono', monospace", size: 10 } }, max: 110 }
                 },
                 plugins: { legend: { display: false } }
               }}
