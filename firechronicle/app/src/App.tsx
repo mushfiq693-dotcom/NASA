@@ -67,8 +67,9 @@ function App() {
             weather.wind_speed_kmh
           );
 
-          // If active fire has high fire radiative power or high weather danger, dispatch emergency alert
-          if (topSpot.frp >= 6.0 || score >= 35.0) {
+          // Only dispatch prominent emergency alert if there is genuine elevated danger
+          // (prevents false alarms when conditions are humid / low danger)
+          if (score >= 40.0 || (topSpot.frp >= 60.0 && score >= 20.0)) {
             setEmergencyAlert({
               hotspot: topSpot,
               fdiScore: score,
@@ -102,8 +103,7 @@ function App() {
           </div>
 
           <div className="emergency-message-body">
-            <span className="em-highlight">NASA FIRMS Active Thermal Anomaly:</span>
-            {' '}{emergencyAlert.hotspot.locationName} ({emergencyAlert.hotspot.district}) · Lat: {emergencyAlert.hotspot.latitude}, Lon: {emergencyAlert.hotspot.longitude} · Fire Radiative Power: <strong>{emergencyAlert.hotspot.frp} MW</strong> ({emergencyAlert.hotspot.satellite}) · Atmospheric Danger: <strong>FDI {emergencyAlert.fdiScore}/100 ({emergencyAlert.dangerClass})</strong>
+            <strong>⚠️ Wildfire Spread Alert:</strong> Active fire near {emergencyAlert.hotspot.district} ({emergencyAlert.hotspot.locationName}) · High spread potential due to dry wind ({emergencyAlert.windSpeed} km/h).
           </div>
 
           <div className="emergency-actions-row">

@@ -5,15 +5,13 @@ import './EarlyWarning.css';
 import {
   fetchLiveFirmsHotspots,
   fetchLiveWeather,
-  calculateVPD,
   calculateFuelMoisture,
   calculateFDI,
   calculateForwardSpreadRate,
   generateHuygensConeGeoJSON,
   evaluateThreatenedSettlements,
-  getStoredFirmsKey,
-  setStoredFirmsKey,
-  DEFAULT_FIRMS_KEY
+  getCompassDirection,
+  getShortCompass
 } from '../services/firmsService';
 import type {
   FirmsHotspot,
@@ -45,30 +43,30 @@ interface ScenarioPreset {
 const PRESETS: Record<string, ScenarioPreset> = {
   camp_fire: {
     id: 'camp_fire',
-    name: '⚡ 2018 Camp Fire Benchmark (Paradise, CA)',
-    description: 'Jarvis Gap Diablo wind event. Poe Dam ignition propagating towards Concow and Paradise.',
+    name: '⚡ 2018 Camp Fire Benchmark (California)',
+    description: 'Jarvis Gap high-wind disaster simulation. Rapid ignition propagating towards Concow & Paradise.',
     lat: 39.813,
     lon: -121.438,
     zoom: 10.5,
     temp_c: 18.3,
     rh_pct: 8.0,
     wind_kmh: 56.0,
-    wind_dir: 45.0, // NE wind => SW spread
+    wind_dir: 45.0,
     drought: 10.0,
     slope_deg: 18.0,
     frp_mw: 450.0
   },
   chittagong: {
     id: 'chittagong',
-    name: '⛰️ Chittagong Hill Tracts (Pre-Monsoon Peak)',
-    description: 'Dry season shifting cultivation ridge fires in Rangamati & Bandarban.',
+    name: '⛰️ Chittagong Hill Tracts (Dry Season)',
+    description: 'Dry season shifting cultivation ridge fires in Rangamati & Bandarban hill terrain.',
     lat: 22.35,
     lon: 92.20,
     zoom: 10.0,
     temp_c: 36.5,
     rh_pct: 28.0,
     wind_kmh: 24.0,
-    wind_dir: 210.0, // SSW wind => NNE spread
+    wind_dir: 210.0,
     drought: 8.5,
     slope_deg: 14.0,
     frp_mw: 65.0
@@ -76,7 +74,7 @@ const PRESETS: Record<string, ScenarioPreset> = {
   sundarbans: {
     id: 'sundarbans',
     name: '🌲 Sundarbans Mangrove Buffer Zone',
-    description: 'Southern mangrove fringe with high moisture and tidal buffer.',
+    description: 'Southern mangrove fringe with high moisture and tidal protection.',
     lat: 22.05,
     lon: 89.50,
     zoom: 10.0,
@@ -91,7 +89,7 @@ const PRESETS: Record<string, ScenarioPreset> = {
   sylhet: {
     id: 'sylhet',
     name: '🌾 Sylhet Haor Basin & Tea Estates',
-    description: 'Post-harvest agricultural stubble burns along wetland corridors.',
+    description: 'Agricultural stubble burn corridors along tea plantations and wetlands.',
     lat: 24.30,
     lon: 91.73,
     zoom: 10.0,
@@ -117,9 +115,6 @@ export const EarlyWarning: React.FC = () => {
   const [firmsHotspots, setFirmsHotspots] = useState<FirmsHotspot[]>([]);
   const [selectedHotspotId, setSelectedHotspotId] = useState<string>('');
   const [isFirmsLoading, setIsFirmsLoading] = useState<boolean>(true);
-  const [firmsKey, setFirmsKey] = useState<string>(getStoredFirmsKey());
-  const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
-  const [customKeyInput, setCustomKeyInput] = useState<string>(getStoredFirmsKey());
 
   // Benchmark preset state
   const [selectedPresetKey, setSelectedPresetKey] = useState<string>('camp_fire');
@@ -143,11 +138,9 @@ export const EarlyWarning: React.FC = () => {
   // Derived telemetry metrics
   const [fdiScore, setFdiScore] = useState<number>(55.0);
   const [dangerClass, setDangerClass] = useState<string>('High');
-  const [vpdVal, setVpdVal] = useState<number>(2.1);
   const [fuelMoisture, setFuelMoisture] = useState<number>(8.5);
   const [spreadRate, setSpreadRate] = useState<number>(0.95);
   const [spreadDistance, setSpreadDistance] = useState<number>(2.85);
-  const [burnArea, setBurnArea] = useState<number>(2.4);
   const [spreadAzimuth, setSpreadAzimuth] = useState<number>(25.0);
   const [spreadGeoJson, setSpreadGeoJson] = useState<any>(null);
   const [exposedCommunities, setExposedCommunities] = useState<ThreatenedSettlement[]>([]);
@@ -158,10 +151,9 @@ export const EarlyWarning: React.FC = () => {
     const loadFirms = async () => {
       setIsFirmsLoading(true);
       try {
-        const spots = await fetchLiveFirmsHotspots(firmsKey, 2);
+        const spots = await fetchLiveFirmsHotspots();
         if (isMounted && spots.length > 0) {
           setFirmsHotspots(spots);
-          // Pick the highest FRP hotspot by default for immediate threat evaluation
           setSelectedHotspotId(spots[0].id);
         }
       } catch (err) {
@@ -173,7 +165,7 @@ export const EarlyWarning: React.FC = () => {
 
     loadFirms();
     return () => { isMounted = false; };
-  }, [firmsKey]);
+  }, []);
 
   // 2. Fetch Live Open-Meteo Weather whenever target coordinates shift
   const fetchWeatherForCoords = useCallback(async (lat: number, lon: number) => {
@@ -216,10 +208,6 @@ export const EarlyWarning: React.FC = () => {
     const mf = calculateFuelMoisture(t, rh);
     setFuelMoisture(mf);
 
-    // VPD
-    const vpd = calculateVPD(t, rh);
-    setVpdVal(vpd);
-
     // Fosberg Fire Weather Index
     const { score, danger_class } = calculateFDI(t, rh, speed);
     setFdiScore(score);
@@ -246,14 +234,6 @@ export const EarlyWarning: React.FC = () => {
       hours
     );
     setSpreadGeoJson(coneFeature);
-
-    // Area approximation
-    const windMph = speed * 0.621371;
-    const lb = Math.max(1.1, 1.0 + 0.00284 * (windMph ** 1.7));
-    const majorA = dist;
-    const minorB = majorA / lb;
-    const area = Number((Math.PI * (majorA / 2) * (minorB / 2)).toFixed(2));
-    setBurnArea(area);
 
     // Downwind settlement vulnerability assessment
     const settlements = evaluateThreatenedSettlements(
@@ -411,134 +391,144 @@ export const EarlyWarning: React.FC = () => {
   }, [spreadGeoJson, mapLoaded]);
 
   // Handle custom FIRMS key submission
-  const handleSaveFirmsKey = () => {
-    const key = customKeyInput.trim() || DEFAULT_FIRMS_KEY;
-    setStoredFirmsKey(key);
-    setFirmsKey(key);
-    setShowKeyModal(false);
-  };
+  const isRedFlag = fdiScore >= 65 || (fuelMoisture <= 6.5 && windSpeed >= 30) || (activeFrp >= 50.0 && fdiScore >= 45);
+  const isElevated = fdiScore >= 35 || activeFrp >= 30.0;
+  
+  // Clean Human Alert Status
+  const alertHeadline = isRedFlag
+    ? '🚨 EMERGENCY WARNING: Rapid Fire Spread Expected'
+    : isElevated
+    ? '⚠️ WATCH ADVISORY: Moderate Fire Spread Possible'
+    : '🟢 SAFE & CONTAINED: Low Fire Spread Risk';
 
-  const isRedFlag = fdiScore >= 65 || (fuelMoisture <= 6.5 && windSpeed >= 30) || (activeFrp >= 30.0 && fdiScore >= 45);
-  const alertLevel = isRedFlag ? 'LEVEL 3: EMERGENCY WARNING' : fdiScore >= 45 ? 'LEVEL 2: WATCH' : 'LEVEL 1: ADVISORY';
-  const alertColorClass = isRedFlag ? 'level-warning' : fdiScore >= 45 ? 'level-watch' : 'level-advisory';
+  const alertColorClass = isRedFlag ? 'level-warning' : isElevated ? 'level-watch' : 'level-advisory';
+
+  const spreadCompass = getCompassDirection(spreadAzimuth);
+  const windFromCompass = getCompassDirection(windDir);
 
   return (
     <div className="early-warning-container">
-      {/* HEADER WITH REALTIME STATUS BADGE */}
+      {/* CLEAN USER-FRIENDLY HEADER */}
       <header className="ew-header">
         <div>
           <div className="ew-badge">
             <span className="pulse-dot"></span>
-            WILDFIRE THREAT EARLY WARNING & SPREAD PREDICTION
+            LIVE WILDFIRE SPREAD & COMMUNITY ALERT TRACKER
           </div>
-          <h1>Atmospheric Fire Danger & Spread Simulator</h1>
+          <h1>Wildfire Early Warning & Community Alert System</h1>
           <p className="ew-lead">
-            Coupling real-time NASA FIRMS satellite telemetry, Open-Meteo meteorological vectors, Dead Fine Fuel Moisture (Nelson NFDRS),
-            Fosberg Fire Weather Index (FFWI), and Huygens downwind forward spread modeling.
+            Tracks real-time satellite fire detections and live weather to predict where smoke and flames will spread, alerting communities in their path.
           </p>
         </div>
 
         <div className="ew-header-controls">
-          <div className="firms-key-badge-row">
-            <button 
-              className="firms-key-pill"
-              onClick={() => setShowKeyModal(true)}
-              title="Configure NASA FIRMS MAP_KEY"
-            >
-              <span className="key-dot active"></span>
-              <span>FIRMS Key: <strong>{firmsKey.slice(0, 6)}...{firmsKey.slice(-4)}</strong></span>
-              <span className="key-edit-tag">⚙️ EDIT</span>
-            </button>
+          <div className="satellite-status-pill">
+            <span className="pulse-green-dot"></span>
+            <span>NASA Satellite Feed: <strong>Active NRT</strong></span>
           </div>
 
           <button 
             className="live-fetch-btn"
             onClick={() => fetchWeatherForCoords(activeLat, activeLon)}
             disabled={isWeatherLoading}
-            title="Query real-time meteorological vectors from Open-Meteo API"
+            title="Refresh current weather from Open-Meteo API"
           >
-            {isWeatherLoading ? '🛰️ Querying Sensors...' : '🛰️ Pull Live Weather (Open-Meteo)'}
+            {isWeatherLoading ? '🛰️ Querying Sensors...' : '🛰️ Refresh Live Weather'}
           </button>
         </div>
       </header>
 
-      {/* TOP TELEMETRY METRIC CARDS */}
+      {/* TOP USER-FRIENDLY STATUS CARDS */}
       <section className="ew-telemetry-grid">
-        {/* FDI GAUGE */}
-        <div className={`telemetry-card ${dangerClass === 'Extreme' ? 'danger-extreme' : dangerClass === 'Very High' ? 'danger-high' : 'danger-mod'}`}>
+        {/* CARD 1: OVERALL THREAT LEVEL */}
+        <div className={`telemetry-card ${isRedFlag ? 'danger-extreme' : isElevated ? 'danger-high' : 'danger-mod'}`}>
           <div className="card-label-row">
-            <span className="card-title">Fire Danger Index (FDI)</span>
-            <span className={`status-pill ${isRedFlag ? 'pill-red-flag' : 'pill-normal'}`}>
-              {isRedFlag ? 'RED FLAG' : 'NORMAL'}
+            <span className="card-title">Overall Fire Threat</span>
+            <span className={`status-pill ${isRedFlag ? 'pill-red-flag' : isElevated ? 'pill-watch' : 'pill-normal'}`}>
+              {isRedFlag ? 'CRITICAL RISK' : isElevated ? 'ELEVATED RISK' : 'LOW RISK (SAFE)'}
             </span>
           </div>
           <div className="metric-number-row">
-            <span className="metric-big" style={{ color: dangerClass === 'Extreme' ? '#FF0033' : '#FF6A00' }}>{fdiScore}</span>
-            <span className="metric-unit">/ 100</span>
+            <span className="metric-big" style={{ color: isRedFlag ? '#FF0033' : isElevated ? '#FF9E00' : '#00E676' }}>
+              {dangerClass.toUpperCase()}
+            </span>
+            <span className="metric-unit">({fdiScore}/100)</span>
           </div>
           <p className="metric-subtext">
-            <strong>{dangerClass.toUpperCase()}</strong> fire weather regime. Based on NOAA / NWS Fosberg FFWI formulation.
+            {fdiScore < 30 
+              ? 'High humidity and mild air prevent fires from spreading fast.' 
+              : fdiScore < 60 
+              ? 'Moderate spread risk if local wind speeds pick up.' 
+              : 'Dangerous dry winds can rapidly fan active flames.'}
           </p>
         </div>
 
-        {/* FUEL MOISTURE */}
+        {/* CARD 2: VEGETATION DRYNESS */}
         <div className="telemetry-card">
           <div className="card-label-row">
-            <span className="card-title">Dead Fine Fuel Moisture</span>
+            <span className="card-title">Vegetation Dryness (Trees & Grass)</span>
             <span className={`status-pill ${fuelMoisture <= 6.5 ? 'pill-red-flag' : 'pill-normal'}`}>
-              {fuelMoisture <= 6.5 ? 'CRITICAL DRY' : 'ADEQUATE'}
+              {fuelMoisture <= 6.5 ? 'TINDER DRY' : 'DAMP & SAFE'}
             </span>
           </div>
           <div className="metric-number-row">
             <span className="metric-big">{fuelMoisture}%</span>
-            <span className="metric-unit">10-hr litter</span>
+            <span className="metric-unit">Moisture</span>
           </div>
           <p className="metric-subtext">
-            Nelson NFDRS equilibrium. Flashover combustibility occurs at &lt;6.5%.
+            {fuelMoisture <= 6.5 
+              ? 'Vegetation is dangerously dry and catches fire very easily.' 
+              : 'Ground brush is moist and naturally resists burning.'}
           </p>
         </div>
 
-        {/* VPD */}
+        {/* CARD 3: AIR TEMPERATURE & HUMIDITY */}
         <div className="telemetry-card">
           <div className="card-label-row">
-            <span className="card-title">Vapor Pressure Deficit</span>
-            <span className="status-pill pill-normal">TETENS SVP</span>
+            <span className="card-title">Air Temperature & Humidity</span>
+            <span className="status-pill pill-normal">
+              {ambientRh >= 60 ? 'HUMID AIR' : 'DRY AIR'}
+            </span>
           </div>
           <div className="metric-number-row">
-            <span className="metric-big">{vpdVal}</span>
-            <span className="metric-unit">kPa</span>
+            <span className="metric-big">{ambientTemp}°C</span>
+            <span className="metric-unit">/ {ambientRh}% RH</span>
           </div>
           <p className="metric-subtext">
-            Atmospheric drying demand. High VPD aggressively strips moisture from living foliage.
+            {ambientRh >= 60 
+              ? 'Moist atmosphere naturally suppresses flame development.' 
+              : 'Dry atmosphere actively draws moisture out of forest canopy.'}
           </p>
         </div>
 
-        {/* FORWARD SPREAD RATE */}
+        {/* CARD 4: PREDICTED SPREAD SPEED */}
         <div className="telemetry-card">
           <div className="card-label-row">
-            <span className="card-title">Forward Rate of Spread</span>
-            <span className="status-pill pill-normal">ROTHERMEL</span>
+            <span className="card-title">Projected Spread Speed</span>
+            <span className="status-pill pill-normal">
+              {spreadRate >= 1.0 ? 'FAST' : 'SLOW'}
+            </span>
           </div>
           <div className="metric-number-row">
             <span className="metric-big" style={{ color: '#00E5FF' }}>{spreadRate}</span>
             <span className="metric-unit">km/h</span>
           </div>
           <p className="metric-subtext">
-            Propagates downwind towards <strong>{spreadAzimuth}° azimuth</strong>. Reaches {spreadDistance} km in {forecastHours}h.
+            Blowing towards <strong>{spreadCompass}</strong>. Reaches ~{spreadDistance} km in {forecastHours} hours.
           </p>
         </div>
       </section>
 
-      {/* REAL-TIME WEATHER LIVE STATUS STRIP */}
+      {/* CLEAN LIVE WEATHER STATUS BAR */}
       <div className="live-weather-infobar">
         <div className="weather-stream-status">
           <span className="pulse-green-dot"></span>
-          <span>Open-Meteo Real-Time Weather Stream:</span>
-          <strong>{weatherData?.isLive ? 'LIVE OBSERVATION' : 'ATMOSPHERIC REANALYSIS'}</strong>
+          <span>Live Weather at Selected Fire:</span>
+          <strong>{weatherData?.isLive ? 'LIVE METEOROLOGICAL FEED' : 'REGIONAL ESTIMATE'}</strong>
         </div>
         <div className="weather-pills-row">
           <div className="weather-metric-pill">
-            <span className="pill-k">TEMP:</span>
+            <span className="pill-k">TEMPERATURE:</span>
             <span className="pill-v">{ambientTemp}°C</span>
           </div>
           <div className="weather-metric-pill">
@@ -547,10 +537,10 @@ export const EarlyWarning: React.FC = () => {
           </div>
           <div className="weather-metric-pill">
             <span className="pill-k">WIND:</span>
-            <span className="pill-v">{windSpeed} km/h @ {windDir}°</span>
+            <span className="pill-v">{windSpeed} km/h ({windFromCompass})</span>
           </div>
           <div className="weather-metric-pill">
-            <span className="pill-k">SOURCE FRP:</span>
+            <span className="pill-k">FIRE HEAT (FRP):</span>
             <span className="pill-v" style={{ color: '#FFB800' }}>{activeFrp} MW</span>
           </div>
         </div>
@@ -575,7 +565,7 @@ export const EarlyWarning: React.FC = () => {
               className={`source-tab-btn ${sourceMode === 'benchmarks' ? 'active' : ''}`}
               onClick={() => setSourceMode('benchmarks')}
             >
-              ⚡ Benchmark Scenarios
+              ⚡ Test Scenarios
             </button>
           </div>
 
@@ -583,25 +573,25 @@ export const EarlyWarning: React.FC = () => {
             /* REAL-TIME NASA FIRMS ACTIVE HOTSPOT PICKER */
             <div className="control-group">
               <div className="firms-picker-header">
-                <label className="control-label">Active Detected Hotspot:</label>
+                <label className="control-label">Select Active Detected Fire:</label>
                 <button
                   type="button"
                   className="refresh-feed-link"
                   onClick={async () => {
                     setIsFirmsLoading(true);
-                    const spots = await fetchLiveFirmsHotspots(firmsKey, 2);
+                    const spots = await fetchLiveFirmsHotspots();
                     setFirmsHotspots(spots);
                     setIsFirmsLoading(false);
                   }}
                   disabled={isFirmsLoading}
                 >
-                  {isFirmsLoading ? 'Syncing...' : '↻ Refresh Satellite Feed'}
+                  {isFirmsLoading ? 'Syncing...' : '↻ Refresh Feed'}
                 </button>
               </div>
 
               {firmsHotspots.length === 0 ? (
                 <div className="no-hotspots-card">
-                  No active thermal anomalies detected in the last 48 hours for the regional boundary.
+                  No active fires detected in the last 48 hours for this region.
                 </div>
               ) : (
                 <div className="live-hotspots-picker">
@@ -631,7 +621,7 @@ export const EarlyWarning: React.FC = () => {
           ) : (
             /* BENCHMARK SCENARIO SELECTOR */
             <div className="control-group">
-              <label className="control-label" htmlFor="scenario-preset-select">Benchmark Monitoring Preset:</label>
+              <label className="control-label" htmlFor="scenario-preset-select">Historical Benchmark Scenario:</label>
               <select
                 id="scenario-preset-select"
                 className="preset-select"
@@ -649,13 +639,13 @@ export const EarlyWarning: React.FC = () => {
           )}
 
           {/* SIMULATION SLIDERS */}
-          <h2 className="control-section-title" style={{ marginTop: '1rem' }}>Downwind Spread Parameters</h2>
+          <h2 className="control-section-title" style={{ marginTop: '0.8rem' }}>Spread Prediction Settings</h2>
 
           {/* FORECAST DURATION */}
           <div className="control-group">
             <label className="control-label" htmlFor="ew-lead-time-slider">
-              <span>Forecast Lead Time:</span>
-              <span className="control-val-badge">+{forecastHours} Hours</span>
+              <span>Predict Forward In Time:</span>
+              <span className="control-val-badge">+{forecastHours} Hours Ahead</span>
             </label>
             <input
               id="ew-lead-time-slider"
@@ -672,7 +662,7 @@ export const EarlyWarning: React.FC = () => {
           {/* WIND SPEED */}
           <div className="control-group">
             <label className="control-label" htmlFor="ew-wind-speed-slider">
-              <span>Sustained Wind Speed:</span>
+              <span>Wind Speed:</span>
               <span className="control-val-badge">{windSpeed} km/h ({(windSpeed * 0.621).toFixed(0)} mph)</span>
             </label>
             <input
@@ -691,7 +681,7 @@ export const EarlyWarning: React.FC = () => {
           <div className="control-group">
             <label className="control-label" htmlFor="ew-wind-dir-slider">
               <span>Wind Blowing From:</span>
-              <span className="control-val-badge">{windDir}° ({windDir < 90 ? 'NE' : windDir < 180 ? 'SE' : windDir < 270 ? 'SW' : 'NW'})</span>
+              <span className="control-val-badge">{windFromCompass} ({windDir}°)</span>
             </label>
             <input
               id="ew-wind-dir-slider"
@@ -705,19 +695,21 @@ export const EarlyWarning: React.FC = () => {
             />
           </div>
 
-          {/* SPREAD SUMMARY BADGES */}
+          {/* USER-FRIENDLY SPREAD SUMMARY */}
           <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '12px', borderRadius: '6px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
-              <span style={{ color: '#94A3B8' }}>Spread Azimuth:</span>
-              <strong style={{ color: '#00E5FF' }}>{spreadAzimuth}° Heading</strong>
+              <span style={{ color: '#94A3B8' }}>Fire Propagation Path:</span>
+              <strong style={{ color: '#00E5FF' }}>Towards {spreadCompass}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
-              <span style={{ color: '#94A3B8' }}>Est. Burn Envelope:</span>
-              <strong style={{ color: '#FFB800' }}>{burnArea} km²</strong>
+              <span style={{ color: '#94A3B8' }}>Expected Travel Distance:</span>
+              <strong style={{ color: '#FFB800' }}>{spreadDistance} km in {forecastHours}h</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-              <span style={{ color: '#94A3B8' }}>Downwind Reach:</span>
-              <strong style={{ color: '#FF3366' }}>{spreadDistance} km</strong>
+              <span style={{ color: '#94A3B8' }}>Communities Threatened:</span>
+              <strong style={{ color: exposedCommunities.length > 0 ? '#FF3366' : '#00E676' }}>
+                {exposedCommunities.length === 0 ? 'None (All Clear)' : `${exposedCommunities.length} nearby areas`}
+              </strong>
             </div>
           </div>
         </aside>
@@ -732,64 +724,66 @@ export const EarlyWarning: React.FC = () => {
             <span 
               className="compass-arrow"
               style={{ transform: `rotate(${windDir + 180}deg)` }}
-              title={`Airflow heading ${spreadAzimuth}°`}
+              title={`Smoke & heat blowing toward ${spreadCompass}`}
             >
               ↓
             </span>
-            <strong>{windSpeed} km/h</strong>
+            <strong>{windSpeed} km/h ({getShortCompass(spreadAzimuth)})</strong>
           </div>
 
           {/* MAP LEGEND OVERLAY */}
           <div className="map-legend-overlay">
             <div className="legend-row">
               <span className="legend-swatch swatch-origin"></span>
-              <span>Ignition Origin ({activeFrp} MW)</span>
+              <span>Active Fire Hotspot ({activeFrp} MW)</span>
             </div>
             <div className="legend-row">
               <span className="legend-swatch swatch-cone"></span>
-              <span>+{forecastHours}h Huygens Spread Envelope</span>
+              <span>Predicted {forecastHours}h Spread Cone</span>
             </div>
             <div className="legend-row">
               <span className="legend-swatch swatch-receptor"></span>
-              <span>Downwind Communities / Assets</span>
+              <span>Nearby Towns / Settlements</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ALERT DISPATCH & EXPOSURE TABLE */}
+      {/* USER-FRIENDLY ALERT DISPATCH & COMMUNITY TABLE */}
       <section className="ew-alert-card">
         <div className={`alert-banner ${alertColorClass}`}>
-          <div className="alert-headline">{alertLevel}</div>
+          <div className="alert-headline">{alertHeadline}</div>
           <div className="alert-action">
             {isRedFlag 
-              ? `CRITICAL WILDFIRE ALERT: High atmospheric spread risk (FDI ${fdiScore}/100, Wind ${windSpeed} km/h). Predicted propagation towards ${spreadAzimuth}° azimuth reaches ${spreadDistance} km in ${forecastHours} hours. Downwind communities must initiate containment staging.`
-              : `MONITORING ADVISORY: Atmospheric conditions currently support moderate localized spread (${spreadRate} km/h). Standard patrol containment active.`}
+              ? `Fast-moving fire envelope projected downwind towards ${spreadCompass}. Settlements in the projected path should be notified immediately and prepare containment measures.`
+              : isElevated
+              ? `Elevated spread risk. Smoke and spot fires may travel up to ${spreadDistance} km over the next ${forecastHours} hours towards ${spreadCompass}. Nearby communities should stay informed.`
+              : `Current atmospheric conditions (high moisture and mild winds) prevent fast fire spread. Standard routine monitoring active; no evacuation required.`}
           </div>
         </div>
 
         {/* EXPOSED COMMUNITIES */}
         <div>
           <h3 style={{ fontSize: '1rem', margin: '0 0 10px 0', color: '#FFFFFF' }}>
-            Downwind Settlement & Infrastructure Exposure Assessment ({exposedCommunities.length} Receptors Identified)
+            Communities & Towns in Downwind Path ({exposedCommunities.length})
           </h3>
           <div className="receptors-table-wrapper">
             <table className="receptors-table">
               <thead>
                 <tr>
-                  <th>Community / Settlement</th>
+                  <th>Town / Settlement</th>
                   <th>Population</th>
-                  <th>Distance</th>
-                  <th>Bearing</th>
-                  <th>Time to Impact</th>
-                  <th>Threat Tier</th>
+                  <th>Distance from Fire</th>
+                  <th>Direction</th>
+                  <th>Time Until Reaches (ETA)</th>
+                  <th>Community Alert Tier</th>
                 </tr>
               </thead>
               <tbody>
                 {exposedCommunities.length === 0 ? (
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center', color: '#94A3B8', padding: '16px' }}>
-                      No registered population centers located directly within downwind propagation path.
+                      ✅ No registered towns or population centers are located in the downwind path of this fire.
                     </td>
                   </tr>
                 ) : (
@@ -798,9 +792,11 @@ export const EarlyWarning: React.FC = () => {
                       <td><strong>{rec.name}</strong></td>
                       <td style={{ color: '#CBD5E1' }}>{rec.population}</td>
                       <td>{rec.distance_km} km</td>
-                      <td>{rec.bearing_deg}°</td>
+                      <td>{getCompassDirection(rec.bearing_deg)}</td>
                       <td style={{ color: rec.time_to_impact_hours <= forecastHours ? '#FF3366' : '#FFB800', fontWeight: 600 }}>
-                        ~{rec.time_to_impact_hours} Hours
+                        {rec.time_to_impact_hours <= forecastHours 
+                          ? `⚠️ ~${rec.time_to_impact_hours} Hours` 
+                          : `~${rec.time_to_impact_hours} Hours (Buffer)`}
                       </td>
                       <td>
                         <span 
@@ -811,7 +807,11 @@ export const EarlyWarning: React.FC = () => {
                             border: `1px solid ${rec.color}`
                           }}
                         >
-                          {rec.threat_level}
+                          {rec.threat_level === 'CRITICAL DIRECT IMPACT' 
+                            ? '🔴 DIRECT PATH' 
+                            : rec.threat_level === 'HIGH DOWNWIND THREAT' 
+                            ? '🟠 HIGH THREAT' 
+                            : '🟡 SMOKE ADVISORY'}
                         </span>
                       </td>
                     </tr>
@@ -824,55 +824,9 @@ export const EarlyWarning: React.FC = () => {
 
         {/* DECISION-SUPPORT MANDATORY DISCLAIMER */}
         <div className="disclaimer-box">
-          <strong>SCIENTIFIC DECISION-SUPPORT PROTOCOL:</strong> This early warning system couples NASA FIRMS Near-Real-Time thermal observations with Open-Meteo atmospheric forecasts to model fire danger and forward spread physics. Evacuation directives and operational emergency actions are issued exclusively by designated local civil protection authorities.
+          <strong>Decision-Support Notice:</strong> BengalFlare couples NASA FIRMS satellite thermal observations with Open-Meteo atmospheric forecasts to model fire danger and forward spread. Official emergency directives and evacuation orders are issued exclusively by local civil protection authorities.
         </div>
       </section>
-
-      {/* NASA FIRMS MAP_KEY MODAL */}
-      {showKeyModal && (
-        <div className="key-modal-backdrop" onClick={() => setShowKeyModal(false)}>
-          <div className="key-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Configure NASA FIRMS Telemetry Key</h3>
-            <p className="modal-sub">
-              Enter your NASA Earthdata FIRMS MAP_KEY to directly ingest real-time VIIRS / MODIS satellite observations.
-            </p>
-            <div className="modal-input-group">
-              <label htmlFor="firms-key-input">NASA FIRMS MAP_KEY:</label>
-              <input
-                id="firms-key-input"
-                type="text"
-                value={customKeyInput}
-                onChange={(e) => setCustomKeyInput(e.target.value)}
-                placeholder="Enter 32-character FIRMS MAP_KEY..."
-                className="modal-key-input"
-              />
-            </div>
-            <div className="modal-btn-row">
-              <button 
-                type="button" 
-                className="modal-btn-reset"
-                onClick={() => setCustomKeyInput(DEFAULT_FIRMS_KEY)}
-              >
-                Reset to Default
-              </button>
-              <button 
-                type="button" 
-                className="modal-btn-cancel"
-                onClick={() => setShowKeyModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                type="button" 
-                className="modal-btn-save"
-                onClick={handleSaveFirmsKey}
-              >
-                Save & Query Live FIRMS
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

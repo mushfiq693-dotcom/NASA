@@ -181,6 +181,21 @@ export const calculateBearingDeg = (lat1: number, lon1: number, lat2: number, lo
   return (deg + 360) % 360;
 };
 
+export const getCompassDirection = (deg: number): string => {
+  const directions = [
+    'North (N)', 'North-East (NE)', 'East (E)', 'South-East (SE)',
+    'South (S)', 'South-West (SW)', 'West (W)', 'North-West (NW)'
+  ];
+  const index = Math.round(((deg % 360) + 360) % 360 / 45) % 8;
+  return directions[index];
+};
+
+export const getShortCompass = (deg: number): string => {
+  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  const index = Math.round(((deg % 360) + 360) % 360 / 45) % 8;
+  return dirs[index];
+};
+
 const round = (val: number, decimals: number = 2): number => {
   const f = 10 ** decimals;
   return Math.round(val * f) / f;

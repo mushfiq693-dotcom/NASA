@@ -7,9 +7,12 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  height: calc(100vh - 72px);
-  padding: 1.5rem 2rem 2rem;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  padding: 1.25rem 2rem 2.5rem;
   max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
   color: var(--foreground);
   box-sizing: border-box;
@@ -24,6 +27,7 @@
   border-bottom: 1px solid var(--border-rule);
   flex-wrap: wrap;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .ew-badge {
@@ -106,6 +110,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .telemetry-card {
@@ -169,10 +174,16 @@
   border: 1px solid #FF0033;
 }
 
+.pill-watch {
+  background: rgba(255, 184, 0, 0.2);
+  color: #FFB800;
+  border: 1px solid rgba(255, 184, 0, 0.5);
+}
+
 .pill-normal {
-  background: rgba(0, 229, 255, 0.15);
-  color: #00E5FF;
-  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  border: 1px solid rgba(0, 230, 118, 0.35);
 }
 
 .metric-number-row {
@@ -209,6 +220,8 @@
   grid-template-columns: 360px 1fr;
   gap: 20px;
   min-height: 540px;
+  height: auto;
+  flex-shrink: 0;
 }
 
 @media (max-width: 1080px) {
@@ -380,6 +393,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex-shrink: 0;
+  margin-top: 10px;
 }
 
 .alert-banner {
@@ -494,49 +509,21 @@
    REAL-TIME NASA FIRMS & METEOROLOGICAL TELEMETRY EXTENSIONS
    ========================================================================= */
 
-.firms-key-badge-row {
-  display: flex;
-  align-items: center;
-}
-
-.firms-key-pill {
+.satellite-status-pill {
   display: flex;
   align-items: center;
   gap: 8px;
   background: rgba(14, 21, 37, 0.85);
-  border: 1px solid rgba(0, 229, 255, 0.3);
+  border: 1px solid rgba(0, 230, 118, 0.3);
   padding: 6px 14px;
   border-radius: 6px;
   font-family: var(--font-mono);
   font-size: 0.76rem;
   color: #CBD5E1;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.firms-key-pill:hover {
-  background: rgba(0, 229, 255, 0.12);
-  border-color: #00E5FF;
-  box-shadow: 0 0 14px rgba(0, 229, 255, 0.25);
-}
-
-.key-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #64748B;
-}
-
-.key-dot.active {
-  background: #00E676;
-  box-shadow: 0 0 8px #00E676;
-}
-
-.key-edit-tag {
-  font-size: 0.68rem;
-  color: #FFB800;
-  font-weight: 700;
-  margin-left: 4px;
+.satellite-status-pill strong {
+  color: #00E676;
 }
 
 /* REAL-TIME WEATHER INFOBAR */
@@ -552,6 +539,7 @@
   margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .weather-stream-status {
@@ -761,123 +749,4 @@
   color: #94A3B8;
 }
 
-/* MODAL CONFIGURATION */
-.key-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
 
-.key-modal {
-  background: #0E1528;
-  border: 1px solid rgba(0, 229, 255, 0.3);
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 480px;
-  width: 100%;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
-}
-
-.key-modal h3 {
-  margin: 0 0 6px 0;
-  color: #FFFFFF;
-  font-size: 1.15rem;
-}
-
-.modal-sub {
-  font-size: 0.82rem;
-  color: #94A3B8;
-  line-height: 1.45;
-  margin: 0 0 16px 0;
-}
-
-.modal-input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
-}
-
-.modal-input-group label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: #CBD5E1;
-}
-
-.modal-key-input {
-  background: rgba(8, 12, 22, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: #00E5FF;
-  outline: none;
-}
-
-.modal-key-input:focus {
-  border-color: #00E5FF;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
-}
-
-.modal-btn-row {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.modal-btn-reset {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #94A3B8;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  cursor: pointer;
-  margin-right: auto;
-}
-
-.modal-btn-reset:hover {
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.modal-btn-cancel {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #CBD5E1;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  cursor: pointer;
-}
-
-.modal-btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.modal-btn-save {
-  background: linear-gradient(135deg, #FF5E00 0%, #FF9E00 100%);
-  border: none;
-  color: #FFFFFF;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.78rem;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(255, 94, 0, 0.4);
-}
-
-.modal-btn-save:hover {
-  filter: brightness(1.1);
-}
