@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
+import geopandas as gpd
 from pathlib import Path
 
 def fetch_bangladesh_boundary(metadata_dir):
@@ -196,12 +197,13 @@ def load_real_firms_data(data_raw_dir, project_root):
     print(f"Successfully loaded {len(df):,} authentic NASA FIRMS observations.")
     return df
 
-def run_qa_filtering(df, reports_dir):
+def run_qa_filtering(df, reports_dir, boundary_file=None):
     """
     Applies QA filtering and writes a summary report.
     Filters:
     1. MODIS confidence >= 30, VIIRS confidence != 'low' ('l')
     2. type == 0 (presumed vegetation)
+    3. Spatial boundary clipping against official national boundary polygon
     """
     qa_summary = {
         "timestamp": datetime.datetime.now().isoformat(),
@@ -228,10 +230,38 @@ def run_qa_filtering(df, reports_dir):
     
     # 2. Filter Type
     mask_type = df_conf['type'] == 0
-    df_final = df_conf[mask_type]
+    df_type = df_conf[mask_type]
     qa_summary["filters"]["non_vegetation_type"] = {
-        "removed": int(len(df_conf) - len(df_final))
+        "removed": int(len(df_conf) - len(df_type))
     }
+    
+    # 3. Filter National Boundary (Point-in-Polygon clipping)
+    if boundary_file and Path(boundary_file).exists():
+        print(f"Applying spatial boundary clipping using {boundary_file}...")
+        gdf_boundary = gpd.read_file(boundary_file)
+        if gdf_boundary.crs != "EPSG:4326":
+            gdf_boundary = gdf_boundary.to_crs("EPSG:4326")
+            
+        gdf_pts = gpd.GeoDataFrame(
+            df_type,
+            geometry=gpd.points_from_xy(df_type.longitude, df_type.latitude),
+            crs="EPSG:4326"
+        )
+        matched = gpd.sjoin(gdf_pts[['geometry']], gdf_boundary[['geometry']], predicate='within')
+        mask_boundary = df_type.index.isin(matched.index)
+        df_final = df_type[mask_boundary].copy()
+        
+        removed_boundary = int(len(df_type) - len(df_final))
+        qa_summary["filters"]["outside_national_boundary"] = {
+            "removed": removed_boundary
+        }
+        print(f"Boundary clipping removed {removed_boundary:,} foreign detections outside national border.")
+    else:
+        df_final = df_type
+        qa_summary["filters"]["outside_national_boundary"] = {
+            "removed": 0,
+            "note": "boundary_file not provided or not found"
+        }
     
     qa_summary["total_rows_out"] = len(df_final)
     
@@ -255,14 +285,15 @@ if __name__ == "__main__":
     print("Starting Phase B: Real NASA FIRMS Data Ingestion & QA...")
     
     # 1. Fetch Boundary if missing
-    if not (metadata_dir / "BGD_boundary.geojson").exists():
-        fetch_bangladesh_boundary(metadata_dir)
+    boundary_file = metadata_dir / "BGD_boundary.geojson"
+    if not boundary_file.exists():
+        boundary_file = fetch_bangladesh_boundary(metadata_dir)
     
     # 2. Ingest Real NASA FIRMS Data
     df_raw = load_real_firms_data(data_raw_dir, project_root)
     
-    # 3. QA Filtering
-    df_qa = run_qa_filtering(df_raw, reports_dir)
+    # 3. QA Filtering (including national boundary clipping)
+    df_qa = run_qa_filtering(df_raw, reports_dir, boundary_file=boundary_file)
     
     # 4. Save to Parquet
     parquet_file = data_interim_dir / "raw_observation.parquet"

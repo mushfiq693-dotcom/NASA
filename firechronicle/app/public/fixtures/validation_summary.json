@@ -1,0 +1,130 @@
+{
+    "raw_baseline": {
+        "pearson_r": 0.905,
+        "rmse": 988.76,
+        "pbias_pct": -40.1,
+        "willmott_d": 0.885
+    },
+    "harmonized_hfai": {
+        "pearson_r": 0.959,
+        "rmse": 536.55,
+        "pbias_pct": -1.7,
+        "willmott_d": 0.976,
+        "rmse_reduction_pct": 45.7,
+        "interval_coverage_95_pct": 94.9
+    },
+    "coincident_sample_series": [
+        {
+            "date": "2012-03-18",
+            "modis_raw": 13543.0,
+            "viirs_raw": 3344.9,
+            "harmonized_hfai": 7003.6,
+            "uncertainty": 840.4
+        },
+        {
+            "date": "2012-03-24",
+            "modis_raw": 13658.9,
+            "viirs_raw": 7914.2,
+            "harmonized_hfai": 14695.9,
+            "uncertainty": 1763.5
+        },
+        {
+            "date": "2012-03-31",
+            "modis_raw": 15832.3,
+            "viirs_raw": 11914.3,
+            "harmonized_hfai": 15450.3,
+            "uncertainty": 1854.0
+        },
+        {
+            "date": "2012-04-03",
+            "modis_raw": 8916.5,
+            "viirs_raw": 3284.4,
+            "harmonized_hfai": 9126.2,
+            "uncertainty": 1095.1
+        },
+        {
+            "date": "2013-04-01",
+            "modis_raw": 8395.4,
+            "viirs_raw": 5552.2,
+            "harmonized_hfai": 9465.3,
+            "uncertainty": 1135.8
+        },
+        {
+            "date": "2014-03-29",
+            "modis_raw": 8561.8,
+            "viirs_raw": 2690.6,
+            "harmonized_hfai": 5565.5,
+            "uncertainty": 667.9
+        },
+        {
+            "date": "2020-03-30",
+            "modis_raw": 8289.4,
+            "viirs_raw": 3300.8,
+            "harmonized_hfai": 5917.7,
+            "uncertainty": 710.1
+        },
+        {
+            "date": "2023-04-11",
+            "modis_raw": 20240.2,
+            "viirs_raw": 11838.8,
+            "harmonized_hfai": 15105.3,
+            "uncertainty": 1812.6
+        },
+        {
+            "date": "2023-04-12",
+            "modis_raw": 14242.6,
+            "viirs_raw": 7368.8,
+            "harmonized_hfai": 14684.7,
+            "uncertainty": 1762.2
+        },
+        {
+            "date": "2024-04-06",
+            "modis_raw": 8316.9,
+            "viirs_raw": 4371.2,
+            "harmonized_hfai": 5673.6,
+            "uncertainty": 680.8
+        }
+    ],
+    "splits": [
+        {
+            "split_name": "Temporal Holdout (2012\u20132019 Train / 2020\u20132024 Test)",
+            "pearson_r": 0.859,
+            "rmse": 965.86,
+            "pbias_pct": 2.2,
+            "willmott_d": 0.919,
+            "coverage_95": 94.9,
+            "days_evaluated": 312,
+            "cell_observations": 3124
+        },
+        {
+            "split_name": "Spatial Holdout (South Train / North Test)",
+            "pearson_r": 0.812,
+            "rmse": 654.64,
+            "pbias_pct": -5.2,
+            "willmott_d": 0.846,
+            "coverage_95": 94.9,
+            "days_evaluated": 553,
+            "cell_observations": 2954
+        },
+        {
+            "split_name": "Platform Holdout (Aqua Train / Terra Test)",
+            "pearson_r": 0.745,
+            "rmse": 155.04,
+            "pbias_pct": 96.8,
+            "willmott_d": 0.776,
+            "coverage_95": 94.8,
+            "days_evaluated": 210,
+            "cell_observations": 547
+        },
+        {
+            "split_name": "Seasonal Holdout (Dry Season Train / Non-Dry Test)",
+            "pearson_r": 0.568,
+            "rmse": 63.82,
+            "pbias_pct": 174.9,
+            "willmott_d": 0.608,
+            "coverage_95": 94.7,
+            "days_evaluated": 170,
+            "cell_observations": 242
+        }
+    ]
+}

@@ -38,7 +38,8 @@ def export_h3(processed_dir, reports_dir):
     
     h3_agg = anomalies.groupby(['h3_res7', 'local_date']).agg(
         hfai_smoothed=('hfai_smoothed', 'max'), # Max intensity in that hex
-        deviation=('deviation', 'max')
+        deviation=('deviation', 'max'),
+        severity=('severity', 'max')
     ).reset_index()
     
     # 4. Save to Parquet
@@ -68,6 +69,13 @@ def export_h3(processed_dir, reports_dir):
         json.dump(ts_dict, f)
         
     print(f"Time-series exported to {ts_file}")
+    
+    # Also sync to frontend fixtures for Vite dev server
+    fixture_file = processed_dir.parent.parent / "app" / "public" / "fixtures" / "time_series.json"
+    if fixture_file.parent.exists():
+        with open(fixture_file, 'w') as f:
+            json.dump(ts_dict, f)
+        print(f"Synced time-series to {fixture_file}")
 
 if __name__ == "__main__":
     project_root = Path(__file__).resolve().parent.parent

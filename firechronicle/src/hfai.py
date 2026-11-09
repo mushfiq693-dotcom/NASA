@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 import pyarrow as pa
 import pyarrow.parquet as pq
 import matplotlib.pyplot as plt
@@ -10,30 +11,39 @@ def calculate_hfai(processed_dir, reports_dir):
     print(f"Reading {input_file}...")
     df = pd.read_parquet(input_file)
     
-    # 1. Base HFAI Calculation
-    # Harmonization weights: VIIRS is much more sensitive than MODIS.
-    # We assign a weight to normalize counts.
-    def get_weight(sensor):
-        return 1.0 if sensor == 'MODIS' else 0.2
-        
-    df['sensor_weight'] = df['sensor'].apply(get_weight)
-    
-    # Ensure raw_count and frp_mean are numeric and fillna with 0 for calculation
-    # except when observation_status is KNOWN_OUTAGE
+    # 1. Base HFAI Calculation using trained scikit-learn Harmonization Model
+    model_path = processed_dir / "harmonization_model.joblib"
     calc_df = df.copy()
     calc_df['calc_count'] = calc_df['raw_count'].fillna(0)
-    calc_df['calc_frp'] = calc_df['frp_mean'].fillna(0)
+    calc_df['calc_frp'] = calc_df['frp_sum'].fillna(0)
     
-    calc_df['hfai_base'] = calc_df['calc_count'] * calc_df['sensor_weight'] * calc_df['calc_frp']
-    
+    if model_path.exists():
+        print(f"Applying trained scikit-learn model from {model_path}...")
+        model = joblib.load(model_path)
+        
+        # MODIS: baseline reference energy (FRP sum in MW)
+        modis_mask = calc_df['sensor'] == 'MODIS'
+        calc_df.loc[modis_mask, 'hfai_base'] = calc_df.loc[modis_mask, 'calc_frp']
+        
+        # VIIRS: calibrated MODIS-equivalent energy using scikit-learn ML model
+        viirs_mask = calc_df['sensor'] == 'VIIRS'
+        features = ['raw_count', 'frp_sum', 'frp_mean', 'frp_max', 'confidence_mean', 'mean_scan', 'mean_track']
+        X_viirs = calc_df.loc[viirs_mask, features].fillna(0)
+        pred_energy = model.predict(X_viirs)
+        calc_df.loc[viirs_mask, 'hfai_base'] = np.clip(pred_energy, 0, None)
+    else:
+        print("Warning: harmonization_model.joblib not found. Using fallback mapping...")
+        calc_df['sensor_weight'] = calc_df['sensor'].apply(lambda s: 1.0 if s == 'MODIS' else 0.25)
+        calc_df['hfai_base'] = calc_df['calc_count'] * calc_df['sensor_weight'] * calc_df['calc_frp']
+        
     # Set hfai_base to NaN where data is genuinely missing
     calc_df.loc[calc_df['observation_status'].isin(['KNOWN_OUTAGE', 'MISSING_PRODUCT']), 'hfai_base'] = np.nan
     
-    # 2. Combine sensors per grid-day
-    # Sum HFAI across platforms/sensors for a given cell and day
+    # 2. Combine sensors per grid-day (Cross-Sensor Overpass Deduplication)
+    # Use max energy on coincident overpasses to prevent artificial double-counting
     grid_day = calc_df.groupby(['grid_id', 'local_date']).agg(
-        total_raw_count=('calc_count', 'sum'),
-        hfai_base=('hfai_base', 'sum')
+        total_raw_count=('calc_count', 'max'),
+        hfai_base=('hfai_base', 'max')
     ).reset_index()
     
     # 3. Temporal Smoothing (7-day rolling average per grid_id)

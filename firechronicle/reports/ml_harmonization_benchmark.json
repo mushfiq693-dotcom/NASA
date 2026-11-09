@@ -1,0 +1,39 @@
+{
+    "dataset": "Coincident MODIS/VIIRS Overpasses (2012-2024)",
+    "total_coincident_cell_days": 7694,
+    "train_samples": 6155,
+    "test_samples": 1539,
+    "champion_model": "HistGradientBoosting",
+    "features": [
+        "raw_count",
+        "frp_sum",
+        "frp_mean",
+        "frp_max",
+        "confidence_mean",
+        "mean_scan",
+        "mean_track"
+    ],
+    "models_benchmark": {
+        "Ridge_Baseline": {
+            "pearson_r": 0.2734,
+            "r2_score": 0.0734,
+            "rmse_mw": 137.07,
+            "pbias_pct": -5.46,
+            "willmott_d": 0.2803
+        },
+        "RandomForest": {
+            "pearson_r": 0.3488,
+            "r2_score": 0.1205,
+            "rmse_mw": 133.54,
+            "pbias_pct": -4.27,
+            "willmott_d": 0.3909
+        },
+        "HistGradientBoosting": {
+            "pearson_r": 0.3567,
+            "r2_score": 0.1253,
+            "rmse_mw": 133.18,
+            "pbias_pct": -8.23,
+            "willmott_d": 0.4202
+        }
+    }
+}

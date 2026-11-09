@@ -119,11 +119,81 @@ export const Validation: React.FC = () => {
   const { isReduced, isOff } = useMotionMode();
   const [selectedSplit, setSelectedSplit] = useState<string>('temporal');
   const [animProgress, setAnimProgress] = useState(isOff ? 1 : 0);
+  const [metrics, setMetrics] = useState<MetricComparison[]>(METRICS);
+  const [empiricalCoverage, setEmpiricalCoverage] = useState<number>(94.9);
+  const [, setRmseReduction] = useState<number>(45.7);
 
   // Interval coverage animation
   const coverageNominal = 95.0;
-  const coverageEmpirical = 95.4;
-  const animatedEmpirical = useCountUp(coverageEmpirical, isOff ? 0 : 900, 1);
+  const animatedEmpirical = useCountUp(empiricalCoverage, isOff ? 0 : 900, 1);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/validation')
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .catch(() => fetch('/fixtures/validation_summary.json').then(r => r.json()))
+      .then(data => {
+        if (data && data.harmonized_hfai) {
+          const raw = data.raw_baseline || {};
+          const harm = data.harmonized_hfai || {};
+          setMetrics([
+            {
+              id: 'pearson_r',
+              name: 'Pearson Correlation (r)',
+              unit: '',
+              raw: raw.pearson_r ?? 0.905,
+              harmonized: harm.pearson_r ?? 0.959,
+              target: 0.92,
+              targetDirection: 'higher',
+              format: (v) => v.toFixed(2),
+              description: 'Measures linear alignment of daily energy-weighted fire activity between MODIS and VIIRS.'
+            },
+            {
+              id: 'rmse',
+              name: 'Root Mean Square Error (RMSE)',
+              unit: 'MW',
+              raw: raw.rmse ?? 988.8,
+              harmonized: harm.rmse ?? 536.6,
+              target: 600.0,
+              targetDirection: 'lower',
+              format: (v) => `${v.toFixed(1)} MW`,
+              description: 'Average magnitude of prediction error against coincident overpass ground truth.'
+            },
+            {
+              id: 'pbias',
+              name: 'Percent Bias (|PBIAS|)',
+              unit: '%',
+              raw: Math.abs(raw.pbias_pct ?? 40.1),
+              harmonized: Math.abs(harm.pbias_pct ?? 1.7),
+              target: 2.5,
+              targetDirection: 'lower',
+              format: (v) => `${v.toFixed(1)}%`,
+              description: 'Systematic tendency of harmonized estimate to over- or under-estimate fire count.'
+            },
+            {
+              id: 'willmott_d',
+              name: 'Willmott Index of Agreement (d)',
+              unit: '',
+              raw: raw.willmott_d ?? 0.885,
+              harmonized: harm.willmott_d ?? 0.976,
+              target: 0.95,
+              targetDirection: 'higher',
+              format: (v) => v.toFixed(2),
+              description: 'Standardized measure of model prediction accuracy (1.0 = perfect agreement).'
+            }
+          ]);
+          if (harm.interval_coverage_95_pct) {
+            setEmpiricalCoverage(harm.interval_coverage_95_pct);
+          }
+          if (harm.rmse_reduction_pct) {
+            setRmseReduction(harm.rmse_reduction_pct);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (isOff) {
@@ -163,13 +233,13 @@ export const Validation: React.FC = () => {
         </div>
 
         <div className="metrics-grid">
-          {METRICS.map((m) => {
+          {metrics.map((m) => {
             const meetsTarget = m.targetDirection === 'higher' 
               ? m.harmonized >= m.target 
               : m.harmonized <= m.target;
             
             // Calculate percentage width for visual bar (normalized between 0 and max)
-            const maxVal = m.id === 'rmse' ? 16 : m.id === 'pbias' ? 25 : 1.0;
+            const maxVal = m.id === 'rmse' ? Math.max(m.raw, m.harmonized, 1200) : m.id === 'pbias' ? Math.max(m.raw, m.harmonized, 50) : 1.0;
             const rawWidth = Math.min(100, (m.raw / maxVal) * 100);
             const harmWidth = Math.min(100, (m.harmonized / maxVal) * 100);
             const targetPos = Math.min(100, (m.target / maxVal) * 100);
@@ -331,7 +401,7 @@ export const Validation: React.FC = () => {
           <div className="coverage-legend">
             <div className="legend-item">
               <span className="legend-dot dot-cyan"></span>
-              <span>Observed: <strong>{coverageEmpirical}%</strong></span>
+              <span>Observed: <strong>{empiricalCoverage}%</strong></span>
             </div>
             <div className="legend-item">
               <span className="legend-dot dot-yellow"></span>

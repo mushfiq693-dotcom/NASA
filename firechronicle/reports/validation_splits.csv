@@ -1,5 +1,5 @@
-split_name,pearson_r,rmse,pbias_pct,willmott_d,coverage_95
-Temporal Holdout (2018-2021 Train / 2022-2023 Test),0.938,3.91,2.1,0.962,94.6
-Spatial Holdout (Division Cross-Validation),0.945,3.75,1.6,0.971,95.2
-Platform Holdout (S-NPP to NOAA-20 Generalization),0.931,4.02,2.4,0.958,94.1
-Seasonal Holdout (Leave-One-Season-Out),0.948,3.68,1.4,0.974,95.5
+split_name,pearson_r,rmse,pbias_pct,willmott_d,coverage_95,days_evaluated,cell_observations
+Temporal Holdout (2012–2019 Train / 2020–2024 Test),0.859,965.86,2.2,0.919,94.9,312,3124
+Spatial Holdout (South Train / North Test),0.812,654.64,-5.2,0.846,94.9,553,2954
+Platform Holdout (Aqua Train / Terra Test),0.745,155.04,96.8,0.776,94.8,210,547
+Seasonal Holdout (Dry Season Train / Non-Dry Test),0.568,63.82,174.9,0.608,94.7,170,242

@@ -1,42 +1,57 @@
 [
     {
-        "grid_id": "8928_2731",
-        "date": "2006-03-21",
-        "hfai": 4164.4,
-        "baseline_mean": 2086.7709999999997,
-        "baseline_p90": 3748.8741999999997,
-        "deviation": 2077.629
+        "grid_id": "8898_2927",
+        "date": "2007-04-02",
+        "hfai": 4326.2,
+        "baseline_mean": 166.39,
+        "baseline_p90": 0.0,
+        "effective_p90": 108.61,
+        "deviation": 4159.81,
+        "z_score": 5.0,
+        "severity": "Extreme"
     },
     {
         "grid_id": "8928_2730",
         "date": "2006-03-21",
         "hfai": 4223.3,
-        "baseline_mean": 2173.866,
-        "baseline_p90": 3813.4132000000004,
-        "deviation": 2049.434
+        "baseline_mean": 166.91,
+        "baseline_p90": 0.0,
+        "effective_p90": 108.61,
+        "deviation": 4056.39,
+        "z_score": 5.0,
+        "severity": "Extreme"
+    },
+    {
+        "grid_id": "8928_2731",
+        "date": "2006-03-21",
+        "hfai": 4164.4,
+        "baseline_mean": 162.03,
+        "baseline_p90": 0.0,
+        "effective_p90": 108.61,
+        "deviation": 4002.37,
+        "z_score": 5.0,
+        "severity": "Extreme"
     },
     {
         "grid_id": "8928_2729",
         "date": "2006-03-21",
         "hfai": 2783.2,
-        "baseline_mean": 1489.7199999999998,
-        "baseline_p90": 2524.504,
-        "deviation": 1293.48
+        "baseline_mean": 114.48,
+        "baseline_p90": 0.0,
+        "effective_p90": 108.61,
+        "deviation": 2668.72,
+        "z_score": 4.99,
+        "severity": "Extreme"
     },
     {
-        "grid_id": "8877_2912",
-        "date": "2024-04-13",
-        "hfai": 2365.152,
-        "baseline_mean": 1193.156,
-        "baseline_p90": 2130.7528,
-        "deviation": 1171.996
-    },
-    {
-        "grid_id": "8919_2777",
-        "date": "2006-03-21",
-        "hfai": 2006.0,
-        "baseline_mean": 1003.789,
-        "baseline_p90": 1805.5578,
-        "deviation": 1002.211
+        "grid_id": "8900_2934",
+        "date": "2006-03-18",
+        "hfai": 2737.6,
+        "baseline_mean": 105.29,
+        "baseline_p90": 0.0,
+        "effective_p90": 108.61,
+        "deviation": 2632.31,
+        "z_score": 5.0,
+        "severity": "Extreme"
     }
 ]

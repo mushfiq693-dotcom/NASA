@@ -1,0 +1,15 @@
+{
+    "archive_years": 26,
+    "total_cell_days": 144260,
+    "unique_cells": 24159,
+    "cells_mean_equals_p90": 50,
+    "sparsity_equality_pct": 0.0404,
+    "regional_quantiles": {
+        "p50": 38.76,
+        "p75": 65.03,
+        "p90": 108.61,
+        "p95": 156.95,
+        "p98": 246.89,
+        "p99": 341.24
+    }
+}
