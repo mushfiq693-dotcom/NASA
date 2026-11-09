@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { GlobeStory } from '../components/GlobeStory';
 import { Line } from 'react-chartjs-2';
 import {
@@ -330,6 +330,52 @@ export const Landing: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Landing Page Bottom Footer - visible ONLY when scrolled to the very end */}
+        <footer className="landing-footer">
+          <div className="landing-footer-inner">
+            <div className="landing-footer-brand">
+              <div className="footer-brand-title">
+                <span className="brand-name-bengal">Bengal</span>
+                <span className="brand-name-flare">Flare</span>
+                <span className="footer-badge-tag">NASA EO TELEMETRY</span>
+              </div>
+              <p className="footer-brand-desc">
+                Harmonized Multi-Decadal Earth Observation Telemetry Record (2001–2026) for Bangladesh & the Bay of Bengal Basin.
+              </p>
+            </div>
+
+            <div className="landing-footer-nav">
+              <div className="footer-nav-col">
+                <span className="footer-col-title">SCIENTIFIC RIGOR</span>
+                <NavLink to="/methodology" className="footer-nav-link">
+                  <span className="footer-link-dot"></span>
+                  Methodology & Mathematical Proofs
+                </NavLink>
+                <NavLink to="/validation" className="footer-nav-link">
+                  <span className="footer-link-dot"></span>
+                  Empirical Validation & Error Metrics
+                </NavLink>
+              </div>
+
+              <div className="footer-nav-col">
+                <span className="footer-col-title">MISSION SUITE</span>
+                <div className="footer-nav-grid">
+                  <NavLink to="/atlas" className="footer-nav-link">Atlas Explorer</NavLink>
+                  <NavLink to="/calendar" className="footer-nav-link">Annual Heatmap Calendar</NavLink>
+                  <NavLink to="/lab" className="footer-nav-link">Sensor Lab</NavLink>
+                  <NavLink to="/live" className="footer-nav-link">Live Telemetry</NavLink>
+                  <NavLink to="/early-warning" className="footer-nav-link">Early Warning & FDI</NavLink>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="landing-footer-bottom">
+            <span>NASA Space Apps Challenge · Earth Observation Data Harmonization</span>
+            <span className="footer-sensor-pill">MODIS (Terra/Aqua) + VIIRS (S-NPP, NOAA-20, NOAA-21)</span>
+          </div>
+        </footer>
 
       </div>
     </div>

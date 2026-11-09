@@ -15,10 +15,25 @@ import { EarlyWarning } from './routes/EarlyWarning';
 import { SharedMotionScene } from './motion/scene';
 import { RouteWipe } from './motion/RouteWipe';
 import { useMotionMode } from './motion/useReducedMotion';
+import { fetchLiveFirmsHotspots, fetchLiveWeather, calculateFDI } from './services/firmsService';
+import type { FirmsHotspot } from './services/firmsService';
+
+interface EmergencyAlertState {
+  hotspot: FirmsHotspot;
+  fdiScore: number;
+  dangerClass: string;
+  windSpeed: number;
+  windDir: number;
+  spreadDistanceKm: number;
+}
 
 function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const { motionMode, setMotionMode } = useMotionMode();
+
+  // Real-Time Emergency Situation Alert State
+  const [emergencyAlert, setEmergencyAlert] = useState<EmergencyAlertState | null>(null);
+  const [isAlertDismissed, setIsAlertDismissed] = useState<boolean>(false);
   
   useEffect(() => {
     // Initial fetch to check API or fallback to fixtures (R1)
@@ -38,7 +53,37 @@ function App() {
         (window as any).__FIXTURES_USED__ = true;
         setDataLoaded(true);
       }
+
+      // Check Real-Time NASA FIRMS Telemetry + Open-Meteo for Emergency Situations
+      try {
+        const spots = await fetchLiveFirmsHotspots(undefined, 2);
+        if (spots.length > 0) {
+          // Identify the most energetic active hotspot
+          const topSpot = spots.slice().sort((a, b) => b.frp - a.frp)[0];
+          const weather = await fetchLiveWeather(topSpot.latitude, topSpot.longitude);
+          const { score, danger_class } = calculateFDI(
+            weather.temperature_c,
+            weather.relative_humidity_pct,
+            weather.wind_speed_kmh
+          );
+
+          // If active fire has high fire radiative power or high weather danger, dispatch emergency alert
+          if (topSpot.frp >= 6.0 || score >= 35.0) {
+            setEmergencyAlert({
+              hotspot: topSpot,
+              fdiScore: score,
+              dangerClass: danger_class,
+              windSpeed: weather.wind_speed_kmh,
+              windDir: weather.wind_direction_deg,
+              spreadDistanceKm: Number((weather.wind_speed_kmh * 0.12 * 3).toFixed(1))
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('Real-time emergency alert monitor scan completed with notice:', e);
+      }
     };
+
     initData();
   }, []);
 
@@ -47,6 +92,35 @@ function App() {
   return (
     <>
       <SharedMotionScene />
+
+      {/* GLOBAL REAL-TIME WILDFIRE EMERGENCY ALERT BANNER */}
+      {emergencyAlert && !isAlertDismissed && (
+        <div className="global-emergency-banner enter-from-top">
+          <div className="emergency-badge-pulse">
+            <span className="pulse-fire-icon">🚨</span>
+            <span>REAL-TIME FIRE ALERT</span>
+          </div>
+
+          <div className="emergency-message-body">
+            <span className="em-highlight">NASA FIRMS Active Thermal Anomaly:</span>
+            {' '}{emergencyAlert.hotspot.locationName} ({emergencyAlert.hotspot.district}) · Lat: {emergencyAlert.hotspot.latitude}, Lon: {emergencyAlert.hotspot.longitude} · Fire Radiative Power: <strong>{emergencyAlert.hotspot.frp} MW</strong> ({emergencyAlert.hotspot.satellite}) · Atmospheric Danger: <strong>FDI {emergencyAlert.fdiScore}/100 ({emergencyAlert.dangerClass})</strong>
+          </div>
+
+          <div className="emergency-actions-row">
+            <NavLink to="/early-warning" className="emergency-action-link">
+              Inspect Threat Cone ➔
+            </NavLink>
+            <button 
+              type="button" 
+              className="emergency-dismiss-button"
+              onClick={() => setIsAlertDismissed(true)}
+              title="Dismiss Emergency Banner"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       <nav className="shell-nav enter-from-top">
         <div className="nav-brand">
@@ -92,7 +166,10 @@ function App() {
           <NavLink to="/calendar">Calendar</NavLink>
           <NavLink to="/lab">Sensor Lab</NavLink>
           <NavLink to="/live">Live</NavLink>
-          <NavLink to="/early-warning">Early Warning</NavLink>
+          <NavLink to="/early-warning">
+            Early Warning
+            {emergencyAlert && <span className="nav-alert-dot" title="Active Real-Time Threat Detected">LIVE ALERT</span>}
+          </NavLink>
         </div>
         <div className="motion-toggle-wrapper">
           <label className="motion-label" htmlFor="motion-select">MOTION:</label>
@@ -124,23 +201,6 @@ function App() {
           </Routes>
         </RouteWipe>
       </main>
-
-      <footer className="shell-footer enter-from-bottom">
-        <div className="footer-left">
-          <span className="footer-telemetry-tag">NASA EARTH OBSERVATION</span>
-          <span className="footer-sep">·</span>
-          <span className="footer-archive-info">2001–2026 Telemetry Archive</span>
-        </div>
-        <div className="footer-center">
-          <span className="footer-docs-label">SCIENTIFIC RIGOR:</span>
-          <NavLink to="/methodology" className="footer-link">Methodology</NavLink>
-          <span className="footer-link-sep">·</span>
-          <NavLink to="/validation" className="footer-link">Validation</NavLink>
-        </div>
-        <div className="footer-right">
-          <span className="footer-sensor-badge">MODIS + VIIRS Harmonized</span>
-        </div>
-      </footer>
     </>
   );
 }
