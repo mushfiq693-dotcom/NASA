@@ -10,6 +10,7 @@ import { Lab } from './routes/Lab';
 import { Validation } from './routes/Validation';
 import { Methodology } from './routes/Methodology';
 import { Live } from './routes/Live';
+import { EarlyWarning } from './routes/EarlyWarning';
 
 import { SharedMotionScene } from './motion/scene';
 import { RouteWipe } from './motion/RouteWipe';
@@ -22,13 +23,19 @@ function App() {
   useEffect(() => {
     // Initial fetch to check API or fallback to fixtures (R1)
     const initData = async () => {
-      try {
-        const res = await fetch('http://127.0.0.1:8000/time-series');
-        if (!res.ok) throw new Error("API not ok");
-      } catch (err) {
-        console.warn("API failed, falling back to fixtures", err);
+      const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      if (isLocal) {
+        try {
+          const res = await fetch('http://127.0.0.1:8000/time-series');
+          if (!res.ok) throw new Error("API not ok");
+        } catch (err) {
+          console.warn("API failed, falling back to fixtures", err);
+          (window as any).__FIXTURES_USED__ = true;
+        } finally {
+          setDataLoaded(true);
+        }
+      } else {
         (window as any).__FIXTURES_USED__ = true;
-      } finally {
         setDataLoaded(true);
       }
     };
@@ -87,6 +94,7 @@ function App() {
           <NavLink to="/validation">Validation</NavLink>
           <NavLink to="/methodology">Methodology</NavLink>
           <NavLink to="/live">Live</NavLink>
+          <NavLink to="/early-warning">Early Warning</NavLink>
         </div>
         <div className="motion-toggle-wrapper">
           <label className="motion-label" htmlFor="motion-select">MOTION:</label>
@@ -114,6 +122,7 @@ function App() {
             <Route path="/validation" element={<Validation />} />
             <Route path="/methodology" element={<Methodology />} />
             <Route path="/live" element={<Live />} />
+            <Route path="/early-warning" element={<EarlyWarning />} />
           </Routes>
         </RouteWipe>
       </main>

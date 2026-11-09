@@ -1,0 +1,569 @@
+{
+  "profiles": {
+    "camp_fire_paradise_ignition": {
+      "location": "Poe Dam / Pulga, Butte County, CA (Camp Fire Ignition)",
+      "latitude": 39.813,
+      "longitude": -121.438,
+      "date": "2018-11-08T06:15:00",
+      "temperature_c": 18.3,
+      "relative_humidity_pct": 8.0,
+      "wind_speed_kmh": 56.3,
+      "wind_gusts_kmh": 85.0,
+      "wind_direction_deg": 45.0,
+      "drought_factor": 10.0,
+      "slope_deg": 18.0
+    },
+    "chittagong_hill_tracts_dry": {
+      "location": "Rangamati / Bandarban, Bangladesh (Pre-Monsoon Peak)",
+      "latitude": 22.35,
+      "longitude": 92.2,
+      "date": "2024-03-25T13:30:00",
+      "temperature_c": 36.5,
+      "relative_humidity_pct": 28.0,
+      "wind_speed_kmh": 22.0,
+      "wind_gusts_kmh": 38.0,
+      "wind_direction_deg": 210.0,
+      "drought_factor": 8.5,
+      "slope_deg": 14.0
+    },
+    "sundarbans_mangrove": {
+      "location": "Sundarbans Reserved Forest, Bangladesh",
+      "latitude": 22.05,
+      "longitude": 89.5,
+      "date": "2024-03-25T13:30:00",
+      "temperature_c": 31.0,
+      "relative_humidity_pct": 68.0,
+      "wind_speed_kmh": 16.0,
+      "wind_gusts_kmh": 24.0,
+      "wind_direction_deg": 180.0,
+      "drought_factor": 4.0,
+      "slope_deg": 0.5
+    },
+    "dhaka_central": {
+      "location": "Dhaka Metropolitan / Central Plain, Bangladesh",
+      "latitude": 23.81,
+      "longitude": 90.41,
+      "date": "2024-04-10T14:00:00",
+      "temperature_c": 38.2,
+      "relative_humidity_pct": 32.0,
+      "wind_speed_kmh": 18.0,
+      "wind_gusts_kmh": 32.0,
+      "wind_direction_deg": 195.0,
+      "drought_factor": 7.5,
+      "slope_deg": 0.5
+    }
+  },
+  "settlements": [
+    {
+      "name": "Bandarban Town & Hill Communities",
+      "lat": 22.19,
+      "lon": 92.22,
+      "type": "settlement",
+      "population": 45000,
+      "region": "Chittagong Hill Tracts"
+    },
+    {
+      "name": "Rangamati Lakeside Settlements",
+      "lat": 22.65,
+      "lon": 92.17,
+      "type": "settlement",
+      "population": 65000,
+      "region": "Chittagong Hill Tracts"
+    },
+    {
+      "name": "Khagrachhari Valley Communities",
+      "lat": 23.11,
+      "lon": 91.98,
+      "type": "settlement",
+      "population": 38000,
+      "region": "Chittagong Hill Tracts"
+    },
+    {
+      "name": "Sreemangal Tea Estates & Reserve Edge",
+      "lat": 24.3,
+      "lon": 91.73,
+      "type": "plantation_settlement",
+      "population": 28000,
+      "region": "Sylhet Division"
+    },
+    {
+      "name": "Mongla / Sundarbans Buffer Zone",
+      "lat": 22.48,
+      "lon": 89.6,
+      "type": "mangrove_fringe",
+      "population": 35000,
+      "region": "Khulna Division"
+    },
+    {
+      "name": "Paradise Town Center, CA (Camp Fire Benchmark)",
+      "lat": 39.759,
+      "lon": -121.621,
+      "type": "wildland_urban_interface",
+      "population": 26800,
+      "region": "Butte County, CA"
+    },
+    {
+      "name": "Concow Community, CA",
+      "lat": 39.758,
+      "lon": -121.52,
+      "type": "wildland_urban_interface",
+      "population": 710,
+      "region": "Butte County, CA"
+    }
+  ],
+  "default_alerts": [
+    {
+      "hotspot_id": "CAMP-FIRE-BENCHMARK-2018",
+      "coordinates": {
+        "latitude": 39.813,
+        "longitude": -121.438
+      },
+      "satellite_evidence": {
+        "frp_mw": 450.0,
+        "confidence": "high",
+        "hfai_anomaly_band": "Extreme"
+      },
+      "environmental_risk": {
+        "fdi": 100.0,
+        "danger_class": "Extreme",
+        "danger_color": "#FF0033",
+        "is_red_flag": true,
+        "fuel_moisture_pct": 2.2,
+        "vpd_kpa": 1.935,
+        "description": "Extreme wildfire outbreak danger. Ignitions will resist direct initial attack and spread explosively downwind.",
+        "components": {
+          "temperature_c": 18.3,
+          "relative_humidity_pct": 8.0,
+          "wind_speed_kmh": 56.3,
+          "drought_factor": 10.0,
+          "slope_deg": 18.0,
+          "moisture_damping_eta": 0.861,
+          "wind_factor_lambda": 34.997
+        }
+      },
+      "spread_prediction": {
+        "forward_rate_kmh": 1.58,
+        "forward_distance_km": 4.74,
+        "flank_width_km": 0.83,
+        "area_sq_km": 3.35,
+        "spread_azimuth_deg": 225.0,
+        "length_to_breadth_ratio": 6.14,
+        "geojson": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  -121.47731,
+                  39.7828
+                ],
+                [
+                  -121.47759,
+                  39.78351
+                ],
+                [
+                  -121.47721,
+                  39.7847
+                ],
+                [
+                  -121.47619,
+                  39.78632
+                ],
+                [
+                  -121.47457,
+                  39.78833
+                ],
+                [
+                  -121.47238,
+                  39.79066
+                ],
+                [
+                  -121.46969,
+                  39.79326
+                ],
+                [
+                  -121.46659,
+                  39.79603
+                ],
+                [
+                  -121.46317,
+                  39.79889
+                ],
+                [
+                  -121.45954,
+                  39.80177
+                ],
+                [
+                  -121.4558,
+                  39.80456
+                ],
+                [
+                  -121.45207,
+                  39.80718
+                ],
+                [
+                  -121.44846,
+                  39.80956
+                ],
+                [
+                  -121.44509,
+                  39.81163
+                ],
+                [
+                  -121.44204,
+                  39.81331
+                ],
+                [
+                  -121.43943,
+                  39.81456
+                ],
+                [
+                  -121.43732,
+                  39.81534
+                ],
+                [
+                  -121.43578,
+                  39.81563
+                ],
+                [
+                  -121.43486,
+                  39.81542
+                ],
+                [
+                  -121.43458,
+                  39.81471
+                ],
+                [
+                  -121.43495,
+                  39.81352
+                ],
+                [
+                  -121.43597,
+                  39.8119
+                ],
+                [
+                  -121.4376,
+                  39.80989
+                ],
+                [
+                  -121.43979,
+                  39.80756
+                ],
+                [
+                  -121.44247,
+                  39.80496
+                ],
+                [
+                  -121.44557,
+                  39.80219
+                ],
+                [
+                  -121.44899,
+                  39.79933
+                ],
+                [
+                  -121.45262,
+                  39.79645
+                ],
+                [
+                  -121.45636,
+                  39.79366
+                ],
+                [
+                  -121.46009,
+                  39.79104
+                ],
+                [
+                  -121.4637,
+                  39.78866
+                ],
+                [
+                  -121.46708,
+                  39.78659
+                ],
+                [
+                  -121.47012,
+                  39.78491
+                ],
+                [
+                  -121.47274,
+                  39.78366
+                ],
+                [
+                  -121.47485,
+                  39.78288
+                ],
+                [
+                  -121.47639,
+                  39.78259
+                ],
+                [
+                  -121.47731,
+                  39.7828
+                ]
+              ]
+            ]
+          },
+          "properties": {
+            "origin_lat": 39.813,
+            "origin_lon": -121.438,
+            "forecast_hours": 3.0,
+            "forward_rate_kmh": 1.58,
+            "forward_distance_km": 4.74,
+            "flank_width_km": 0.83,
+            "area_sq_km": 3.35,
+            "spread_azimuth_deg": 225.0,
+            "wind_speed_kmh": 56.3
+          }
+        }
+      },
+      "alert": {
+        "level": "WARNING",
+        "color": "#FF0033",
+        "action_statement": "URGENT ACTION: Immediate ground verification and downwind community evacuation preparedness advised.",
+        "non_evacuation_disclaimer": "DISCLAIMER: Decision support model output only. Official evacuation mandates are issued exclusively by authorized local emergency management agencies.",
+        "headline": "LEVEL 3 EMERGENCY WARNING: High-intensity thermal anomaly with extreme spread potential toward Concow Community, CA"
+      },
+      "exposed_receptors": [
+        {
+          "name": "Concow Community, CA",
+          "type": "wildland_urban_interface",
+          "population": 710,
+          "distance_km": 9.3,
+          "bearing_deg": 228.9,
+          "is_downwind": true,
+          "threat_severity": "ELEVATED",
+          "eta_hours": 5.9
+        },
+        {
+          "name": "Paradise Town Center, CA (Camp Fire Benchmark)",
+          "type": "wildland_urban_interface",
+          "population": 26800,
+          "distance_km": 16.75,
+          "bearing_deg": 249.1,
+          "is_downwind": true,
+          "threat_severity": "ELEVATED",
+          "eta_hours": 10.6
+        }
+      ],
+      "timestamp_utc": "2026-11-09T15:02:54.226402+00:00"
+    },
+    {
+      "hotspot_id": "CHT-PREMONSOON-OUTBREAK",
+      "coordinates": {
+        "latitude": 22.35,
+        "longitude": 92.2
+      },
+      "satellite_evidence": {
+        "frp_mw": 65.0,
+        "confidence": "high",
+        "hfai_anomaly_band": "High"
+      },
+      "environmental_risk": {
+        "fdi": 32.8,
+        "danger_class": "Moderate",
+        "danger_color": "#E5D000",
+        "is_red_flag": false,
+        "fuel_moisture_pct": 6.17,
+        "vpd_kpa": 4.396,
+        "description": "Moderate seasonal burning risk. Fires spread at manageable rates and can be readily contained.",
+        "components": {
+          "temperature_c": 36.5,
+          "relative_humidity_pct": 28.0,
+          "wind_speed_kmh": 22.0,
+          "drought_factor": 8.5,
+          "slope_deg": 14.0,
+          "moisture_damping_eta": 0.648,
+          "wind_factor_lambda": 13.707
+        }
+      },
+      "spread_prediction": {
+        "forward_rate_kmh": 0.37,
+        "forward_distance_km": 1.11,
+        "flank_width_km": 0.34,
+        "area_sq_km": 0.32,
+        "spread_azimuth_deg": 30.0,
+        "length_to_breadth_ratio": 3.54,
+        "geojson": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  92.20541,
+                  22.35866
+                ],
+                [
+                  92.20561,
+                  22.35846
+                ],
+                [
+                  92.20572,
+                  22.35812
+                ],
+                [
+                  92.20573,
+                  22.35765
+                ],
+                [
+                  92.20564,
+                  22.35708
+                ],
+                [
+                  92.20546,
+                  22.35641
+                ],
+                [
+                  92.20518,
+                  22.35566
+                ],
+                [
+                  92.20483,
+                  22.35487
+                ],
+                [
+                  92.2044,
+                  22.35404
+                ],
+                [
+                  92.20392,
+                  22.35322
+                ],
+                [
+                  92.20339,
+                  22.35242
+                ],
+                [
+                  92.20283,
+                  22.35167
+                ],
+                [
+                  92.20226,
+                  22.35098
+                ],
+                [
+                  92.2017,
+                  22.35039
+                ],
+                [
+                  92.20117,
+                  22.34991
+                ],
+                [
+                  92.20067,
+                  22.34955
+                ],
+                [
+                  92.20023,
+                  22.34933
+                ],
+                [
+                  92.19986,
+                  22.34925
+                ],
+                [
+                  92.19957,
+                  22.34931
+                ],
+                [
+                  92.19936,
+                  22.34951
+                ],
+                [
+                  92.19925,
+                  22.34985
+                ],
+                [
+                  92.19924,
+                  22.35032
+                ],
+                [
+                  92.19933,
+                  22.35089
+                ],
+                [
+                  92.19952,
+                  22.35156
+                ],
+                [
+                  92.19979,
+                  22.35231
+                ],
+                [
+                  92.20015,
+                  22.3531
+                ],
+                [
+                  92.20057,
+                  22.35392
+                ],
+                [
+                  92.20106,
+                  22.35475
+                ],
+                [
+                  92.20159,
+                  22.35555
+                ],
+                [
+                  92.20214,
+                  22.3563
+                ],
+                [
+                  92.20271,
+                  22.35698
+                ],
+                [
+                  92.20327,
+                  22.35757
+                ],
+                [
+                  92.2038,
+                  22.35806
+                ],
+                [
+                  92.2043,
+                  22.35842
+                ],
+                [
+                  92.20474,
+                  22.35864
+                ],
+                [
+                  92.20511,
+                  22.35872
+                ],
+                [
+                  92.20541,
+                  22.35866
+                ]
+              ]
+            ]
+          },
+          "properties": {
+            "origin_lat": 22.35,
+            "origin_lon": 92.2,
+            "forecast_hours": 3.0,
+            "forward_rate_kmh": 0.37,
+            "forward_distance_km": 1.11,
+            "flank_width_km": 0.34,
+            "area_sq_km": 0.32,
+            "spread_azimuth_deg": 30.0,
+            "wind_speed_kmh": 22.0
+          }
+        }
+      },
+      "alert": {
+        "level": "WATCH",
+        "color": "#FF5E00",
+        "action_statement": "ELEVATED THREAT: Rapid spread potential downwind. Fire management teams should stage containment resources.",
+        "non_evacuation_disclaimer": "DISCLAIMER: Decision support model output only. Official evacuation mandates are issued exclusively by authorized local emergency management agencies.",
+        "headline": "LEVEL 2 WILDFIRE WATCH: Elevated fire danger index with rapid spread potential"
+      },
+      "exposed_receptors": [],
+      "timestamp_utc": "2026-11-09T15:02:54.226475+00:00"
+    }
+  ]
+}

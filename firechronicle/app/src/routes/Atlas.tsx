@@ -63,17 +63,31 @@ export const Atlas: React.FC = () => {
       .catch(err => console.error("Error loading fires GeoJSON:", err));
 
     // 2. Fetch Time Series
-    fetch('http://127.0.0.1:8000/time-series')
-      .then(r => r.json())
-      .then(d => {
-        const series = d.data || [];
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const fetchTS = async () => {
+      if (isLocal) {
+        try {
+          const r = await fetch('http://127.0.0.1:8000/time-series');
+          if (r.ok) {
+            const d = await r.json();
+            const series = Array.isArray(d) ? d : (d.data || []);
+            setTimeSeries(series);
+            return;
+          }
+        } catch {
+          // fallback below
+        }
+      }
+      try {
+        const r = await fetch('/fixtures/time_series.json');
+        const d = await r.json();
+        const series = Array.isArray(d) ? d : (d.data || []);
         setTimeSeries(series);
-      })
-      .catch(() => {
-        fetch('/fixtures/time_series.json')
-          .then(r => r.json())
-          .then(d => setTimeSeries(d.data || []));
-      });
+      } catch (err) {
+        console.error("Error loading time_series fixture:", err);
+      }
+    };
+    fetchTS();
   }, []);
 
   // Update map source GeoJSON data for current date & active layer

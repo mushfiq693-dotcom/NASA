@@ -32,53 +32,90 @@ export const Calendar: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch complete multi-decadal time-series (2001–2026)
-    fetch('http://127.0.0.1:8000/calendar?aoi=' + selectedAoi + '&mode=' + calendarMode)
-      .then(res => {
-        if (!res.ok) throw new Error('API returned status ' + res.status);
-        return res.json();
-      })
-      .then(data => {
-        const rawDays = data.days || [];
-        if (rawDays.length > 0) {
-          const formatted: CalendarDay[] = rawDays.map((d: any) => ({
-            local_date: d.date || d.local_date || '',
-            total_hfai: typeof d.hfai === 'number' ? d.hfai : typeof d.total_hfai === 'number' ? d.total_hfai : 0,
-            total_raw_count: typeof d.raw_count === 'number' ? d.raw_count : typeof d.total_raw_count === 'number' ? d.total_raw_count : 0,
-            observability: d.observability || (d.hfai > 50 || d.total_hfai > 50 ? 'High' : 'Medium'),
-            percentile: d.historical_percentile ?? d.percentile ?? 50,
-            uncertainty_lower: d.uncertainty_lower ?? Math.max(0, (d.hfai || d.total_hfai || 0) * 0.85),
-            uncertainty_upper: d.uncertainty_upper ?? ((d.hfai || d.total_hfai || 0) * 1.15),
-            anomaly_band: d.anomaly_band || ((d.hfai || d.total_hfai || 0) > 250 ? 'Extreme' : (d.hfai || d.total_hfai || 0) > 120 ? 'High' : (d.hfai || d.total_hfai || 0) > 50 ? 'Elevated' : 'Normal')
-          }));
-          setAllRecords(formatted);
-        } else {
-          throw new Error('No calendar days returned');
+    let isCancelled = false;
+
+    const processAndSet = (rawList: any[]) => {
+      if (isCancelled || !rawList || rawList.length === 0) return;
+
+      // Extract all HFAI values to dynamically compute empirical historical percentiles
+      const allHfais = rawList
+        .map((d: any) => Number(typeof d.total_hfai === 'number' ? d.total_hfai : typeof d.hfai === 'number' ? d.hfai : 0))
+        .sort((a: number, b: number) => a - b);
+      const totalDays = Math.max(1, allHfais.length);
+
+      const series: CalendarDay[] = rawList.map((d: any) => {
+        const hfai = typeof d.total_hfai === 'number' ? d.total_hfai : typeof d.hfai === 'number' ? d.hfai : 0;
+        const rawCount = typeof d.total_raw_count === 'number' ? d.total_raw_count : typeof d.raw_count === 'number' ? d.raw_count : 0;
+
+        let percentile = d.historical_percentile ?? d.percentile;
+        if (typeof percentile !== 'number') {
+          let countBelow = 0;
+          for (let i = 0; i < allHfais.length; i++) {
+            if (allHfais[i] <= hfai) countBelow++;
+            else break;
+          }
+          percentile = Math.round((countBelow / totalDays) * 1000) / 10;
         }
-      })
-      .catch(() => {
-        // Fallback to comprehensive local fixture
-        fetch('/fixtures/time_series.json')
-          .then(res => res.json())
-          .then(data => {
-            const rawList = data.data || [];
-            const series: CalendarDay[] = rawList.map((d: any) => ({
-              local_date: d.local_date || d.date || '',
-              total_hfai: typeof d.total_hfai === 'number' ? d.total_hfai : typeof d.hfai === 'number' ? d.hfai : 0,
-              total_raw_count: typeof d.total_raw_count === 'number' ? d.total_raw_count : typeof d.raw_count === 'number' ? d.raw_count : 0,
-              observability: d.observability || (d.total_hfai > 60 ? 'High' : 'Medium'),
-              percentile: d.historical_percentile ?? d.percentile ?? Math.min(99, Math.max(10, Math.round((d.total_hfai || 0) * 1.2))),
-              uncertainty_lower: d.uncertainty_lower ?? Math.max(0, (d.total_hfai || 0) * 0.85),
-              uncertainty_upper: d.uncertainty_upper ?? ((d.total_hfai || 0) * 1.15),
-              anomaly_band: d.anomaly_band || ((d.total_hfai || 0) > 250 ? 'Extreme' : (d.total_hfai || 0) > 120 ? 'High' : (d.total_hfai || 0) > 50 ? 'Elevated' : 'Normal')
-            }));
-            setAllRecords(series);
-          })
-          .catch(e => console.error('Fallback fixture error:', e));
+
+        const band = d.anomaly_band || (
+          hfai > 200 || percentile >= 95 ? 'Extreme' :
+          hfai > 90 || percentile >= 80 ? 'High' :
+          hfai >= 40 || percentile >= 50 ? 'Elevated' : 'Normal'
+        );
+
+        return {
+          local_date: d.local_date || d.date || '',
+          total_hfai: hfai,
+          total_raw_count: rawCount,
+          observability: d.observability || (hfai > 60 ? 'High' : 'Medium'),
+          percentile,
+          uncertainty_lower: d.uncertainty_lower ?? Math.max(0, hfai * 0.85),
+          uncertainty_upper: d.uncertainty_upper ?? (hfai * 1.15),
+          anomaly_band: band
+        };
       });
 
+      setAllRecords(series);
+    };
+
+    const loadData = async () => {
+      const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+      if (isLocal) {
+        try {
+          const res = await fetch('http://127.0.0.1:8000/calendar?aoi=' + selectedAoi + '&mode=' + calendarMode);
+          if (res.ok) {
+            const data = await res.json();
+            const rawDays = Array.isArray(data) ? data : (data.days || data.data || []);
+            if (rawDays.length > 0) {
+              processAndSet(rawDays);
+              return;
+            }
+          }
+        } catch {
+          // Fall through to static fixture
+        }
+      }
+
+      // Fallback to comprehensive local multi-decadal fixture (2001–2026)
+      try {
+        const res = await fetch('/fixtures/time_series.json');
+        if (!res.ok) throw new Error('Fixture returned status ' + res.status);
+        const data = await res.json();
+        const rawList = Array.isArray(data) ? data : (data.data || data.days || []);
+        processAndSet(rawList);
+      } catch (err) {
+        console.error('Failed to load multi-decadal calendar data:', err);
+      }
+    };
+
+    loadData();
+
     const timer = setTimeout(() => setIsRevealed(true), 120);
-    return () => clearTimeout(timer);
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
   }, [selectedAoi, calendarMode]);
 
   // Fast map lookup by ISO date string (YYYY-MM-DD)
@@ -141,6 +178,15 @@ export const Calendar: React.FC = () => {
 
     return summaries;
   }, [allRecords, availableYears]);
+
+  // Maximum annual HFAI for normalizing the 24-year timeline sparkline
+  const maxAnnualHfai = useMemo(() => {
+    let maxVal = 1;
+    Object.values(yearlySummaries).forEach(s => {
+      if (s.totalHfai > maxVal) maxVal = s.totalHfai;
+    });
+    return maxVal;
+  }, [yearlySummaries]);
 
 
 
@@ -289,6 +335,53 @@ export const Calendar: React.FC = () => {
         </div>
       </header>
 
+      {/* 24-Year Macro Timeline Bar Strip (2001–2026) */}
+      <section className="macro-timeline-card">
+        <div className="macro-timeline-header">
+          <div className="macro-title-group">
+            <span className="macro-title">24-YEAR MULTI-DECADAL RECORD (2001–2026)</span>
+            <span className="macro-subtitle">Click any year bar to view its complete 365-day annual heatmap</span>
+          </div>
+          <div className="macro-era-badges">
+            <span className="era-badge modis-era">2001–2011: MODIS Era</span>
+            <span className="era-badge shift-era">2012: Sensor Step Shift</span>
+            <span className="era-badge viirs-era">2013–2026: VIIRS Era</span>
+          </div>
+        </div>
+
+        <div className="macro-bars-scroll">
+          <div className="macro-bars-container">
+            {availableYears.map(yr => {
+              const summary = yearlySummaries[yr];
+              const hfai = summary?.totalHfai || 0;
+              const barHeightPct = Math.max(12, Math.round((hfai / maxAnnualHfai) * 100));
+              const isSelected = yr === selectedYear;
+              const isShift = yr === '2012';
+              const isEarly = Number(yr) < 2012;
+
+              return (
+                <button
+                  key={yr}
+                  type="button"
+                  className={`macro-year-bar-item ${isSelected ? 'active' : ''} ${isShift ? 'is-shift-year' : ''}`}
+                  onClick={() => setSelectedYear(yr)}
+                  title={`Year ${yr} · Total HFAI: ${Math.round(hfai).toLocaleString()} · Hotspots: ${summary?.totalRawCount.toLocaleString() || 0}`}
+                >
+                  <div className="bar-track">
+                    <div
+                      className={`bar-fill ${isEarly ? 'modis-color' : isShift ? 'shift-color' : 'viirs-color'}`}
+                      style={{ height: `${barHeightPct}%` }}
+                    />
+                  </div>
+                  <span className="bar-year-label">{yr.slice(2)}</span>
+                  {isShift && <span className="shift-dot" title="2012 Sensor Transition" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* Selected Year Navigation & Controls */}
       <div className="calendar-year-nav-card">
         <div className="year-selector-main">
@@ -327,6 +420,53 @@ export const Calendar: React.FC = () => {
               title="Next Year"
             >
               Next Year ▶
+            </button>
+          </div>
+
+          {/* Quick-Jump Era Pills */}
+          <div className="quick-era-pills">
+            <span className="pills-label">KEY MILESTONES:</span>
+            <button
+              type="button"
+              className={`era-pill ${selectedYear === '2001' ? 'active' : ''}`}
+              onClick={() => setSelectedYear('2001')}
+            >
+              2001 (Early MODIS)
+            </button>
+            <button
+              type="button"
+              className={`era-pill shift-pill ${selectedYear === '2012' ? 'active' : ''}`}
+              onClick={() => setSelectedYear('2012')}
+            >
+              2012 (Sensor Step-Change)
+            </button>
+            <button
+              type="button"
+              className={`era-pill ${selectedYear === '2018' ? 'active' : ''}`}
+              onClick={() => setSelectedYear('2018')}
+            >
+              2018 (NOAA-20 VIIRS)
+            </button>
+            <button
+              type="button"
+              className={`era-pill anomaly-pill ${selectedYear === '2022' ? 'active' : ''}`}
+              onClick={() => setSelectedYear('2022')}
+            >
+              2022 (Severe Delta Anomaly)
+            </button>
+            <button
+              type="button"
+              className={`era-pill ${selectedYear === '2024' ? 'active' : ''}`}
+              onClick={() => setSelectedYear('2024')}
+            >
+              2024 (Consolidated)
+            </button>
+            <button
+              type="button"
+              className={`era-pill live-pill ${selectedYear === '2026' ? 'active' : ''}`}
+              onClick={() => setSelectedYear('2026')}
+            >
+              2026 (Present / S-NPP Countdown)
             </button>
           </div>
         </div>
@@ -424,7 +564,7 @@ export const Calendar: React.FC = () => {
               const row = idx % 7;
               const col = Math.floor(idx / 7);
               const isExtreme = extremeDaysSet.has(day.local_date);
-              const isLowObs = day.observability === 'Low' || (day.total_hfai > 0 && day.total_hfai < 10);
+              const isLowObs = day.observability === 'Low';
               const isRowHovered = hoveredDay?.row === row;
               const isColHovered = hoveredDay?.col === col;
 

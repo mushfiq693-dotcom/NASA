@@ -29,6 +29,9 @@ app.add_middleware(
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+import sys
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 METADATA_DIR = PROJECT_ROOT / "metadata"
 REPORTS_DIR = PROJECT_ROOT / "reports"
@@ -90,14 +93,18 @@ def get_calendar(
 ):
     ts_path = REPORTS_DIR / "time_series.json"
     data = []
+    raw_data = []
     
     if ts_path.exists():
         with open(ts_path, 'r') as f:
-            raw_data = json.load(f)
+            raw = json.load(f)
+            raw_data = raw if isinstance(raw, list) else raw.get("data", [])
             data = raw_data
     elif (FIXTURES_DIR / "time_series.json").exists():
         with open(FIXTURES_DIR / "time_series.json", 'r') as f:
-            data = json.load(f).get("data", [])
+            raw = json.load(f)
+            raw_data = raw if isinstance(raw, list) else raw.get("data", [])
+            data = raw_data
 
     # Filter by year if specified
     if year:
@@ -109,7 +116,7 @@ def get_calendar(
             data = [item for item in data if str(item.get("local_date", "")) <= end]
             
     # Compute exact empirical percentiles against the full historical daily archive
-    all_ts = raw_data if ts_path.exists() else (json.load(open(FIXTURES_DIR / "time_series.json")).get("data", []) if (FIXTURES_DIR / "time_series.json").exists() else [])
+    all_ts = raw_data
     all_hfais_sorted = sorted([float(r.get("total_hfai", 0)) for r in all_ts if isinstance(r, dict)])
     total_archive_days = max(1, len(all_hfais_sorted))
 
@@ -472,12 +479,96 @@ def get_timeseries():
     if not ts_path.exists():
         if (FIXTURES_DIR / "time_series.json").exists():
             with open(FIXTURES_DIR / "time_series.json", 'r') as f:
-                return json.load(f)
+                d = json.load(f)
+                return {"data": d if isinstance(d, list) else d.get("data", [])}
         return {"data": []}
     try:
         with open(ts_path, 'r') as f:
             data = json.load(f)
-        return {"data": data}
+        return {"data": data if isinstance(data, list) else data.get("data", [])}
     except Exception as e:
         print(f"Error reading JSON: {e}")
         return {"data": []}
+
+# ==========================================
+# Phase 3 & 4: Environmental Risk & Alerting Endpoints
+# ==========================================
+
+from src.environmental import (
+    calculate_vpd,
+    calculate_fuel_moisture,
+    compute_fire_danger_index,
+    predict_fire_spread,
+    fetch_live_weather,
+    REGIONAL_PROFILES
+)
+from src.alert_engine import generate_wildfire_alert, scan_active_anomalies_for_alerts
+
+@app.get("/weather/live")
+def get_live_weather_api(lat: float = 23.81, lon: float = 90.41):
+    weather = fetch_live_weather(lat, lon)
+    fdi_data = compute_fire_danger_index(
+        temp_c=weather["temperature_c"],
+        rh_pct=weather["relative_humidity_pct"],
+        wind_kmh=weather["wind_speed_kmh"],
+        drought_factor=weather.get("drought_factor", 6.5)
+    )
+    return {
+        "weather": weather,
+        "fire_danger": fdi_data
+    }
+
+@app.get("/weather/profiles")
+def get_weather_profiles():
+    return {
+        "profiles": REGIONAL_PROFILES
+    }
+
+@app.get("/spread/predict")
+def predict_spread_api(
+    lat: float = Query(22.35, description="Origin latitude"),
+    lon: float = Query(92.20, description="Origin longitude"),
+    wind_speed: float = Query(25.0, description="Wind speed in km/h"),
+    wind_dir: float = Query(210.0, description="Wind direction in degrees"),
+    fuel_moisture: float = Query(6.0, description="Dead fine fuel moisture %"),
+    hours: float = Query(3.0, description="Forecast duration in hours")
+):
+    spread = predict_fire_spread(
+        origin_lat=lat,
+        origin_lon=lon,
+        wind_speed_kmh=wind_speed,
+        wind_dir_deg=wind_dir,
+        fuel_moisture_pct=fuel_moisture,
+        hours=hours
+    )
+    return spread
+
+@app.get("/alerts")
+def get_wildfire_alerts(mode: str = "all"):
+    alerts = []
+    
+    # 1. Benchmark alert: Camp Fire retrospective
+    p_camp = REGIONAL_PROFILES["camp_fire_paradise_ignition"]
+    camp_alert = generate_wildfire_alert(
+        hotspot_id="CAMP-FIRE-BENCHMARK-2018",
+        lat=p_camp["latitude"],
+        lon=p_camp["longitude"],
+        frp_mw=450.0,
+        confidence="high",
+        hfai_anomaly_band="Extreme",
+        weather_override=p_camp,
+        slope_deg=p_camp["slope_deg"]
+    )
+    alerts.append(camp_alert)
+    
+    # 2. Bangladesh active anomalies alerts
+    bd_alerts = scan_active_anomalies_for_alerts(top_n=3)
+    alerts.extend(bd_alerts)
+    
+    return {
+        "status": "success",
+        "total_alerts": len(alerts),
+        "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "disclaimer": "Automated decision-support system. Official emergency evacuation orders are issued exclusively by designated local civil protection authorities.",
+        "alerts": alerts
+    }

@@ -55,10 +55,10 @@ export const DayDetail: React.FC = () => {
       .catch(async () => {
         try {
           const [tsRes, ptsRes] = await Promise.all([
-            fetch('/fixtures/time_series.json').then(r => r.json()).catch(() => ({ data: [] })),
+            fetch('/fixtures/time_series.json').then(r => r.json()).catch(() => []),
             fetch('/fixtures/firms_points.json').then(r => r.json()).catch(() => ({ features: [] }))
           ]);
-          const series = tsRes.data || [];
+          const series = Array.isArray(tsRes) ? tsRes : (tsRes.data || []);
           const matched = series.find((x: any) => x.local_date === date);
           const allFeatures = ptsRes.features || [];
           const ptsForDate = allFeatures.filter((f: any) => f.properties?.date === date);
@@ -153,7 +153,7 @@ export const DayDetail: React.FC = () => {
     fetch('/fixtures/time_series.json')
       .then(r => r.json())
       .then(d => {
-        const series = d.data || [];
+        const series = Array.isArray(d) ? d : (d.data || []);
         const idx = series.findIndex((x: any) => x.local_date === date);
         if (idx >= 0) {
           setRecentSeries(series.slice(Math.max(0, idx - 30), idx + 1));
