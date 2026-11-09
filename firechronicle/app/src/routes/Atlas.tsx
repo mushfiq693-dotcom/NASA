@@ -31,10 +31,10 @@ const AOI_COORDINATES: Record<string, { center: [number, number]; zoom: number; 
 };
 
 const DISAGREEMENT_CATEGORIES = [
-  { id: 'both', label: 'Both Detected (High Agreement)', color: '#ffeb3b', class: 'both' },
-  { id: 'modis-only', label: 'MODIS Only (Saturated/Large)', color: '#ff9800', class: 'modis-only' },
-  { id: 'viirs-only', label: 'VIIRS Only (Small <5MW)', color: '#f44336', class: 'viirs-only' },
-  { id: 'obscured', label: 'Potentially Obscured (Cloud)', color: '#00e5ff', class: 'obscured' }
+  { id: 'both', label: 'Both Detected (Consensus Overpass)', color: '#ffeb3b', class: 'both', description: 'Coincident MODIS (1km) & VIIRS (375m) consensus detection on the same date.' },
+  { id: 'modis-only', label: 'MODIS Only (Large Footprint)', color: '#ff9800', class: 'modis-only', description: 'Detected on morning/afternoon Terra/Aqua passes without simultaneous VIIRS pass.' },
+  { id: 'viirs-only', label: 'VIIRS Only (High-Res 375m)', color: '#f44336', class: 'viirs-only', description: 'Sub-pixel & small agricultural fires (<5 MW) resolved only by VIIRS 375m I-band.' },
+  { id: 'obscured', label: 'Potentially Obscured (Cloud/Marginal)', color: '#00e5ff', class: 'obscured', description: 'Low-confidence thermal anomalies or cloud-edge obscured detections.' }
 ];
 
 export const Atlas: React.FC = () => {
@@ -51,6 +51,12 @@ export const Atlas: React.FC = () => {
   const [pointerInfo, setPointerInfo] = useState<{ lat: number; lon: number; cellId: string } | null>(null);
   const [revealedCategories, setRevealedCategories] = useState<string[]>(['both', 'modis-only', 'viirs-only', 'obscured']);
   const [dailyFireCount, setDailyFireCount] = useState<number>(0);
+  const [categoryCounts, setCategoryCounts] = useState<{ both: number; modis: number; viirs: number; obscured: number }>({
+    both: 0,
+    modis: 0,
+    viirs: 0,
+    obscured: 0
+  });
 
   // Fetch GeoJSON and time-series
   useEffect(() => {
@@ -63,7 +69,9 @@ export const Atlas: React.FC = () => {
       .catch(err => console.error("Error loading fires GeoJSON:", err));
 
     // 2. Fetch Time Series
-    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const isLocal = typeof window !== 'undefined' && 
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
     const fetchTS = async () => {
       if (isLocal) {
         try {
@@ -91,7 +99,7 @@ export const Atlas: React.FC = () => {
   }, []);
 
   // Update map source GeoJSON data for current date & active layer
-  const updateDateData = useCallback((date: string, layer: string, features: any[]) => {
+  const updateDateData = useCallback((date: string, layer: string, features: any[], allowedCats: string[]) => {
     if (!mapRef.current) return;
     const source = mapRef.current.getSource('fires') as maplibregl.GeoJSONSource | undefined;
     if (!source || features.length === 0) return;
@@ -114,10 +122,28 @@ export const Atlas: React.FC = () => {
       windowed = features.filter(f => f.properties?.date === '2022-03-21');
     }
 
+    // Compute category counts for HUD
+    let cBoth = 0, cModis = 0, cViirs = 0, cObsc = 0;
+    windowed.forEach(f => {
+      const c = f.properties?.category;
+      if (c === 'both') cBoth++;
+      else if (c === 'modis-only') cModis++;
+      else if (c === 'viirs-only') cViirs++;
+      else if (c === 'obscured') cObsc++;
+    });
+    setCategoryCounts({ both: cBoth, modis: cModis, viirs: cViirs, obscured: cObsc });
+
     if (layer === 'modis') {
       windowed = windowed.filter(f => f.properties?.sensor === 'MODIS');
     } else if (layer === 'viirs') {
       windowed = windowed.filter(f => f.properties?.sensor === 'VIIRS');
+    } else if (layer === 'disagreement') {
+      if (allowedCats.length > 0 && allowedCats.length < 4) {
+        windowed = windowed.filter(f => allowedCats.includes(f.properties?.category));
+      }
+    } else if (layer === 'observability') {
+      // In observability layer, emphasize non-obscured vs cloud marginal detections
+      windowed = windowed.filter(f => f.properties?.category !== 'obscured');
     }
 
     setDailyFireCount(windowed.length);
@@ -131,11 +157,25 @@ export const Atlas: React.FC = () => {
       if (layer === 'disagreement') {
         mapRef.current.setPaintProperty('fire-points-core', 'circle-color', [
           'match',
-          ['get', 'sensor'],
-          'MODIS', '#ff9800',
-          'VIIRS', '#f44336',
+          ['get', 'category'],
+          'both', '#ffeb3b',
+          'modis-only', '#ff9800',
+          'viirs-only', '#f44336',
+          'obscured', '#00e5ff',
           '#ffeb3b'
         ]);
+        mapRef.current.setPaintProperty('fire-points-glow', 'circle-color', [
+          'match',
+          ['get', 'category'],
+          'both', '#ffeb3b',
+          'modis-only', '#ff9800',
+          'viirs-only', '#f44336',
+          'obscured', '#00e5ff',
+          '#ff7700'
+        ]);
+      } else if (layer === 'observability') {
+        mapRef.current.setPaintProperty('fire-points-core', 'circle-color', '#00E5FF');
+        mapRef.current.setPaintProperty('fire-points-glow', 'circle-color', 'rgba(0, 229, 255, 0.45)');
       } else {
         mapRef.current.setPaintProperty('fire-points-core', 'circle-color', [
           'match',
@@ -143,6 +183,13 @@ export const Atlas: React.FC = () => {
           'MODIS', '#ff1a00',
           'VIIRS', '#ffa600',
           '#ff2e00'
+        ]);
+        mapRef.current.setPaintProperty('fire-points-glow', 'circle-color', [
+          'match',
+          ['get', 'sensor'],
+          'MODIS', '#ff2600',
+          'VIIRS', '#ff7700',
+          '#ff3b00'
         ]);
       }
     }
@@ -352,6 +399,55 @@ export const Atlas: React.FC = () => {
         }
       });
 
+      // Interactive MapLibre Click Popup
+      const popup = new maplibregl.Popup({
+        closeButton: true,
+        closeOnClick: true,
+        className: 'atlas-fire-popup',
+        maxWidth: '320px'
+      });
+
+      map.on('click', 'fire-points-core', (e) => {
+        if (!e.features || e.features.length === 0) return;
+        const feat = e.features[0];
+        const props = feat.properties as any;
+        const coords = (feat.geometry as any).coordinates.slice();
+
+        const cat = props.category || 'both';
+        const catLabel = cat === 'both' 
+          ? '🌟 Consensus (Observed by Both MODIS & VIIRS)' 
+          : cat === 'modis-only'
+          ? '🔶 MODIS Only (1,000m Footprint)'
+          : cat === 'viirs-only'
+          ? '🔴 VIIRS Only (375m High-Resolution)'
+          : '🔷 Cloud Marginal / Low Confidence';
+
+        const content = `
+          <div class="atlas-popup-box">
+            <div class="popup-title">${props.date} · NASA Thermal Hotspot</div>
+            <div class="popup-row">
+              <span class="popup-label">Satellite Platform:</span>
+              <span class="popup-val"><strong>${props.satellite || 'Satellite'}</strong> (${props.sensor})</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Radiative Power (FRP):</span>
+              <span class="popup-val highlight-frp">${props.frp} MW</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Brightness:</span>
+              <span class="popup-val">${props.brightness ? props.brightness + ' K' : '—'}</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Confidence:</span>
+              <span class="popup-val">${props.confidence}</span>
+            </div>
+            <div class="popup-category-pill cat-${cat}">${catLabel}</div>
+          </div>
+        `;
+
+        popup.setLngLat(coords).setHTML(content).addTo(map);
+      });
+
       // Cursor pointer on hover over fire dots
       map.on('mouseenter', 'fire-points-core', () => {
         map.getCanvas().style.cursor = 'crosshair';
@@ -404,12 +500,12 @@ export const Atlas: React.FC = () => {
     };
   }, []);
 
-  // Update Map when Date, Layer, allFeatures, or mapLoaded Changes
+  // Update Map when Date, Layer, allFeatures, revealedCategories, or mapLoaded Changes
   useEffect(() => {
     if (mapLoaded && allFeatures.length > 0) {
-      updateDateData(currentDate, activeLayer, allFeatures);
+      updateDateData(currentDate, activeLayer, allFeatures, revealedCategories);
     }
-  }, [mapLoaded, currentDate, activeLayer, allFeatures, updateDateData]);
+  }, [mapLoaded, currentDate, activeLayer, allFeatures, revealedCategories, updateDateData]);
 
   // Handle AOI FlyTo
   const handleAoiChange = (aoi: string) => {
@@ -426,6 +522,22 @@ export const Atlas: React.FC = () => {
     }
   };
 
+  // Toggle Disagreement Category Filter
+  const toggleCategory = (catId: string) => {
+    setRevealedCategories(prev => {
+      if (prev.includes(catId)) {
+        if (prev.length === 1) return prev; // Keep at least one
+        return prev.filter(c => c !== catId);
+      } else {
+        return [...prev, catId];
+      }
+    });
+  };
+
+  const selectAllCategories = () => {
+    setRevealedCategories(['both', 'modis-only', 'viirs-only', 'obscured']);
+  };
+
   // Time-lapse Playback Engine
   useEffect(() => {
     if (!isPlaying || timeSeries.length === 0) return;
@@ -439,21 +551,6 @@ export const Atlas: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [isPlaying, playSpeed, timeSeries, currentDate]);
-
-  // Disagreement Category Staggered Animation
-  useEffect(() => {
-    if (activeLayer === 'disagreement') {
-      setRevealedCategories([]);
-      const timers: number[] = [];
-      DISAGREEMENT_CATEGORIES.forEach((cat, idx) => {
-        const t = window.setTimeout(() => {
-          setRevealedCategories(prev => [...prev, cat.id]);
-        }, idx * 140);
-        timers.push(t);
-      });
-      return () => timers.forEach(t => clearTimeout(t));
-    }
-  }, [activeLayer]);
 
   const currentIndex = timeSeries.findIndex(d => d.local_date === currentDate);
 
@@ -489,6 +586,11 @@ export const Atlas: React.FC = () => {
             <span>GRID: <strong>{pointerInfo.cellId}</strong> (1km)</span>
             <span>LAT: <strong>{pointerInfo.lat}°</strong> · LON: <strong>{pointerInfo.lon}°</strong></span>
             <span>ACTIVE FIRES: <strong>{dailyFireCount}</strong></span>
+            {activeLayer === 'disagreement' && (
+              <span className="hud-disagreement-breakdown">
+                [ 🌟 {categoryCounts.both} · 🔶 {categoryCounts.modis} · 🔴 {categoryCounts.viirs} ]
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -496,8 +598,11 @@ export const Atlas: React.FC = () => {
       {/* Control Sidebar */}
       <aside className="atlas-sidebar">
         <div className="panel-section">
-          <span className="section-tag">REGION FOCUS</span>
-          <h3>AOI Picker</h3>
+          <div className="section-title-split">
+            <span className="section-tag">REGION FOCUS</span>
+            <span className="basemap-pill-inline">🛰️ NASA True Color</span>
+          </div>
+          <h3>Area of Interest (AOI)</h3>
           <select
             className="dark-select"
             value={selectedAoi}
@@ -512,24 +617,6 @@ export const Atlas: React.FC = () => {
         </div>
 
         <div className="panel-section">
-          <span className="section-tag">IMAGERY & BASEMAP</span>
-          <h3>Satellite Background</h3>
-          <div className="basemap-grid">
-            <button
-              type="button"
-              className="basemap-btn active"
-              title="NASA EOSDIS / True Color Satellite View"
-            >
-              <div className="basemap-btn-header">
-                <span className="bm-label">True Color Satellite</span>
-                <span className="basemap-status-badge">ACTIVE</span>
-              </div>
-              <span className="bm-meta">Esri / NASA Imagery</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="panel-section">
           <span className="section-tag">FUSION LAYERS</span>
           <h3>Layer Switcher</h3>
           <div className="radio-group">
@@ -537,8 +624,8 @@ export const Atlas: React.FC = () => {
               { id: 'harmonized', label: 'Harmonized Activity (HFAI)' },
               { id: 'modis', label: 'MODIS Baseline (1 km Footprint)' },
               { id: 'viirs', label: 'VIIRS High-Res (375 m Footprint)' },
-              { id: 'disagreement', label: 'Disagreement Mode (MODIS vs VIIRS)' },
-              { id: 'observability', label: 'Observability Mask' }
+              { id: 'disagreement', label: 'Disagreement Mode (Sensor Cross-Check)' },
+              { id: 'observability', label: 'Observability (Cloud-Filtered)' }
             ].map(layer => (
               <label key={layer.id} className={`radio-label ${activeLayer === layer.id ? 'active' : ''}`}>
                 <input
@@ -556,17 +643,38 @@ export const Atlas: React.FC = () => {
 
         {activeLayer === 'disagreement' && (
           <div className="panel-section disagreement-legend">
-            <span className="section-tag">SENSOR STRATIFICATION</span>
-            <h3>Disagreement Categories</h3>
-            {DISAGREEMENT_CATEGORIES.map(cat => (
-              <div
-                key={cat.id}
-                className={`legend-item ${revealedCategories.includes(cat.id) ? 'revealed' : 'hidden'}`}
+            <div className="legend-header-row">
+              <span className="section-tag">SENSOR STRATIFICATION</span>
+              <button 
+                type="button" 
+                className="legend-reset-btn"
+                onClick={selectAllCategories}
+                title="Show all categories"
               >
-                <span className={`dot ${cat.class}`}></span>
-                <span className="legend-label">{cat.label}</span>
-              </div>
-            ))}
+                Reset All
+              </button>
+            </div>
+            <h3>Disagreement Categories</h3>
+            <p className="legend-instruction">Click category to toggle on map:</p>
+            {DISAGREEMENT_CATEGORIES.map(cat => {
+              const isSelected = revealedCategories.includes(cat.id);
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`legend-item-btn ${isSelected ? 'active' : 'inactive'}`}
+                  onClick={() => toggleCategory(cat.id)}
+                  title={cat.description}
+                >
+                  <span className={`dot ${cat.class}`}></span>
+                  <div className="legend-label-col">
+                    <span className="legend-label">{cat.label}</span>
+                    <span className="legend-sub-desc">{cat.description}</span>
+                  </div>
+                  <span className="legend-check-icon">{isSelected ? '✓' : '—'}</span>
+                </button>
+              );
+            })}
           </div>
         )}
       </aside>
