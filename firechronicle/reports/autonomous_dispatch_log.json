@@ -1,0 +1,98 @@
+[
+  {
+    "scan_timestamp_utc": "2026-11-09T22:38:35.903323+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-09T22:38:53.634630+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 1,
+    "dispatches": [
+      {
+        "hotspot_id": "AUTONOMOUS-TEST-1794263934",
+        "coordinates": {
+          "lat": 22.35,
+          "lon": 92.2
+        },
+        "level": "WATCH",
+        "fdi": 0.8,
+        "dispatch_report": {
+          "dispatch_id": "DISP-AUTONOMOUS-TEST-1794263934-1794263936",
+          "timestamp_utc": "2026-11-09T22:38:56.641664+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-09T22:38:56.640747+00:00",
+              "broadcast_targets": [
+                "5408879423"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 5
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-09T22:38:56.640762+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 254,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nLocation: Bandarban Town & Hill Communities (22.350N,92.200E)\nWeather: 4.3km/h S, 22.4C, RH 95.0%\nSpread: 0.1km/h toward NNW\nThreat: Active spread toward NNW. Direct threat to Rangamati Lakeside Settlements (Pop: ~65,000) i...",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-09T22:38:56.640767+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 6153,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      }
+    ]
+  },
+  {
+    "scan_timestamp_utc": "2026-11-09T22:42:38.332396+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-09T22:42:48.219842+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-09T22:46:24.465815+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-09T22:52:00.984702+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  }
+]

@@ -34,6 +34,31 @@ function App() {
   // Real-Time Emergency Situation Alert State
   const [emergencyAlert, setEmergencyAlert] = useState<EmergencyAlertState | null>(null);
   const [isAlertDismissed, setIsAlertDismissed] = useState<boolean>(false);
+  const [pushPermission, setPushPermission] = useState<NotificationPermission>(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      return Notification.permission;
+    }
+    return 'default';
+  });
+
+  const handleEnablePushNotifications = async () => {
+    if (typeof window === 'undefined' || !('Notification' in window)) {
+      alert('Browser notifications are not supported in this browser.');
+      return;
+    }
+    try {
+      const perm = await Notification.requestPermission();
+      setPushPermission(perm);
+      if (perm === 'granted') {
+        new Notification('🚨 BengalFlare Wildfire Warning System Activated', {
+          body: 'You will receive real-time push alerts on your screen when critical wildfire propagation is detected across Bangladesh.',
+          icon: '/favicon.ico'
+        });
+      }
+    } catch (err) {
+      console.warn('Notification permission error:', err);
+    }
+  };
   
   useEffect(() => {
     // Initial fetch to check API or fallback to fixtures (R1)
@@ -78,6 +103,15 @@ function App() {
               windDir: weather.wind_direction_deg,
               spreadDistanceKm: Number((weather.wind_speed_kmh * 0.12 * 3).toFixed(1))
             });
+
+            // Trigger native OS Browser Web Push Notification if permission is granted
+            if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+              new Notification(`🚨 BengalFlare Wildfire Threat: ${topSpot.district}`, {
+                body: `Active fire near ${topSpot.locationName} (${topSpot.frp.toFixed(1)} MW). Winds blowing at ${weather.wind_speed_kmh} km/h with high forward spread risk.`,
+                icon: '/favicon.ico',
+                tag: `fire-${topSpot.id}`
+              });
+            }
           }
         }
       } catch (e) {
@@ -107,6 +141,23 @@ function App() {
           </div>
 
           <div className="emergency-actions-row">
+            <button 
+              type="button" 
+              className={`emergency-push-btn ${pushPermission === 'granted' ? 'granted' : ''}`}
+              onClick={handleEnablePushNotifications}
+              title="Receive instant push notifications on your phone or desktop even when site is closed"
+            >
+              {pushPermission === 'granted' ? '🔔 Web Push Active' : '🔔 Enable Web Push'}
+            </button>
+            <a 
+              href="https://t.me/pika09_bot" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="emergency-telegram-btn"
+              title="Subscribe to official Telegram Early Warning Channel"
+            >
+              📢 Telegram Channel
+            </a>
             <NavLink to="/early-warning" className="emergency-action-link">
               Inspect Threat Cone ➔
             </NavLink>
@@ -171,7 +222,16 @@ function App() {
             {emergencyAlert && <span className="nav-alert-dot" title="Active Real-Time Threat Detected">LIVE ALERT</span>}
           </NavLink>
         </div>
-        <div className="motion-toggle-wrapper">
+        <div className="nav-controls-group">
+          <button 
+            type="button" 
+            className={`nav-push-badge ${pushPermission === 'granted' ? 'active' : ''}`}
+            onClick={handleEnablePushNotifications}
+            title={pushPermission === 'granted' ? 'Browser Web Push alerts are active' : 'Click to enable Browser Web Push alerts'}
+          >
+            {pushPermission === 'granted' ? '🔔 Alerts On' : '🔔 Push Alerts'}
+          </button>
+          <div className="motion-toggle-wrapper">
           <label className="motion-label" htmlFor="motion-select">MOTION:</label>
           <select
             id="motion-select"
@@ -184,7 +244,8 @@ function App() {
             <option value="off">Off</option>
           </select>
         </div>
-      </nav>
+      </div>
+    </nav>
 
       <main className="shell-stage">
         <RouteWipe>

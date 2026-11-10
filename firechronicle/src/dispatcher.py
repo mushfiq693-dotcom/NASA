@@ -16,6 +16,7 @@ import httpx
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 DEFAULT_WEBHOOK_URL = os.environ.get("DISASTER_WEBHOOK_URL")
 
 async def send_telegram_alert(
@@ -25,16 +26,24 @@ async def send_telegram_alert(
 ) -> Dict[str, Any]:
     """
     Sends actionable alert message to Telegram.
+    Supports both personal chats (TELEGRAM_CHAT_ID) and public broadcast channels (TELEGRAM_CHANNEL_ID).
     Falls back to simulation log if token is unconfigured.
     """
     token = bot_token or TELEGRAM_BOT_TOKEN
-    target_chat = chat_id or TELEGRAM_CHAT_ID
+    primary_chat = chat_id or TELEGRAM_CHAT_ID
     
+    # Collect all destination targets
+    targets = []
+    if primary_chat:
+        targets.append(primary_chat)
+    if TELEGRAM_CHANNEL_ID and TELEGRAM_CHANNEL_ID != primary_chat:
+        targets.append(TELEGRAM_CHANNEL_ID)
+        
     act = alert_dict.get("actionable_intelligence", {})
     dispatch = act.get("dispatch_payloads", {})
     markdown_text = dispatch.get("telegram_markdown", f"Wildfire alert: {alert_dict.get('hotspot_id')}")
     
-    if not token or not target_chat:
+    if not token or not targets:
         return {
             "channel": "telegram",
             "status": "simulated",
@@ -42,39 +51,36 @@ async def send_telegram_alert(
             "target": "simulated_telegram_channel",
             "characters_sent": len(markdown_text),
             "preview": markdown_text[:120] + "...",
-            "note": "Configured in simulation mode. Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID to broadcast live."
+            "note": "Configured in simulation mode. Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID / TELEGRAM_CHANNEL_ID to broadcast live."
         }
         
     url = f"https://api.telegram.org/bot{token}/sendMessage"
-    payload = {
-        "chat_id": target_chat,
-        "text": markdown_text,
-        "parse_mode": "Markdown"
-    }
+    delivery_results = []
     
-    try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            resp = await client.post(url, json=payload)
-            if resp.status_code == 200:
-                return {
-                    "channel": "telegram",
-                    "status": "delivered",
-                    "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                    "response": resp.json()
-                }
-            else:
-                return {
-                    "channel": "telegram",
-                    "status": "failed",
-                    "error_code": resp.status_code,
-                    "error_body": resp.text
-                }
-    except Exception as e:
-        return {
-            "channel": "telegram",
-            "status": "error",
-            "error": str(e)
-        }
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        for t in targets:
+            payload = {
+                "chat_id": t,
+                "text": markdown_text,
+                "parse_mode": "Markdown"
+            }
+            try:
+                resp = await client.post(url, json=payload)
+                if resp.status_code == 200:
+                    delivery_results.append({"target": t, "status": "delivered", "message_id": resp.json().get("result", {}).get("message_id")})
+                else:
+                    delivery_results.append({"target": t, "status": "failed", "code": resp.status_code, "error": resp.text})
+            except Exception as e:
+                delivery_results.append({"target": t, "status": "error", "error": str(e)})
+
+    has_success = any(r.get("status") == "delivered" for r in delivery_results)
+    return {
+        "channel": "telegram",
+        "status": "delivered" if has_success else "failed",
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "broadcast_targets": targets,
+        "results": delivery_results
+    }
 
 async def send_sms_alert(
     alert_dict: Dict[str, Any],

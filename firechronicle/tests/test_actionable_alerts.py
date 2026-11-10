@@ -134,3 +134,12 @@ def test_actionable_and_dispatch_api_endpoints():
     assert report["channels"]["sms"]["status"] in ["delivered", "simulated"]
     assert report["channels"]["webhook"]["status"] in ["delivered", "simulated"]
 
+def test_autonomous_watchdog_scan_api():
+    """Verify Autonomous 24/7 Watchdog daemon scan API endpoint."""
+    res = client.post("/alerts/autonomous-scan?force_test=false")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "success"
+    assert "scan_summary" in data
+    assert "total_hotspots_detected" in data["scan_summary"]
+

@@ -859,6 +859,15 @@ export const EarlyWarning: React.FC = () => {
               </h3>
             </div>
             <div className="dispatch-buttons-group">
+              <a 
+                href="https://t.me/pika09_bot" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="dispatch-action-btn btn-telegram"
+                title="Join official Telegram Emergency Dispatch Channel"
+              >
+                📢 Telegram Channel
+              </a>
               <button 
                 type="button" 
                 className="dispatch-action-btn btn-copy" 

@@ -1,0 +1,11 @@
+[
+  {
+    "hotspot_id": "AUTONOMOUS-TEST-1794263934",
+    "latitude": 22.35,
+    "longitude": 92.2,
+    "frp": 65.0,
+    "level": "WATCH",
+    "fdi_score": 0.8,
+    "timestamp_utc": "2026-11-09T22:38:53.634630+00:00"
+  }
+]

@@ -678,3 +678,17 @@ async def dispatch_wildfire_alert_endpoint(
         },
         "dispatch_report": dispatch_report
     }
+
+from src.alert_daemon import run_autonomous_scan
+
+@app.post("/alerts/autonomous-scan")
+async def trigger_autonomous_scan_api(force_test: bool = False):
+    """
+    Triggers an autonomous 24/7 watchdog scan across NASA FIRMS and live weather.
+    Can be invoked by external cron jobs (GitHub Actions, Cloud Scheduler, etc.).
+    """
+    summary = await run_autonomous_scan(force_test=force_test)
+    return {
+        "status": "success",
+        "scan_summary": summary
+    }

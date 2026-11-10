@@ -499,3 +499,81 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.55; }
 }
+
+/* Push Notification & Channel Action Buttons */
+.emergency-push-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.emergency-push-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.emergency-push-btn.granted {
+  background: rgba(0, 230, 118, 0.25);
+  border-color: #00E676;
+  color: #00E676;
+}
+
+.emergency-telegram-btn {
+  background: rgba(0, 136, 204, 0.3);
+  border: 1px solid rgba(0, 136, 204, 0.6);
+  color: #FFFFFF;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.emergency-telegram-btn:hover {
+  background: rgba(0, 136, 204, 0.6);
+  transform: translateY(-1px);
+  color: #FFFFFF;
+}
+
+.nav-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-push-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #CBD5E1;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-push-badge:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+}
+
+.nav-push-badge.active {
+  background: rgba(0, 230, 118, 0.15);
+  border-color: rgba(0, 230, 118, 0.5);
+  color: #00E676;
+}
+
