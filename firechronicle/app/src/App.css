@@ -252,39 +252,6 @@
   background: var(--bg-muted);
 }
 
-/* Motion Mode Selector in Nav */
-.motion-toggle-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-muted);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border-rule);
-}
-
-.motion-label {
-  font-size: 0.68rem;
-  font-family: var(--font-mono);
-  color: var(--accent-gold);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-}
-
-.motion-select {
-  background: transparent;
-  color: var(--foreground);
-  border: none;
-  font-size: 0.78rem;
-  font-family: var(--font-sans);
-  cursor: pointer;
-  outline: none;
-}
-
-.motion-select option {
-  background: #0E1424;
-  color: #FFFFFF;
-}
 
 /* Staggered Panel Entrances */
 .enter-from-top {
@@ -349,9 +316,6 @@
     padding-bottom: 4px;
     gap: 14px;
     -webkit-overflow-scrolling: touch;
-  }
-  .motion-toggle-wrapper {
-    display: none;
   }
 }
 
@@ -549,7 +513,44 @@
 .nav-controls-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+.nav-telegram-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(0, 136, 204, 0.22) 0%, rgba(34, 158, 217, 0.32) 100%);
+  border: 1px solid rgba(0, 168, 255, 0.55);
+  color: #E0F2FE;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+  box-shadow: 0 0 12px rgba(0, 136, 204, 0.2);
+}
+
+.nav-telegram-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 136, 204, 0.45) 0%, rgba(34, 158, 217, 0.58) 100%);
+  border-color: #38BDF8;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
+}
+
+.nav-telegram-btn .telegram-icon {
+  flex-shrink: 0;
+  color: #38BDF8;
+  transition: transform 0.2s ease;
+}
+
+.nav-telegram-btn:hover .telegram-icon {
+  transform: scale(1.15) rotate(-6deg);
+  color: #FFFFFF;
 }
 
 .nav-push-badge {

@@ -144,7 +144,6 @@ export const EarlyWarning: React.FC = () => {
   const [spreadAzimuth, setSpreadAzimuth] = useState<number>(25.0);
   const [spreadGeoJson, setSpreadGeoJson] = useState<any>(null);
   const [exposedCommunities, setExposedCommunities] = useState<ThreatenedSettlement[]>([]);
-  const [dispatchStatus, setDispatchStatus] = useState<'idle' | 'sending' | 'success' | 'copied'>('idle');
 
   // 1. Initial Load of Real-Time NASA FIRMS Telemetry
   useEffect(() => {
@@ -407,31 +406,6 @@ export const EarlyWarning: React.FC = () => {
   const spreadCompass = getCompassDirection(spreadAzimuth);
   const windFromCompass = getCompassDirection(windDir);
 
-  const handleCopySMS = () => {
-    const locName = sourceMode === 'live_firms' && activeHotspot 
-      ? `${activeHotspot.district} (${activeHotspot.locationName})` 
-      : activePreset.name;
-    const topThreat = exposedCommunities.length > 0 
-      ? `${exposedCommunities[0].name} in ~${exposedCommunities[0].time_to_impact_hours}h` 
-      : 'No settlements in forward reach';
-    const sms = `[${isRedFlag ? 'RED FLAG WARNING' : isElevated ? 'WILDFIRE WATCH' : 'FIRE ADVISORY'}]\nLoc: ${locName} (${activeLat.toFixed(3)}N, ${activeLon.toFixed(3)}E)\nWeather: ${windSpeed}km/h ${windFromCompass}, ${ambientTemp}C, RH ${ambientRh}%\nSpread: ${spreadRate}km/h toward ${spreadCompass}\nThreat: ${topThreat}\nDirective: Clear 50m dry scrub; stage water tenders.`;
-    navigator.clipboard.writeText(sms);
-    setDispatchStatus('copied');
-    setTimeout(() => setDispatchStatus('idle'), 2500);
-  };
-
-  const handleDispatchAlert = async () => {
-    setDispatchStatus('sending');
-    try {
-      await fetch(`http://localhost:8000/alerts/dispatch?lat=${activeLat}&lon=${activeLon}&wind_kmh=${windSpeed}&wind_dir=${windDir}&temp_c=${ambientTemp}&rh_pct=${ambientRh}&frp_mw=${activeFrp}`, {
-        method: 'POST'
-      });
-      setDispatchStatus('success');
-    } catch {
-      setDispatchStatus('success');
-    }
-    setTimeout(() => setDispatchStatus('idle'), 3000);
-  };
 
   return (
     <div className="early-warning-container">
@@ -846,142 +820,6 @@ export const EarlyWarning: React.FC = () => {
                 )}
               </tbody>
             </table>
-          </div>
-        </div>
-
-        {/* PILLAR 5: ACTIONABLE TACTICAL DIRECTIVES & MULTI-CHANNEL DISPATCH */}
-        <div className="actionable-directives-panel">
-          <div className="directives-header-row">
-            <div>
-              <span className="directives-tag">ACTIONABLE INCIDENT MANAGEMENT</span>
-              <h3 style={{ fontSize: '1.1rem', margin: '4px 0 0 0', color: '#FFFFFF' }}>
-                Role-Specific Tactical Directives
-              </h3>
-            </div>
-            <div className="dispatch-buttons-group">
-              <a 
-                href="https://t.me/pika09_bot" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="dispatch-action-btn btn-telegram"
-                title="Join official Telegram Emergency Dispatch Channel"
-              >
-                📢 Telegram Channel
-              </a>
-              <button 
-                type="button" 
-                className="dispatch-action-btn btn-copy" 
-                onClick={handleCopySMS}
-                title="Copy formatted 160-char SMS for cellular dispatch"
-              >
-                {dispatchStatus === 'copied' ? '✓ SMS Copied to Clipboard' : '📋 Copy Actionable SMS'}
-              </button>
-              <a 
-                href="http://localhost:8000/alerts/cap.xml" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="dispatch-action-btn btn-cap"
-                title="Download or inspect WMO / Google Public Alerts OASIS CAP v1.2 XML feed"
-              >
-                🌐 OASIS CAP v1.2 XML
-              </a>
-              <button 
-                type="button" 
-                className="dispatch-action-btn btn-send" 
-                onClick={handleDispatchAlert}
-                disabled={dispatchStatus === 'sending'}
-                title="Trigger multi-channel automated broadcast to Telegram and Webhooks"
-              >
-                {dispatchStatus === 'sending' 
-                  ? '📡 Broadcasting...' 
-                  : dispatchStatus === 'success' 
-                  ? '✓ Dispatched to Telegram & Webhook!' 
-                  : '📲 Dispatch Alert'}
-              </button>
-            </div>
-          </div>
-
-          <div className="directives-grid">
-            {/* CARD 1: FOREST DEPARTMENT */}
-            <div className="directive-card card-forestry">
-              <div className="directive-card-title">
-                <span className="role-icon">🌲</span>
-                <strong>Forest Range & Beat Officers</strong>
-              </div>
-              <ul className="directive-list">
-                {isRedFlag ? (
-                  <>
-                    <li>Deploy motorized patrol teams along downwind boundary toward {spreadCompass}.</li>
-                    <li>Establish defensive 5-meter mineral earth fuel breaks immediately.</li>
-                    <li>Pre-wet canopy fringe and monitor for high-speed wind ember spotting.</li>
-                  </>
-                ) : isElevated ? (
-                  <>
-                    <li>Increase watchtower lookouts and test VHF/satellite radio communications.</li>
-                    <li>Check water storage tanks and portable backpack pumps at beat stations.</li>
-                    <li>Clear access tracks of dry fallen branches and high bamboo combustible litter.</li>
-                  </>
-                ) : (
-                  <>
-                    <li>Routine seasonal forest boundary patrol; report any unauthorized campfires.</li>
-                    <li>Maintain fire observation towers on standard operational shifts.</li>
-                  </>
-                )}
-              </ul>
-            </div>
-
-            {/* CARD 2: FIRE SERVICE & CIVIL DEFENSE */}
-            <div className="directive-card card-fire-service">
-              <div className="directive-card-title">
-                <span className="role-icon">🚒</span>
-                <strong>Fire Service & Civil Defense</strong>
-              </div>
-              <ul className="directive-list">
-                {isRedFlag ? (
-                  <>
-                    <li>Pre-position water tender trucks along the nearest motorable access roads.</li>
-                    <li>Coordinate with local administration for surface water pump extraction points.</li>
-                    <li>Prepare high-pressure brush hoses and foam extinguishing units on standby.</li>
-                  </>
-                ) : isElevated ? (
-                  <>
-                    <li>Place rural fire station crews on heightened yellow standby alert.</li>
-                    <li>Survey and verify road navigation routes leading toward the fire coordinates.</li>
-                  </>
-                ) : (
-                  <>
-                    <li>Standard operational standby for municipal and rural fire units.</li>
-                    <li>Ensure tanker water levels are fully topped up.</li>
-                  </>
-                )}
-              </ul>
-            </div>
-
-            {/* CARD 3: LOCAL ADMINISTRATION & PUBLIC */}
-            <div className="directive-card card-public-admin">
-              <div className="directive-card-title">
-                <span className="role-icon">🏘️</span>
-                <strong>Union Parishad & Community Residents</strong>
-              </div>
-              <ul className="directive-list">
-                {isRedFlag ? (
-                  <>
-                    <li>Strictly enforce emergency ban on all agricultural field and stubble burning.</li>
-                    <li>Notify downwind settlements ({exposedCommunities.length > 0 ? exposedCommunities[0].name : 'nearby communities'}) for preventive readiness.</li>
-                    <li>Instruct residents to clear dry leaves and firewood piles 50 meters away from dwellings.</li>
-                  </>
-                ) : isElevated ? (
-                  <>
-                    <li>Advise farmers against midday stubble clearing during gusty wind hours.</li>
-                    <li>Broadcast localized precautionary advisories via community mosque loudspeakers.</li>
-                  </>
-                ) : (
-                  <>
-                    <li>Promote general wildfire safety and controlled agricultural debris disposal.</li>
-                  </>
-                )}
-              </ul>
-            </div>
           </div>
         </div>
 
