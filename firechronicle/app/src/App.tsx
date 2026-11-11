@@ -32,29 +32,53 @@ function App() {
   // Real-Time Emergency Situation Alert State
   const [emergencyAlert, setEmergencyAlert] = useState<EmergencyAlertState | null>(null);
   const [isAlertDismissed, setIsAlertDismissed] = useState<boolean>(false);
-  const [pushPermission, setPushPermission] = useState<NotificationPermission>(() => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      return Notification.permission;
+
+  const [alertsEnabled, setAlertsEnabled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const saved = localStorage.getItem('bengalflare_alerts_enabled');
+    if (saved !== null) {
+      return saved === 'true';
     }
-    return 'default';
+    return 'Notification' in window && Notification.permission === 'granted';
   });
 
-  const handleEnablePushNotifications = async () => {
-    if (typeof window === 'undefined' || !('Notification' in window)) {
+  const handleToggleAlerts = async () => {
+    if (typeof window === 'undefined') return;
+
+    if (!('Notification' in window)) {
       alert('Browser notifications are not supported in this browser.');
       return;
     }
-    try {
-      const perm = await Notification.requestPermission();
-      setPushPermission(perm);
-      if (perm === 'granted') {
-        new Notification('🚨 BengalFlare Wildfire Warning System Activated', {
-          body: 'You will receive real-time push alerts on your screen when critical wildfire propagation is detected across Bangladesh.',
-          icon: '/favicon.ico'
-        });
+
+    // If currently ON, toggle to OFF
+    if (alertsEnabled) {
+      setAlertsEnabled(false);
+      localStorage.setItem('bengalflare_alerts_enabled', 'false');
+      return;
+    }
+
+    // If currently OFF, turn ON
+    if (Notification.permission === 'denied') {
+      alert('Push notifications are blocked in your browser settings. Please allow notifications for this site to receive emergency wildfire alerts.');
+      return;
+    }
+
+    if (Notification.permission === 'default') {
+      try {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+          setAlertsEnabled(true);
+          localStorage.setItem('bengalflare_alerts_enabled', 'true');
+        } else {
+          setAlertsEnabled(false);
+          localStorage.setItem('bengalflare_alerts_enabled', 'false');
+        }
+      } catch (err) {
+        console.warn('Notification permission error:', err);
       }
-    } catch (err) {
-      console.warn('Notification permission error:', err);
+    } else if (Notification.permission === 'granted') {
+      setAlertsEnabled(true);
+      localStorage.setItem('bengalflare_alerts_enabled', 'true');
     }
   };
   
@@ -102,8 +126,9 @@ function App() {
               spreadDistanceKm: Number((weather.wind_speed_kmh * 0.12 * 3).toFixed(1))
             });
 
-            // Trigger native OS Browser Web Push Notification if permission is granted
-            if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+            // Trigger native OS Browser Web Push Notification only if user has alerts turned ON and permission granted
+            const isAlertsActive = typeof window !== 'undefined' && localStorage.getItem('bengalflare_alerts_enabled') !== 'false';
+            if (isAlertsActive && typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
               new Notification(`🚨 BengalFlare Wildfire Threat: ${topSpot.district}`, {
                 body: `Active fire near ${topSpot.locationName} (${topSpot.frp.toFixed(1)} MW). Winds blowing at ${weather.wind_speed_kmh} km/h with high forward spread risk.`,
                 icon: '/favicon.ico',
@@ -141,11 +166,13 @@ function App() {
           <div className="emergency-actions-row">
             <button 
               type="button" 
-              className={`emergency-push-btn ${pushPermission === 'granted' ? 'granted' : ''}`}
-              onClick={handleEnablePushNotifications}
-              title="Receive instant push notifications on your phone or desktop even when site is closed"
+              role="switch"
+              aria-checked={alertsEnabled}
+              className={`emergency-push-btn ${alertsEnabled ? 'granted' : ''}`}
+              onClick={handleToggleAlerts}
+              title={alertsEnabled ? "Wildfire push alerts are ON. Click to mute." : "Wildfire push alerts are OFF. Click to turn ON."}
             >
-              {pushPermission === 'granted' ? '🔔 Web Push Active' : '🔔 Enable Web Push'}
+              {alertsEnabled ? '🔔 Alerts ON' : '🔕 Alerts OFF'}
             </button>
             <a 
               href="https://t.me/bengalflare_live" 
@@ -221,7 +248,7 @@ function App() {
         </div>
         <div className="nav-controls-group">
           <a 
-            href="https://t.me/pika09_bot" 
+            href="https://t.me/bengalflare_live" 
             target="_blank" 
             rel="noreferrer" 
             className="nav-telegram-btn"
@@ -234,11 +261,17 @@ function App() {
           </a>
           <button 
             type="button" 
-            className={`nav-push-badge ${pushPermission === 'granted' ? 'active' : ''}`}
-            onClick={handleEnablePushNotifications}
-            title={pushPermission === 'granted' ? 'Browser Web Push alerts are active' : 'Click to enable Browser Web Push alerts'}
+            role="switch"
+            aria-checked={alertsEnabled}
+            className={`nav-alert-toggle ${alertsEnabled ? 'active' : ''}`}
+            onClick={handleToggleAlerts}
+            title={alertsEnabled ? 'Live wildfire alerts are ON. Click to turn OFF.' : 'Live wildfire alerts are OFF. Click to turn ON.'}
           >
-            {pushPermission === 'granted' ? '🔔 Alerts On' : '🔔 Push Alerts'}
+            <span className="toggle-bell">{alertsEnabled ? '🔔' : '🔕'}</span>
+            <span className="toggle-text">{alertsEnabled ? 'Alerts ON' : 'Alerts OFF'}</span>
+            <span className="toggle-slider">
+              <span className="toggle-knob"></span>
+            </span>
           </button>
         </div>
     </nav>

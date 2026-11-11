@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
           </p>
           <div className="footer-telegram-cta">
             <a 
-              href="https://t.me/pika09_bot" 
+              href="https://t.me/bengalflare_live" 
               target="_blank" 
               rel="noreferrer" 
               className="footer-tg-link"
