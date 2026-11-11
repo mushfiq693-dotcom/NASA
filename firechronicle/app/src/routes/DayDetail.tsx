@@ -15,6 +15,7 @@ import {
   Filler
 } from 'chart.js';
 import './DayDetail.css';
+import { Footer } from '../components/Footer';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -539,6 +540,9 @@ export const DayDetail: React.FC = () => {
 
         </div>
       </div>
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

@@ -124,13 +124,13 @@ def test_actionable_and_dispatch_api_endpoints():
     assert "actionable_intelligence" in data_act["alerts"][0]
     
     # 2. Dispatch endpoint (Simulation mode)
-    res_disp = client.post("/alerts/dispatch", json={})
+    res_disp = client.post("/alerts/dispatch?simulate=true", json={})
     assert res_disp.status_code == 200
     data_disp = res_disp.json()
     assert data_disp["status"] == "success"
     report = data_disp["dispatch_report"]
     assert "channels" in report
-    assert report["channels"]["telegram"]["status"] in ["delivered", "simulated"]
+    assert report["channels"]["telegram"]["status"] in ["delivered", "simulated", "skipped_cooldown"]
     assert report["channels"]["sms"]["status"] in ["delivered", "simulated"]
     assert report["channels"]["webhook"]["status"] in ["delivered", "simulated"]
 

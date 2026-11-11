@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Methodology.css';
+import { Footer } from '../components/Footer';
 import { useMotionMode } from '../motion/useReducedMotion';
 
 interface PipelineStage {
@@ -358,6 +359,9 @@ export const Methodology: React.FC = () => {
           </ul>
         </section>
       </div>
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

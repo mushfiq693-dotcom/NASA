@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Live.css';
+import { Footer } from '../components/Footer';
 import { useMotionMode } from '../motion/useReducedMotion';
 import { fetchLiveFirmsHotspots } from '../services/firmsService';
 import type { FirmsHotspot } from '../services/firmsService';
@@ -348,6 +349,9 @@ export const Live: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

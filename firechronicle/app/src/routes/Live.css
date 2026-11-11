@@ -6,6 +6,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 2.5rem 3rem 4rem;
+  --page-pad-x: 3rem;
+  --page-pad-bottom: 4rem;
   max-width: 1400px;
   margin: 0 auto;
   color: var(--foreground);
@@ -493,6 +495,8 @@
 @media (max-width: 768px) {
   .live-container {
     padding: 1.25rem 1rem 3rem;
+    --page-pad-x: 1rem;
+    --page-pad-bottom: 3rem;
   }
   .live-header h1 {
     font-size: 1.6rem;

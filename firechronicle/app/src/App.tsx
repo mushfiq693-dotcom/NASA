@@ -213,7 +213,6 @@ function App() {
           <NavLink to="/">Overview</NavLink>
           <NavLink to="/atlas">Atlas</NavLink>
           <NavLink to="/calendar">Calendar</NavLink>
-          <NavLink to="/lab">Sensor Lab</NavLink>
           <NavLink to="/live">Live</NavLink>
           <NavLink to="/early-warning">
             Early Warning

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Validation.css';
+import { Footer } from '../components/Footer';
 import { useMotionMode } from '../motion/useReducedMotion';
 import { useCountUp } from '../motion/countUp';
 
@@ -619,14 +620,17 @@ export const Validation: React.FC = () => {
       </section>
 
       {/* SCIENTIFIC QA NOTE */}
-      <footer className="validation-footer-card">
+      <div className="validation-footer-card">
         <h3>Quality Assurance & Continuous Monitoring Protocol</h3>
         <p>
           Model parameters are continuously evaluated against new Landsat-8/9 and Sentinel-2 
           high-resolution optical fire perimeters (20m/30m). Detections failing the 
           F1 &gt; 0.90 threshold during anomalous atmospheric events are flagged with a low-observability warning.
         </p>
-      </footer>
+      </div>
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

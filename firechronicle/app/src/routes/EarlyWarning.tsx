@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './EarlyWarning.css';
+import { Footer } from '../components/Footer';
 import {
   fetchLiveFirmsHotspots,
   fetchLiveWeather,
@@ -828,6 +829,9 @@ export const EarlyWarning: React.FC = () => {
           <strong>Decision-Support Notice:</strong> BengalFlare couples NASA FIRMS satellite thermal observations with Open-Meteo atmospheric forecasts to model fire danger and forward spread. Official emergency directives and evacuation orders are issued exclusively by local civil protection authorities.
         </div>
       </section>
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

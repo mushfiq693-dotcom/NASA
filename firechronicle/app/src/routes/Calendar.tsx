@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Calendar.css';
+import { Footer } from '../components/Footer';
 
 interface CalendarDay {
   local_date: string;
@@ -579,6 +580,9 @@ export const Calendar: React.FC = () => {
           <div className="tooltip-click-hint">Click to inspect 24h satellite pass sweep ▶</div>
         </div>
       )}
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

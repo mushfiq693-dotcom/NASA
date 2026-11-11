@@ -131,6 +131,20 @@ def assess_settlement_exposure(
         
     return sorted(exposed, key=lambda x: x["distance_km"])
 
+COMPASS_BENGALI = {
+    "N": "উত্তর (N)", "NNE": "উত্তর-উত্তরপূর্ব (NNE)", "NE": "উত্তর-পূর্ব (NE)", "ENE": "পূর্ব-উত্তরপূর্ব (ENE)",
+    "E": "পূর্ব (E)", "ESE": "পূর্ব-দক্ষিণপূর্ব (ESE)", "SE": "দক্ষিণ-পূর্ব (SE)", "SSE": "দক্ষিণ-দক্ষিণপূর্ব (SSE)",
+    "S": "দক্ষিণ (S)", "SSW": "দক্ষিণ-দক্ষিণপশ্চিম (SSW)", "SW": "দক্ষিণ-পশ্চিম (SW)", "WSW": "পশ্চিম-দক্ষিণপশ্চিম (WSW)",
+    "W": "পশ্চিম (W)", "WNW": "পশ্চিম-উত্তরপশ্চিম (WNW)", "NW": "উত্তর-পশ্চিম (NW)", "NNW": "উত্তর-উত্তরপশ্চিম (NNW)"
+}
+
+COMPASS_ENGLISH = {
+    "N": "North (N)", "NNE": "North-Northeast (NNE)", "NE": "Northeast (NE)", "ENE": "East-Northeast (ENE)",
+    "E": "East (E)", "ESE": "East-Southeast (ESE)", "SE": "Southeast (SE)", "SSE": "South-Southeast (SSE)",
+    "S": "South (S)", "SSW": "South-Southwest (SSW)", "SW": "Southwest (SW)", "WSW": "West-Southwest (WSW)",
+    "W": "West (W)", "WNW": "West-Northwest (WNW)", "NW": "Northwest (NW)", "NNW": "North-Northwest (NNW)"
+}
+
 def degrees_to_compass(deg: float) -> str:
     """Converts 0-360 degrees to 16-point cardinal compass direction."""
     val = int((deg / 22.5) + 0.5)
@@ -257,31 +271,61 @@ def format_actionable_intelligence(threat: Dict[str, Any], exposed: List[Dict[st
             "Routine public awareness on wildfire prevention in rural areas."
         ]
 
-    # 6. Formatted Dispatch Messages
-    sms_text = (
-        f"[{tier_title.split(':')[1].strip()}]\n"
-        f"Location: {nearest_name} ({lat:.3f}N,{lon:.3f}E)\n"
-        f"Weather: {wind_spd}km/h {wind_from}, {temp}C, RH {rh}%\n"
-        f"Spread: {rate}km/h toward {wind_toward}\n"
-        f"Threat: {corridor_summary[:90]}..."
-    )
+    # 6. Concise & High-Impact Formatted Dispatch Messages (English)
+    wind_toward_en = COMPASS_ENGLISH.get(wind_toward, wind_toward)
+
+    if level == "WARNING":
+        header = "🚨 *WILDFIRE ALERT: RED FLAG WARNING* 🔴"
+        risk_summary = "Extreme & rapid spread risk"
+        why_text = f"NASA detected active fire. Strong winds ({wind_spd} km/h) & dry heat ({temp}°C) are fanning flames."
+        user_directives = [
+            "• Do NOT light outdoor fires or burn brush/leaves.",
+            "• Keep flammable materials away from residences.",
+            "• Report smoke or flames immediately to Fire Service."
+        ]
+    elif level == "WATCH":
+        header = "⚠️ *WILDFIRE ALERT: WATCH LEVEL* 🟠"
+        risk_summary = "Elevated fire danger (Monitoring closely)"
+        why_text = f"NASA detected heat hotspots. Warm winds ({wind_spd} km/h) may expand the fire front."
+        user_directives = [
+            "• Avoid lighting open outdoor fires.",
+            "• Stay alert and report any visible forest smoke."
+        ]
+    else:
+        header = "ℹ️ *WILDFIRE ADVISORY* 🟡"
+        risk_summary = "Dry conditions (Caution advised)"
+        why_text = f"Satellite detected heat signatures under dry weather ({temp}°C)."
+        user_directives = [
+            "• Exercise extra caution with open flames outdoors."
+        ]
+
+    if downwind_communities:
+        top_c = downwind_communities[0]
+        heading_text = (
+            f"Moving *{wind_toward_en}* towards *{top_c['name']}* (possible impact in ~{top_c['eta_hours']}h)."
+        )
+    else:
+        heading_text = (
+            f"Moving *{wind_toward_en}* over open forest (no immediate threat to settlements)."
+        )
 
     telegram_markdown = (
-        f"🚨 *BENGALFLARE WILDFIRE EARLY WARNING*\n"
-        f"*{tier_title}*\n\n"
-        f"📍 *Location:* `{lat:.4f}°N, {lon:.4f}°E`\n"
-        f"Near: {location_desc}\n\n"
-        f"🌪️ *Weather Drivers:*\n"
-        f"• Wind: `{wind_spd} km/h` blowing from *{wind_from}* towards *{wind_toward}*\n"
-        f"• Temp / RH: `{temp}°C` / `{rh}%` (Fuel Moisture: `{mf}%`)\n"
-        f"• Fire Danger Index: `{env.get('fdi', 0)}/100` (*{env.get('danger_class', 'Moderate')}*)\n\n"
-        f"🔥 *Spread Prediction:*\n"
-        f"• Forward Rate: `{rate} km/h`\n"
-        f"• 3-Hour Burn Reach: `{dist_3h} km`\n\n"
-        f"🏘️ *Threat Corridor:*\n"
-        f"{corridor_summary}\n\n"
-        f"📋 *Tactical Directive:* {forest_directives[0]}\n\n"
-        f"ℹ️ _Official emergency response coordinates via BengalFlare Open Data Architecture._"
+        f"{header}\n\n"
+        f"📍 *Location:* {nearest_name} (~{nearest_dist} km away)\n"
+        f"⚠️ *Risk:* {risk_summary}\n\n"
+        f"🛰️ *Why:* {why_text}\n"
+        f"🧭 *Heading:* {heading_text}\n\n"
+        f"🛡️ *What To Do:*\n" + "\n".join(user_directives) + "\n\n"
+        f"🗺️ *Live Map:* https://bengalflare.vercel.app/early-warning\n"
+        f"📢 *Updates:* @bengalflare\\_live"
+    )
+
+    sms_text = (
+        f"[{tier_title.split(':')[1].strip() if ':' in tier_title else tier_title}]\n"
+        f"Near: {nearest_name} (~{nearest_dist}km)\n"
+        f"Risk: {risk_summary}\n"
+        f"Wind: {wind_spd}km/h towards {wind_toward}\n"
+        f"Action: Avoid open burning. Map: t.me/bengalflare_live"
     )
 
     return {

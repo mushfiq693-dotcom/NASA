@@ -1,5 +1,7 @@
 .lab-container {
   padding: 2.5rem 3rem;
+  --page-pad-x: 3rem;
+  --page-pad-bottom: 2.5rem;
   height: 100%;
   overflow-y: auto;
   background: var(--background);
@@ -306,6 +308,8 @@
 @media (max-width: 992px) {
   .lab-container {
     padding: 1.5rem;
+    --page-pad-x: 1.5rem;
+    --page-pad-bottom: 1.5rem;
   }
   .lab-grid {
     grid-template-columns: 1fr;
@@ -321,6 +325,8 @@
 @media (max-width: 600px) {
   .lab-container {
     padding: 1rem;
+    --page-pad-x: 1rem;
+    --page-pad-bottom: 1rem;
   }
   .stepper-tabs {
     grid-template-columns: repeat(2, 1fr);

@@ -108,5 +108,54 @@
     "skipped_anti_spam_cooldown": 0,
     "dispatched_count": 0,
     "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-10T21:37:39.617016+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-10T21:38:45.272009+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-10T21:41:53.365305+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-10T21:52:47.494727+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-10T21:54:04.927739+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-11T05:53:20.705163+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-11T11:18:44.981440+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
   }
 ]

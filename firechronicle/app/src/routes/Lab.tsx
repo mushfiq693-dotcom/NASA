@@ -12,6 +12,7 @@ import {
   Filler
 } from 'chart.js';
 import './Lab.css';
+import { Footer } from '../components/Footer';
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, CategoryScale, BarElement, Filler);
 
@@ -412,6 +413,9 @@ export const Lab: React.FC = () => {
         </div>
 
       </div>
+
+      {/* GLOBAL FOOTER - VISIBLE ON SCROLL DOWN */}
+      <Footer />
     </div>
   );
 };

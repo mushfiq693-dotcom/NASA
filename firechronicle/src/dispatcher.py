@@ -6,10 +6,12 @@ Dispatches actionable wildfire alerts across:
 1. Telegram Bot (Field Officers & Forest Guards Group)
 2. SMS Gateway (Cellular Broadcast / Priority Mobile)
 3. Government Disaster Management Webhook APIs
-With safe simulation & zero-crash fallback when external credentials are absent.
+With safe simulation, zero-crash fallback, and anti-spam deduplication protection.
 """
 
 import os
+import time
+import math
 import datetime
 from typing import Dict, Any, List, Optional
 import httpx
@@ -19,16 +21,96 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 DEFAULT_WEBHOOK_URL = os.environ.get("DISASTER_WEBHOOK_URL")
 
+# Anti-Spam Deduplication Cooldown Cache (30 minutes default)
+_DISPATCH_COOLDOWN_CACHE: Dict[str, float] = {}
+COOLDOWN_SECONDS = 1800  # 30 minutes
+
+
+def _extract_coords(alert_dict: Dict[str, Any]) -> tuple:
+    lat = alert_dict.get("latitude")
+    lon = alert_dict.get("longitude")
+    if lat is None or lon is None:
+        p1 = alert_dict.get("actionable_intelligence", {}).get("pillar_1_pinpoint_location", {})
+        coords = p1.get("coordinates", {})
+        lat = coords.get("latitude")
+        lon = coords.get("longitude")
+    return lat, lon
+
+
+def check_anti_spam_cooldown(
+    alert_dict: Dict[str, Any],
+    force: bool = False
+) -> Optional[str]:
+    """
+    Returns None if allowed to dispatch.
+    Returns a reason string if blocked by anti-spam cooldown protection.
+    """
+    if force:
+        return None
+
+    hotspot_id = str(alert_dict.get("hotspot_id", "ALERT"))
+    lat, lon = _extract_coords(alert_dict)
+    now = time.time()
+
+    # 1. Check exact hotspot ID
+    if hotspot_id in _DISPATCH_COOLDOWN_CACHE:
+        elapsed = now - _DISPATCH_COOLDOWN_CACHE[hotspot_id]
+        if elapsed < COOLDOWN_SECONDS:
+            remaining = int((COOLDOWN_SECONDS - elapsed) / 60)
+            return (
+                f"Duplicate alert suppressed for '{hotspot_id}'. Dispatched {int(elapsed/60)}m ago. "
+                f"Anti-spam cooldown active for {remaining} more minutes."
+            )
+
+    # 2. Check geographical proximity (within 5 km)
+    if lat is not None and lon is not None:
+        for key, ts in list(_DISPATCH_COOLDOWN_CACHE.items()):
+            if key.startswith("GEO:"):
+                try:
+                    _, klat, klon = key.split(":")
+                    klat_f, klon_f = float(klat), float(klon)
+                    dlat = (lat - klat_f) * 111.0
+                    dlon = (lon - klon_f) * 111.0 * math.cos(math.radians(lat))
+                    dist_km = math.sqrt(dlat * dlat + dlon * dlon)
+                    if dist_km <= 5.0 and (now - ts) < COOLDOWN_SECONDS:
+                        elapsed = now - ts
+                        remaining = int((COOLDOWN_SECONDS - elapsed) / 60)
+                        return (
+                            f"Proximity cooldown active. A recent alert ({dist_km:.1f} km away) was dispatched "
+                            f"{int(elapsed/60)}m ago. Suppressed to avoid channel spam. Cooldown: {remaining}m remaining."
+                        )
+                except Exception:
+                    continue
+
+    return None
+
+
+def record_dispatch_event(alert_dict: Dict[str, Any]):
+    """Records alert signature in the anti-spam cooldown cache."""
+    now = time.time()
+    hotspot_id = str(alert_dict.get("hotspot_id", "ALERT"))
+    _DISPATCH_COOLDOWN_CACHE[hotspot_id] = now
+    lat, lon = _extract_coords(alert_dict)
+    if lat is not None and lon is not None:
+        _DISPATCH_COOLDOWN_CACHE[f"GEO:{round(lat, 2)}:{round(lon, 2)}"] = now
+
+
 async def send_telegram_alert(
     alert_dict: Dict[str, Any],
     bot_token: Optional[str] = None,
-    chat_id: Optional[str] = None
+    chat_id: Optional[str] = None,
+    simulate: bool = False,
+    force: bool = False
 ) -> Dict[str, Any]:
     """
     Sends actionable alert message to Telegram.
     Supports both personal chats (TELEGRAM_CHAT_ID) and public broadcast channels (TELEGRAM_CHANNEL_ID).
-    Falls back to simulation log if token is unconfigured.
+    Includes anti-spam cooldown protection to prevent duplicate message flooding.
     """
+    # Auto-detect test runner execution (e.g. pytest)
+    is_test_env = "PYTEST_CURRENT_TEST" in os.environ
+    should_simulate = simulate or is_test_env
+
     token = bot_token or TELEGRAM_BOT_TOKEN
     primary_chat = chat_id or TELEGRAM_CHAT_ID
     
@@ -43,7 +125,7 @@ async def send_telegram_alert(
     dispatch = act.get("dispatch_payloads", {})
     markdown_text = dispatch.get("telegram_markdown", f"Wildfire alert: {alert_dict.get('hotspot_id')}")
     
-    if not token or not targets:
+    if should_simulate or not token or not targets:
         return {
             "channel": "telegram",
             "status": "simulated",
@@ -51,7 +133,19 @@ async def send_telegram_alert(
             "target": "simulated_telegram_channel",
             "characters_sent": len(markdown_text),
             "preview": markdown_text[:120] + "...",
-            "note": "Configured in simulation mode. Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID / TELEGRAM_CHANNEL_ID to broadcast live."
+            "note": "Simulation mode active. No live network calls dispatched to Telegram."
+        }
+
+    # Anti-spam deduplication check
+    cooldown_reason = check_anti_spam_cooldown(alert_dict, force=force)
+    if cooldown_reason:
+        return {
+            "channel": "telegram",
+            "status": "skipped_cooldown",
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "broadcast_targets": targets,
+            "reason": cooldown_reason,
+            "note": "Duplicate message suppressed to prevent channel spam."
         }
         
     url = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -74,6 +168,9 @@ async def send_telegram_alert(
                 delivery_results.append({"target": t, "status": "error", "error": str(e)})
 
     has_success = any(r.get("status") == "delivered" for r in delivery_results)
+    if has_success:
+        record_dispatch_event(alert_dict)
+
     return {
         "channel": "telegram",
         "status": "delivered" if has_success else "failed",
@@ -93,7 +190,6 @@ async def send_sms_alert(
     sms_text = act.get("dispatch_payloads", {}).get("sms_text", "Fire Alert")
     recipients = phone_numbers or ["+8801700000000 (Forest Beat Officer)", "+8801800000000 (Fire Station Duty)"]
     
-    # In production, connects to Twilio / Infobip / BulkSMS BD
     return {
         "channel": "sms",
         "status": "simulated",
@@ -148,12 +244,16 @@ async def dispatch_all_channels(
     alert_dict: Dict[str, Any],
     telegram_token: Optional[str] = None,
     telegram_chat_id: Optional[str] = None,
-    webhook_url: Optional[str] = None
+    webhook_url: Optional[str] = None,
+    simulate: bool = False,
+    force: bool = False
 ) -> Dict[str, Any]:
     """
     Orchestrates concurrent multi-channel dispatch across Telegram, SMS, and Webhook.
     """
-    tg_res = await send_telegram_alert(alert_dict, telegram_token, telegram_chat_id)
+    tg_res = await send_telegram_alert(
+        alert_dict, telegram_token, telegram_chat_id, simulate=simulate, force=force
+    )
     sms_res = await send_sms_alert(alert_dict)
     wh_res = await send_webhook_alert(alert_dict, webhook_url)
     
@@ -166,6 +266,5 @@ async def dispatch_all_channels(
             "sms": sms_res,
             "webhook": wh_res
         },
-        "all_delivered_or_simulated": all(c.get("status") in ["delivered", "simulated"] for c in [tg_res, sms_res, wh_res])
+        "all_delivered_or_simulated": all(c.get("status") in ["delivered", "simulated", "skipped_cooldown"] for c in [tg_res, sms_res, wh_res])
     }
-

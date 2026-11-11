@@ -646,10 +646,13 @@ async def dispatch_wildfire_alert_endpoint(
     wind_kmh: float = 35.0,
     wind_dir: float = 210.0,
     temp_c: float = 34.0,
-    rh_pct: float = 25.0
+    rh_pct: float = 25.0,
+    simulate: bool = False,
+    force: bool = False
 ):
     """
     Triggers multi-channel automated alert dispatch (Telegram, SMS, Webhook).
+    Supports simulate=True for test executions and force=True to bypass anti-spam cooldown.
     """
     weather = {
         "temperature_c": temp_c,
@@ -668,7 +671,7 @@ async def dispatch_wildfire_alert_endpoint(
         weather_override=weather,
         slope_deg=3.0
     )
-    dispatch_report = await dispatch_all_channels(alert)
+    dispatch_report = await dispatch_all_channels(alert, simulate=simulate, force=force)
     return {
         "status": "success",
         "alert_summary": {

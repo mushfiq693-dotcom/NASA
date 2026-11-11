@@ -1,5 +1,7 @@
 .calendar-container {
   padding: 2.5rem 3rem;
+  --page-pad-x: 3rem;
+  --page-pad-bottom: 2.5rem;
   height: 100%;
   overflow-y: auto;
   background: var(--background);
@@ -568,6 +570,8 @@
 @media (max-width: 768px) {
   .calendar-container {
     padding: 1.25rem 1rem 3rem;
+    --page-pad-x: 1rem;
+    --page-pad-bottom: 3rem;
   }
   .calendar-header {
     flex-direction: column;
