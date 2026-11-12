@@ -4,6 +4,8 @@
  * Dispatches live satellite wildfire threat warnings to the official Telegram Bot & Channel.
  */
 
+import { classifyFireOrigin } from './fireClassifier';
+
 export interface TelegramDispatchParams {
   hotspotId: string;
   district: string;
@@ -75,6 +77,8 @@ export async function dispatchTelegramAlert(
   }
 
   const token = getTelegramToken();
+  const origin = classifyFireOrigin(params.latitude, params.longitude, params.frpMw, params.humidityPct);
+
   const dangerEmoji = params.dangerClass === 'Extreme' ? '🔴' :
                       params.dangerClass === 'Very High' ? '🟠' :
                       params.dangerClass === 'High' ? '🔥' : '⚠️';
@@ -84,6 +88,9 @@ export async function dispatchTelegramAlert(
     `━━━━━━━━━━━━━━━━━━━━━`,
     `${dangerEmoji} *Threat Level:* ${params.dangerClass.toUpperCase()} (ELEVATED SPREAD RISK)`,
     `🔥 *FDI Fire Danger Score:* ${params.fdiScore.toFixed(1)} / 100 · ${params.frpMw.toFixed(1)} MW Heat`,
+    `🏷️ *Fire Type:* ${origin.typeLabel}`,
+    `🧠 *Origin Attribution:* ${Math.round(origin.humanMadeProbability * 100)}% Human-Made (${origin.landCoverContext})`,
+    `🌾 *Cause / Context:* ${origin.primaryDriver}`,
     `📍 *Location:* ${params.locationName} (${params.district})`,
     `🌐 *Coordinates:* ${params.latitude.toFixed(4)}°N, ${params.longitude.toFixed(4)}°E`,
     `💨 *Wind Telemetry:* ${params.windSpeedKmh.toFixed(1)} km/h (${params.windDirection})`,
@@ -143,3 +150,4 @@ export async function dispatchTelegramAlert(
 
   return result;
 }
+

@@ -20,6 +20,7 @@ import type {
   ThreatenedSettlement
 } from '../services/firmsService';
 import { dispatchTelegramAlert, isAlertDispatched } from '../services/telegramService';
+import { classifyFireOrigin } from '../services/fireClassifier';
 
 // Fix Vite Web Worker loading in MapLibre GL JS
 if (typeof window !== 'undefined') {
@@ -474,6 +475,7 @@ export const EarlyWarning: React.FC = () => {
 
   const spreadCompass = getCompassDirection(spreadAzimuth);
   const windFromCompass = getCompassDirection(windDir);
+  const fireOrigin = classifyFireOrigin(activeLat, activeLon, activeFrp, ambientRh, activeHotspot?.acq_date);
 
 
   return (
@@ -520,7 +522,7 @@ export const EarlyWarning: React.FC = () => {
               ? 'Broadcasting urgent telemetry to Telegram subscribers...'
               : isTelegramCooldown 
               ? `✅ Alert Dispatched to Telegram Channel & Responders (${activeHotspot?.district || 'Active Hotspot'})`
-              : '⚡ Automated Telegram Early Warning is Armed & Active'}
+              : `⚡ Real-Time Alert Engine Active · ${fireOrigin.typeLabel}`}
           </span>
         </div>
 
@@ -627,6 +629,27 @@ export const EarlyWarning: React.FC = () => {
             Blowing towards <strong>{spreadCompass}</strong>. Reaches ~{spreadDistance} km in {forecastHours} hours.
           </p>
         </div>
+
+        {/* CARD 5: ML FIRE ORIGIN ATTRIBUTION */}
+        <div className="telemetry-card card-fire-origin">
+          <div className="card-label-row">
+            <span className="card-title">Fire Origin & Cause Attribution</span>
+            <span className="status-pill pill-origin">
+              {Math.round(fireOrigin.humanMadeProbability * 100)}% HUMAN-MADE
+            </span>
+          </div>
+          <div className="metric-number-row">
+            <span className="metric-big" style={{ fontSize: '1.2rem', color: '#F59E0B' }}>
+              {fireOrigin.typeCode === 'AGRICULTURAL_STUBBLE' ? '🌾 CROP STUBBLE' :
+               fireOrigin.typeCode === 'JHUM_SLASH_AND_BURN' ? '🌲 HILL JHUM BRUSH' :
+               fireOrigin.typeCode === 'INDUSTRIAL_BRICK_KILN' ? '🏭 BRICK KILN' : '🌿 BUFFER HEARTH'}
+            </span>
+            <span className="metric-unit">({fireOrigin.landCoverContext})</span>
+          </div>
+          <p className="metric-subtext">
+            {fireOrigin.primaryDriver}
+          </p>
+        </div>
       </section>
 
       {/* CLEAN LIVE WEATHER STATUS BAR */}
@@ -720,6 +743,9 @@ export const EarlyWarning: React.FC = () => {
                         </div>
                         <div className="hotspot-bottom-line">
                           <span>{h.satellite}</span>
+                          <span className="hotspot-origin-tag">
+                            {classifyFireOrigin(h.latitude, h.longitude, h.frp, 45, h.acq_date).typeCode === 'AGRICULTURAL_STUBBLE' ? '🌾 Stubble' : '🌲 Brush'}
+                          </span>
                           <span className="hotspot-time">{h.acq_date} · {h.acq_time}</span>
                         </div>
                       </button>

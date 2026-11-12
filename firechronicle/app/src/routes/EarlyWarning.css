@@ -251,6 +251,27 @@
   border-left-color: #FF0033;
 }
 
+.card-fire-origin {
+  border-left-color: #F59E0B;
+}
+
+.status-pill.pill-origin {
+  background: rgba(245, 158, 11, 0.18);
+  color: #FBBF24;
+  border: 1px solid #F59E0B;
+}
+
+.hotspot-origin-tag {
+  background: rgba(245, 158, 11, 0.16);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
 .telemetry-card.danger-high {
   border-left-color: #FF5E00;
 }

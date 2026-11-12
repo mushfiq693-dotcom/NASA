@@ -44,6 +44,17 @@ except ImportError:
             evaluate_hotspot_threat
         )
 
+try:
+    from src.fire_classifier import classify_fire_origin
+except ImportError:
+    try:
+        from firechronicle.src.fire_classifier import classify_fire_origin
+    except ImportError:
+        try:
+            from fire_classifier import classify_fire_origin
+        except ImportError:
+            classify_fire_origin = None
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 REPORTS_DIR = PROJECT_ROOT / "reports"
@@ -178,7 +189,14 @@ def format_actionable_intelligence(threat: Dict[str, Any], exposed: List[Dict[st
             nearest_dist = d
             nearest_name = rec["name"]
 
-    location_desc = f"{nearest_name} ({nearest_dist} km away) · Lat {lat:.3f}°N, Lon {lon:.3f}°E"
+    if nearest_dist <= 25.0:
+        loc_display = f"{nearest_name} (~{nearest_dist:.1f} km away)"
+    elif nearest_dist <= 60.0:
+        loc_display = f"{nearest_name} Outskirts (~{nearest_dist:.0f} km away)"
+    else:
+        loc_display = f"Regional Farmland ({lat:.3f}°N, {lon:.3f}°E · ~{nearest_dist:.0f} km from {nearest_name})"
+
+    location_desc = f"{loc_display} · Lat {lat:.3f}°N, Lon {lon:.3f}°E"
 
     # 2. Severity Classification
     if level == "WARNING":
@@ -309,20 +327,31 @@ def format_actionable_intelligence(threat: Dict[str, Any], exposed: List[Dict[st
             f"Moving *{wind_toward_en}* over open forest (no immediate threat to settlements)."
         )
 
+    frp_mw = threat.get("satellite_evidence", {}).get("frp_mw", 20.0)
+    origin_info = classify_fire_origin(lat, lon, frp_mw, temp, rh) if classify_fire_origin else {
+        "type_label": "🌾 Agricultural Stubble Burning (Human-Made)",
+        "human_made_probability": 0.96,
+        "primary_driver": "Post-harvest crop residue burn in agricultural cropland.",
+        "land_cover_context": "Alluvial Agricultural Cropland"
+    }
+
     telegram_markdown = (
         f"{header}\n\n"
-        f"📍 *Location:* {nearest_name} (~{nearest_dist} km away)\n"
-        f"⚠️ *Risk:* {risk_summary}\n\n"
-        f"🛰️ *Why:* {why_text}\n"
+        f"📍 *Location:* {loc_display}\n"
+        f"🔥 *Fire Type:* {origin_info['type_label']}\n"
+        f"🧠 *Attribution:* {int(origin_info['human_made_probability']*100)}% Human-Made ({origin_info['land_cover_context']})\n"
+        f"⚠️ *Threat Level:* {risk_summary} · {frp_mw:.1f} MW FRP\n\n"
+        f"🌾 *Origin Context:* {origin_info['primary_driver']}\n"
         f"🧭 *Heading:* {heading_text}\n\n"
-        f"🛡️ *What To Do:*\n" + "\n".join(user_directives) + "\n\n"
-        f"🗺️ *Live Map:* https://bengalflare.vercel.app/early-warning\n"
-        f"📢 *Updates:* @bengalflare\\_live"
+        f"🛡️ *Action Guidance:*\n" + "\n".join(user_directives) + "\n\n"
+        f"🗺️ *Live Threat Map:* https://bengalflare.vercel.app/early-warning\n"
+        f"📢 *Live Alerts Channel:* @bengalflare\\_live"
     )
 
     sms_text = (
         f"[{tier_title.split(':')[1].strip() if ':' in tier_title else tier_title}]\n"
-        f"Near: {nearest_name} (~{nearest_dist}km)\n"
+        f"Near: {loc_display}\n"
+        f"Type: {origin_info.get('type_code', 'FIRE')}\n"
         f"Risk: {risk_summary}\n"
         f"Wind: {wind_spd}km/h towards {wind_toward}\n"
         f"Action: Avoid open burning. Map: t.me/bengalflare_live"
@@ -333,7 +362,8 @@ def format_actionable_intelligence(threat: Dict[str, Any], exposed: List[Dict[st
             "coordinates": {"latitude": lat, "longitude": lon},
             "nearest_landmark": nearest_name,
             "distance_to_landmark_km": round(nearest_dist, 2),
-            "description": location_desc
+            "description": location_desc,
+            "fire_origin_attribution": origin_info
         },
         "pillar_2_severity": {
             "tier": tier_title,

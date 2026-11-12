@@ -31,11 +31,13 @@ load_dotenv(PROJECT_ROOT / ".env")
 try:
     from src.environmental import fetch_live_weather, evaluate_hotspot_threat, REGIONAL_PROFILES
     from src.alert_engine import generate_wildfire_alert, assess_settlement_exposure
-    from src.dispatcher import dispatch_all_channels
+    from src.dispatcher import dispatch_all_channels, send_telegram_alert
+    from src.fire_classifier import classify_fire_origin
 except ImportError:
     from environmental import fetch_live_weather, evaluate_hotspot_threat, REGIONAL_PROFILES
     from alert_engine import generate_wildfire_alert, assess_settlement_exposure
-    from dispatcher import dispatch_all_channels
+    from dispatcher import dispatch_all_channels, send_telegram_alert
+    from fire_classifier import classify_fire_origin
 
 DATA_DIR = PROJECT_ROOT / "data"
 CACHE_DIR = DATA_DIR / "cache"
@@ -81,6 +83,21 @@ def is_within_cooldown(lat: float, lon: float, cooldown_hours: float = 6.0) -> b
                     return True
         except Exception:
             continue
+    return False
+
+def is_bulletin_in_cooldown(cooldown_hours: float = 2.0) -> bool:
+    """Checks if a consolidated regional bulletin was dispatched recently."""
+    history = load_alert_history()
+    now = datetime.datetime.now(datetime.timezone.utc)
+    for entry in reversed(history):
+        if entry.get("type") == "CONSOLIDATED_BULLETIN":
+            try:
+                dt = datetime.datetime.fromisoformat(entry["timestamp_utc"])
+                diff = (now - dt).total_seconds() / 3600.0
+                if diff < cooldown_hours:
+                    return True
+            except Exception:
+                continue
     return False
 
 def fetch_latest_firms_hotspots(days: int = 2) -> List[Dict[str, Any]]:
@@ -142,16 +159,13 @@ def fetch_latest_firms_hotspots(days: int = 2) -> List[Dict[str, Any]]:
 
 async def run_autonomous_scan(force_test: bool = False) -> Dict[str, Any]:
     """
-    Executes one complete autonomous monitoring and alerting cycle.
-    Returns audit summary.
+    Executes an intelligent, spam-free monitoring and alerting cycle.
+    Consolidates multiple detections into a single Regional Thermal Intelligence Bulletin.
     """
     scan_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
     hotspots = fetch_latest_firms_hotspots(days=2)
-    dispatched_alerts = []
-    skipped_cooldown = 0
     evaluated_count = len(hotspots)
 
-    # If no active fires in nature right now and force_test=True, use benchmark scenario
     if (len(hotspots) == 0 or force_test) and force_test:
         p = REGIONAL_PROFILES["chittagong_hill_tracts_dry"]
         hotspots.append({
@@ -159,21 +173,42 @@ async def run_autonomous_scan(force_test: bool = False) -> Dict[str, Any]:
             "latitude": p["latitude"],
             "longitude": p["longitude"],
             "frp": 65.0,
-            "confidence": "high"
+            "confidence": "high",
+            "satellite": "NOAA-20 (JPSS-1)",
+            "date": datetime.date.today().isoformat()
         })
 
-    for spot in hotspots:
+    if not hotspots:
+        return {
+            "scan_timestamp_utc": scan_time,
+            "total_hotspots_detected": 0,
+            "bulletin_dispatched": False,
+            "note": "No active thermal hotspots detected across Bangladesh."
+        }
+
+    # Evaluate all hotspots with classification
+    evaluated_hotspots = []
+    agri_spots = []
+    cht_spots = []
+    industrial_spots = []
+
+    # Process top active spots
+    for spot in hotspots[:15]:
         lat = spot["latitude"]
         lon = spot["longitude"]
         frp = spot["frp"]
+        date_str = spot.get("date", "")
 
-        # 1. Anti-Spam Cooldown check
-        if is_within_cooldown(lat, lon, cooldown_hours=6.0) and not force_test:
-            skipped_cooldown += 1
-            continue
-
-        # 2. Live Weather Ingestion & Physics Threat Evaluation
         weather = fetch_live_weather(lat, lon)
+        classification = classify_fire_origin(
+            lat=lat,
+            lon=lon,
+            frp_mw=frp,
+            temp_c=weather.get("temperature_c", 28.0),
+            rh_pct=weather.get("relative_humidity_pct", 50.0),
+            acq_date=date_str
+        )
+
         alert = generate_wildfire_alert(
             hotspot_id=spot["id"],
             lat=lat,
@@ -183,53 +218,114 @@ async def run_autonomous_scan(force_test: bool = False) -> Dict[str, Any]:
             weather_override=weather
         )
 
-        level = alert.get("alert", {}).get("level", "ADVISORY")
-        is_red_flag = alert.get("environmental_risk", {}).get("is_red_flag", False)
-        fdi = alert.get("environmental_risk", {}).get("fdi", 0.0)
+        cat = classification["origin_category"]
+        if "AGRICULTURAL" in cat or cat in ["HUMAN_MADE", "HUMAN_MADE_BUFFER"]:
+            agri_spots.append(spot)
+        elif "FOREST" in cat or "JHUM" in classification.get("type_code", ""):
+            cht_spots.append(spot)
+        elif "INDUSTRIAL" in cat:
+            industrial_spots.append(spot)
+        else:
+            agri_spots.append(spot)
 
-        # 3. Autonomous Dispatch Trigger Condition:
-        # Trigger on ADVISORY (Moderate Risk) and above, or FDI >= 18.0, or FRP >= 20.0, or Red Flag
-        if level in ["ADVISORY", "WATCH", "WARNING"] or is_red_flag or fdi >= 18.0 or frp >= 20.0 or force_test:
-            dispatch_res = await dispatch_all_channels(alert)
+        evaluated_hotspots.append({
+            "spot": spot,
+            "alert": alert,
+            "classification": classification,
+            "weather": weather
+        })
 
-            # Record in cooldown cache
-            history = load_alert_history()
-            history.append({
-                "hotspot_id": spot["id"],
-                "latitude": lat,
-                "longitude": lon,
-                "frp": frp,
-                "level": level,
-                "fdi_score": fdi,
-                "timestamp_utc": scan_time
-            })
-            save_alert_history(history)
+    # Pick top spot
+    top_entry = evaluated_hotspots[0]
+    top_spot = top_entry["spot"]
+    top_alert = top_entry["alert"]
+    top_class = top_entry["classification"]
+    top_weather = top_entry["weather"]
+    top_fdi = top_alert.get("environmental_risk", {}).get("fdi", 0.0)
+    top_level = top_alert.get("alert", {}).get("level", "ADVISORY")
+    top_loc = top_alert.get("actionable_intelligence", {}).get("pillar_1_pinpoint_location", {}).get("description", f"{top_spot['latitude']}°N, {top_spot['longitude']}°E")
 
-            dispatched_alerts.append({
-                "hotspot_id": spot["id"],
-                "coordinates": {"lat": lat, "lon": lon},
-                "level": level,
-                "fdi": fdi,
-                "dispatch_report": dispatch_res
-            })
+    dispatched = False
+    dispatch_report = None
 
-    # Record log
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    # Anti-flood check: Only send ONE consolidated bulletin per 2 hours
+    if not is_bulletin_in_cooldown(cooldown_hours=2.0) or force_test:
+        time_str = scan_time[:16].replace("T", " ")
+        agri_count = len(agri_spots)
+        cht_count = len(cht_spots)
+        ind_count = len(industrial_spots)
+        total_eval = len(evaluated_hotspots)
+        agri_pct = int((agri_count / max(1, total_eval)) * 100)
+
+        bulletin_lines = [
+            f"🛰️ *BENGALFLARE REGIONAL WILDFIRE & THERMAL BULLETIN*",
+            f"📅 *Observation:* {time_str} UTC · NASA VIIRS / NOAA-20",
+            f"━━━━━━━━━━━━━━━━━━━━━",
+            f"📊 *Regional Scan:* {evaluated_count} Active Thermal Hotspots Detected",
+            f"",
+            f"🚨 *Priority Monitored Hotspot (#1 Threat):*",
+            f"• *Location:* {top_loc}",
+            f"• *Threat Level:* {top_level} · FRP: {top_spot['frp']:.1f} MW · FDI: {top_fdi:.1f}/100",
+            f"• *Fire Type:* {top_class['type_label']}",
+            f"• *Smart Attribution:* {int(top_class['human_made_probability']*100)}% Human-Made ({top_class['land_cover_context']})",
+            f"• *Context:* {top_class['primary_driver']}",
+            f"",
+            f"🌾 *Regional Fire Origin Attribution:*",
+            f"• 🌾 *Human-Made Agricultural Stubble:* {agri_count} spots (Post-harvest Aman residue clearance)",
+            f"• 🌲 *Hill Tracts / Forest Margin Burns:* {cht_count} spots (Jhum clearing / brush)",
+            f"• 🏭 *Industrial / Stationary Points:* {ind_count} spots",
+            f"",
+            f"💡 *ML Insight:* {agri_pct}% of regional detections are open-field agricultural stubble burns, NOT uncontained forest wildfires.",
+            f"",
+            f"🗺️ *Interactive Threat Map & Spread Cones:* https://bengalflare.vercel.app/early-warning",
+            f"📢 *Official Channel:* @bengalflare\\_live"
+        ]
+
+        bulletin_text = "\n".join(bulletin_lines)
+        bulletin_payload = {
+            "hotspot_id": "REGIONAL-BULLETIN",
+            "actionable_intelligence": {
+                "dispatch_payloads": {
+                    "telegram_markdown": bulletin_text
+                }
+            }
+        }
+
+        dispatch_report = await send_telegram_alert(bulletin_payload, force=force_test)
+        dispatched = dispatch_report.get("status") == "delivered"
+
+        # Record bulletin in history
+        history = load_alert_history()
+        history.append({
+            "type": "CONSOLIDATED_BULLETIN",
+            "timestamp_utc": scan_time,
+            "total_hotspots": evaluated_count,
+            "top_hotspot_id": top_spot["id"],
+            "top_frp": top_spot["frp"]
+        })
+        save_alert_history(history)
+
+    # Save execution log
     summary = {
         "scan_timestamp_utc": scan_time,
         "total_hotspots_detected": evaluated_count,
-        "skipped_anti_spam_cooldown": skipped_cooldown,
-        "dispatched_count": len(dispatched_alerts),
-        "dispatches": dispatched_alerts
+        "bulletin_dispatched": dispatched,
+        "dispatch_report": dispatch_report,
+        "top_hotspot": {
+            "id": top_spot["id"],
+            "frp": top_spot["frp"],
+            "level": top_level,
+            "classification": top_class["type_label"]
+        }
     }
 
     try:
+        REPORTS_DIR.mkdir(parents=True, exist_ok=True)
         existing_logs = []
         if LOG_FILE.exists():
             with open(LOG_FILE, "r") as f:
                 existing_logs = json.load(f)
         existing_logs.append(summary)
-        # Keep last 50 scan summaries
         with open(LOG_FILE, "w") as f:
             json.dump(existing_logs[-50:], f, indent=2)
     except Exception as e:

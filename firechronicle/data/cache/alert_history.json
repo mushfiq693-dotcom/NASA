@@ -169,5 +169,12 @@
     "level": "WATCH",
     "fdi_score": 1.8,
     "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "type": "CONSOLIDATED_BULLETIN",
+    "timestamp_utc": "2026-11-12T22:38:25.611325+00:00",
+    "total_hotspots": 19,
+    "top_hotspot_id": "FIRMS-VIIRS-2026-11-12-8",
+    "top_frp": 31.95
   }
 ]

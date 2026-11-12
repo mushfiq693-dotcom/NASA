@@ -151,10 +151,18 @@ export const findNearestSettlement = (lat: number, lon: number): { name: string;
     }
   }
 
+  const dKm = round(minDistance, 1);
+  let displayName = nearest.name;
+  if (dKm > 60.0) {
+    displayName = `Regional Farmland (~${Math.round(dKm)} km from ${nearest.name})`;
+  } else if (dKm > 25.0) {
+    displayName = `${nearest.name} Outskirts`;
+  }
+
   return {
-    name: nearest.name,
+    name: displayName,
     district: nearest.district,
-    distance_km: round(minDistance, 1)
+    distance_km: dKm
   };
 };
 
