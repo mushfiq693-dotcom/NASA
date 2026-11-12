@@ -164,5 +164,12 @@
     "skipped_anti_spam_cooldown": 0,
     "dispatched_count": 0,
     "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-12T21:59:45.975736+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
   }
 ]

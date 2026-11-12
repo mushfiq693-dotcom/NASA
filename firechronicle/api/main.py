@@ -37,6 +37,11 @@ METADATA_DIR = PROJECT_ROOT / "metadata"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 FIXTURES_DIR = PROJECT_ROOT / "app" / "public" / "fixtures"
 
+try:
+    from src.database import query_stats, query_annual_discontinuity, get_connection
+except ImportError:
+    from database import query_stats, query_annual_discontinuity, get_connection
+
 FIRMS_MAP_KEY = os.environ.get("FIRMS_MAP_KEY", "1f1f9a28bc8561f922237c272055e274")
 
 @app.get("/")
@@ -45,9 +50,26 @@ def get_root():
         "service": "BengalFlare API",
         "version": "1.0.0",
         "region": "Bangladesh (Primary) · South Asia (Target)",
+        "database": "DuckDB 1.5.6 (In-Process Columnar Engine)",
         "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "status": "operational"
     }
+
+@app.get("/database/status")
+def get_database_status():
+    """Returns DuckDB connection status and record counts across NASA archives."""
+    try:
+        return query_stats()
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/database/discontinuity")
+def get_database_discontinuity():
+    """Analyzes the 2012 MODIS vs VIIRS detection jump directly with DuckDB SQL."""
+    try:
+        return {"status": "success", "data": query_annual_discontinuity()}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.get("/availability")
 def get_availability():
