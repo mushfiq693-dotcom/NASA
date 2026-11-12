@@ -4,6 +4,10 @@
 **/dist-ssr/
 *.local
 .npm
+test-results/
+**/test-results/
+playwright-report/
+**/playwright-report/
 
 # Python / Virtualenv
 venv/

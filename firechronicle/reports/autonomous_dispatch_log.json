@@ -1299,5 +1299,17 @@
       "level": "WATCH",
       "classification": "\ud83c\udf32 Hill Tracts Brush / Jhum Slash-and-Burn (Human-Ignited)"
     }
+  },
+  {
+    "scan_timestamp_utc": "2026-11-12T22:47:48.474467+00:00",
+    "total_hotspots_detected": 19,
+    "bulletin_dispatched": false,
+    "dispatch_report": null,
+    "top_hotspot": {
+      "id": "FIRMS-VIIRS-2026-11-12-8",
+      "frp": 31.95,
+      "level": "WATCH",
+      "classification": "\ud83c\udf32 Hill Tracts Brush / Jhum Slash-and-Burn (Human-Ignited)"
+    }
   }
 ]

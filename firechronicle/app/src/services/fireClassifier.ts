@@ -127,3 +127,4 @@ export function classifyFireOrigin(
     actionGuidance: 'Open field stubble burning. Confined to agricultural plots with negligible forest risk.'
   };
 }
+

@@ -138,3 +138,4 @@ def classify_fire_origin(
         "forest_canopy_escape_hazard": canopy_hazard,
         "is_human_made": human_prob >= 0.80
     }
+

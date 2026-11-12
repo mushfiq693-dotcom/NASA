@@ -41,13 +41,13 @@ When VIIRS became operational in 2012, recorded fire hotspots suddenly exploded 
 
 ---
 
-## 🚀 Live Production & Video Showcase
+## 🚀 Live Production & Documentation Hub
 
 - 🌐 **Live Web Application:** [https://bengalflare.vercel.app](https://bengalflare.vercel.app)
 - 📁 **Open Source Repository:** [https://github.com/mushfiq693-dotcom/NASA](https://github.com/mushfiq693-dotcom/NASA)
-- 🎬 **Video Script & Presentation Pitch:** [`docs/media/bengalflare_space_apps_3min10sec_video_script.md`](docs/media/bengalflare_space_apps_3min10sec_video_script.md)
+- 🎬 **Video Script & Production Blueprint:** [`docs/media/BENGALFLARE_3M50S_FINAL_VIDEO_BLUEPRINT.md`](docs/media/BENGALFLARE_3M50S_FINAL_VIDEO_BLUEPRINT.md)
 - 📑 **Comprehensive Scientific Research Report:** [`docs/research/MODIS_VIIRS_Harmonization_Research_Report_v2.md`](docs/research/MODIS_VIIRS_Harmonization_Research_Report_v2.md)
-- 🛡️ **Technical Review & Mentor Q&A Defense Guide:** [`Mentor_QnA_Defense_Guide.md`](Mentor_QnA_Defense_Guide.md)
+- 🛡️ **Technical Review & Mentor Q&A Defense Guide:** [`docs/planning/Mentor_QnA_Defense_Guide.md`](docs/planning/Mentor_QnA_Defense_Guide.md)
 - 📚 **Full Project Documentation Index:** [`docs/README.md`](docs/README.md)
 
 ---
@@ -174,6 +174,52 @@ graph TD
 - **Geospatial Analytics:** Uber H3 Hexagonal Spatial Indexing, GeoJSON, NASA EOSDIS GIBS Basemaps.
 - **Design System:** "Cosmic Dusk & Solar Flare" Aerospace Glassmorphism (`rgba(10, 16, 28, 0.62)`, `backdrop-filter: blur(20px)`, Solar Flare `#FF5E00`, Corona Gold `#FFB800`).
 - **Testing:** Playwright End-to-End Test Suite (Desktop & Mobile, 36 passing tests), Pytest Backend Suite.
+
+---
+
+## 📁 Repository Architecture & Directory Layout
+
+BengalFlare is engineered as a clean, modular monorepo following modern production standards:
+
+```text
+.
+├── .github/
+│   └── workflows/
+│       └── watchdog.yml            # Automated CI/CD & 24/7 background telemetry watchdog
+├── docs/                           # Comprehensive Engineering & Science Documentation
+│   ├── README.md                   # Documentation master index
+│   ├── audit/                      # Technical audit reports & performance benchmarks
+│   ├── media/                      # NASA Space Apps video storyboard & voiceover scripts
+│   ├── planning/                   # Architecture plans, scopes, & mentor defense guides
+│   ├── research/                   # Sensor harmonization & physics research papers
+│   └── specifications/             # Machine learning & scientific specifications
+├── DL_FIRE_M-C61_820366/           # NASA FIRMS MODIS (Terra & Aqua) 24-year archive
+├── DL_FIRE_SV-C2_820367/           # NASA FIRMS VIIRS (Suomi-NPP & NOAA-20) archive
+├── firechronicle/                  # Primary Application Monorepo
+│   ├── api/                        # FastAPI REST API & real-time telemetry endpoints
+│   ├── app/                        # React 19 + TypeScript + Vite + MapLibre GL Frontend
+│   │   ├── src/                    # Components, routes, motion scenes, services
+│   │   ├── public/                 # Static assets, GeoJSON boundaries, fallback fixtures
+│   │   └── tests/                  # Playwright end-to-end acceptance & UI test suites
+│   ├── data/                       # Processed Parquet analytical stores & DuckDB database
+│   ├── metadata/                   # National boundary GeoJSONs & sensor availability
+│   ├── reports/                    # Autonomous dispatch logs & validation metrics
+│   ├── scripts/                    # Automation scripts & FIRMS data loaders
+│   ├── src/                        # Core Python analytical engines & ML classifiers
+│   │   ├── alert_daemon.py         # Autonomous 24/7 background alerting service
+│   │   ├── alert_engine.py         # Threat modeling & downwind Huygens cone projection
+│   │   ├── database.py             # DuckDB analytical queries & parquet catalog
+│   │   ├── dispatcher.py           # Multi-channel Telegram & SMS emergency broadcast
+│   │   ├── environmental.py        # Fosberg Fire Danger Index (FDI) & Rothermel spread
+│   │   ├── fire_classifier.py      # ML & geospatial fire origin & attribution model
+│   │   ├── harmonization_ml.py     # B0-B5 sensor harmonization regressors
+│   │   ├── hfai.py                 # Harmonized Fire Activity Index computation
+│   │   └── ingest.py               # QA filtering & spatial clipping pipeline
+│   └── tests/                      # Pytest analytical unit test suite (32 passing tests)
+├── LICENSE                         # MIT Open Source License
+├── README.md                       # Master Project Showcase & Documentation
+└── vercel.json                     # Production deployment routing configuration
+```
 
 ---
 

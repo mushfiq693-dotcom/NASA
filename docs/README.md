@@ -11,13 +11,19 @@ docs/
 ├── audit/
 │   ├── BengalFlare_Technical_Audit_Report.md         # Comprehensive 9-part technical audit & verification
 │   └── BengalFlare_Flaws_and_Production_Roadmap.md   # Flaw inventory, Master Blueprint gaps, & production roadmap
+├── media/
+│   ├── BENGALFLARE_3M50S_FINAL_VIDEO_BLUEPRINT.md    # Master 3m 50s multimodal video production storyboard
+│   ├── bengalflare_space_apps_3min10sec_video_script.md # Official NASA Space Apps video presentation script
+│   └── animation_prompt_all_pages.md                  # UI/UX interaction, motion design & animation specifications
+├── planning/
+│   ├── BengalFlare_Implementation_Plan.md            # Master architectural specification & implementation plan
+│   ├── BengalFlare_Project_Scope_Shareable.md        # Concise executive brief for stakeholders & mentors
+│   ├── MENTOR_MEETING_PREP_GUIDE.md                  # Comprehensive defense strategies & technical answers
+│   └── Mentor_QnA_Defense_Guide.md                   # Evidence-based technical defense answering mentor inquiries
 ├── research/
 │   └── MODIS_VIIRS_Harmonization_Research_Report_v2.md # Core scientific research, physics & mathematical framework
-├── specifications/
-│   └── master_prompt_firechronicle_v3.md             # Complete system architecture specification & design contract
-└── media/
-    ├── bengalflare_space_apps_3min10sec_video_script.md # Official NASA Space Apps 3-minute video presentation script
-    └── animation_prompt_all_pages.md                  # UI/UX interaction, motion design & animation specifications
+└── specifications/
+    └── master_prompt_firechronicle_v3.md             # Complete system architecture specification & design contract
 ```
 
 ---
@@ -39,13 +45,21 @@ docs/
   The complete master architectural blueprint defining the backend ETL pipeline, H3 geospatial indexing, API contracts, frontend layout constraints, and accessibility requirements.
 
 ### 4. 🎬 Media & Presentation Assets (`docs/media/`)
+* **[BENGALFLARE_3M50S_FINAL_VIDEO_BLUEPRINT.md](media/BENGALFLARE_3M50S_FINAL_VIDEO_BLUEPRINT.md):**  
+  Complete 3 minute 50 second official video blueprint, storyboard, AI video generation prompts, and editing blueprint.
 * **[bengalflare_space_apps_3min10sec_video_script.md](media/bengalflare_space_apps_3min10sec_video_script.md):**  
-  The word-for-word timed 3-minute video narration script with scene-by-scene visual cues, live demonstration prompts, and judge pitch angles.
+  The word-for-word timed video narration script with scene-by-scene visual cues and live demonstration prompts.
 * **[animation_prompt_all_pages.md](media/animation_prompt_all_pages.md):**  
-  Framer Motion and CSS animation specifications, HUD card transitions, globe interaction controls, and 60 FPS temporal scrubber guidelines.
+  Framer Motion and CSS animation specifications, HUD card transitions, and UI interaction controls.
+
+### 5. 🗺️ Project Planning & Mentor Guides (`docs/planning/`)
+* **[BengalFlare_Implementation_Plan.md](planning/BengalFlare_Implementation_Plan.md):** Master architectural blueprint, timeline, and retrospective case study.
+* **[BengalFlare_Project_Scope_Shareable.md](planning/BengalFlare_Project_Scope_Shareable.md):** Executive summary for mentors and judges.
+* **[Mentor_QnA_Defense_Guide.md](planning/Mentor_QnA_Defense_Guide.md):** Formal, evidence-based technical response document answering mentor inquiries.
+* **[MENTOR_MEETING_PREP_GUIDE.md](planning/MENTOR_MEETING_PREP_GUIDE.md):** Defense strategies and deep-dive technical guidance.
 
 ---
 
 ## 🧭 Root Project Documents
-* **[Mentor_QnA_Defense_Guide.md](../Mentor_QnA_Defense_Guide.md):** The formal, evidence-based technical response document answering all 5 mentor inquiries directly.
 * **[README.md](../README.md):** The primary GitHub repository overview, feature tour, and quick-start guide.
+* **[LICENSE](../LICENSE):** Official MIT open-source license.
