@@ -176,7 +176,9 @@
 }
 
 .scene-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 0.72rem;
   font-family: var(--font-mono);
   color: #FFB800;
@@ -185,6 +187,14 @@
   font-weight: 700;
   margin-bottom: 0;
   text-transform: uppercase;
+}
+
+.hud-logo-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(224, 82, 141, 0.65));
 }
 
 /* Clip Mask Reveal for Titles */

@@ -163,7 +163,16 @@ export const Landing: React.FC = () => {
             ) : (
               <>
                 <div className="scene-content-header">
-                  <span className="scene-tag">BENGALFLARE · ORBITAL THERMAL INTELLIGENCE</span>
+                  <span className="scene-tag">
+                    <img 
+                      src="/bengalflare_logo_emblem.png" 
+                      alt="BengalFlare Logo" 
+                      className="hud-logo-icon" 
+                      width="18" 
+                      height="18" 
+                    />
+                    BENGALFLARE · ORBITAL THERMAL INTELLIGENCE
+                  </span>
                   <button
                     className="hud-toggle-btn"
                     onClick={() => setIsHudMinimized(true)}

@@ -8,16 +8,23 @@ export const Footer: React.FC = () => {
       <div className="bengal-footer-inner">
         <div className="bengal-footer-brand">
           <div className="footer-brand-title">
+            <img 
+              src="/bengalflare_logo_emblem.png" 
+              alt="BengalFlare Logo" 
+              className="footer-logo-img" 
+              width="28" 
+              height="28" 
+            />
             <span className="brand-name-bengal">Bengal</span>
             <span className="brand-name-flare">Flare</span>
-            <span className="footer-badge-tag">NASA EO TELEMETRY</span>
+            <span className="footer-badge-tag">NASA EO TELEMETRY · 2026</span>
           </div>
           <p className="footer-brand-desc">
             Harmonized Multi-Decadal Earth Observation Telemetry Record (2001–2026) for Bangladesh & the Bay of Bengal Basin.
           </p>
           <div className="footer-telegram-cta">
             <a 
-              href="https://t.me/bengalflare_live" 
+              href="https://t.me/pika09_bot" 
               target="_blank" 
               rel="noreferrer" 
               className="footer-tg-link"
