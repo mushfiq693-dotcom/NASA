@@ -171,5 +171,1089 @@
     "skipped_anti_spam_cooldown": 0,
     "dispatched_count": 0,
     "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-12T22:20:15.183435+00:00",
+    "total_hotspots_detected": 0,
+    "skipped_anti_spam_cooldown": 0,
+    "dispatched_count": 0,
+    "dispatches": []
+  },
+  {
+    "scan_timestamp_utc": "2026-11-12T22:22:09.726300+00:00",
+    "total_hotspots_detected": 19,
+    "skipped_anti_spam_cooldown": 1,
+    "dispatched_count": 18,
+    "dispatches": [
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-8",
+        "coordinates": {
+          "lat": 22.85005,
+          "lon": 92.06215
+        },
+        "level": "WATCH",
+        "fdi": 0.4,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-8-1794522135",
+          "timestamp_utc": "2026-11-12T22:22:15.019708+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:15.019098+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 26
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 18
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:15.019125+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Rangamati Lakeside Settlements (~24.84km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 1.2km/h towards SSW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:15.019137+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5478,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-4",
+        "coordinates": {
+          "lat": 25.66877,
+          "lon": 89.77444
+        },
+        "level": "WATCH",
+        "fdi": 2.8,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-4-1794522137",
+          "timestamp_utc": "2026-11-12T22:22:17.404375+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:17.404102+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 27
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 19
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:17.404132+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 213,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~249.02km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 10.9km/h towards SSW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:17.404145+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5512,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-3",
+        "coordinates": {
+          "lat": 23.7903,
+          "lon": 89.73877
+        },
+        "level": "WATCH",
+        "fdi": 1.1,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-3-1794522139",
+          "timestamp_utc": "2026-11-12T22:22:19.855933+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:19.855760+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 28
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 20
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:19.855782+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 206,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~146.39km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 5.0km/h towards SSE\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:19.855788+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5486,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-14",
+        "coordinates": {
+          "lat": 24.31859,
+          "lon": 90.04395
+        },
+        "level": "WATCH",
+        "fdi": 2.0,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-14-1794522141",
+          "timestamp_utc": "2026-11-12T22:22:21.954028+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:21.953779+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 29
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 21
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:21.953855+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 212,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~170.87km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 5.4km/h towards SSE\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:21.953864+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5512,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-6",
+        "coordinates": {
+          "lat": 22.05395,
+          "lon": 88.12314
+        },
+        "level": "WATCH",
+        "fdi": 1.3,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-6-1794522144",
+          "timestamp_utc": "2026-11-12T22:22:24.111283+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:24.111103+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 30
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 22
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:24.111120+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~159.19km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 4.0km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:24.111128+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5466,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-17",
+        "coordinates": {
+          "lat": 26.23363,
+          "lon": 91.50851
+        },
+        "level": "WATCH",
+        "fdi": 4.1,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-17-1794522146",
+          "timestamp_utc": "2026-11-12T22:22:26.232496+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:26.232180+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 31
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 23
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:26.232204+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 212,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~216.16km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 9.6km/h towards WSW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:26.232215+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5508,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-10",
+        "coordinates": {
+          "lat": 23.60252,
+          "lon": 90.77708
+        },
+        "level": "WATCH",
+        "fdi": 0.9,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-10-1794522148",
+          "timestamp_utc": "2026-11-12T22:22:28.448634+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:28.448297+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 32
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 24
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:28.448330+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 210,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~124.06km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 2.4km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:28.448345+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5490,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-19",
+        "coordinates": {
+          "lat": 26.42384,
+          "lon": 90.90376
+        },
+        "level": "WATCH",
+        "fdi": 5.5,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-19-1794522151",
+          "timestamp_utc": "2026-11-12T22:22:31.533658+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:31.533426+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 33
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 25
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:31.533456+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 212,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~250.32km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 9.4km/h towards WSW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:31.533469+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5514,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-2",
+        "coordinates": {
+          "lat": 23.21158,
+          "lon": 91.49137
+        },
+        "level": "WATCH",
+        "fdi": 1.3,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-2-1794522153",
+          "timestamp_utc": "2026-11-12T22:22:33.613469+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:33.613184+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 34
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 26
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:33.613211+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 203,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Khagrachhari Valley Communities (~51.22km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 5.4km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:33.613222+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5459,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-15",
+        "coordinates": {
+          "lat": 26.04582,
+          "lon": 92.02827
+        },
+        "level": "WATCH",
+        "fdi": 1.2,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-15-1794522155",
+          "timestamp_utc": "2026-11-12T22:22:35.917256+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:35.917020+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 35
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 27
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:35.917047+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 212,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~196.43km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 3.1km/h towards NNW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:35.917056+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5509,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-9",
+        "coordinates": {
+          "lat": 23.28137,
+          "lon": 88.22512
+        },
+        "level": "WATCH",
+        "fdi": 1.2,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-9-1794522158",
+          "timestamp_utc": "2026-11-12T22:22:38.034877+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:38.034608+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 36
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 28
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:38.034639+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~166.67km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 4.4km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:38.034651+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5464,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-18",
+        "coordinates": {
+          "lat": 26.3638,
+          "lon": 88.21025
+        },
+        "level": "WATCH",
+        "fdi": 5.9,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-18-1794522160",
+          "timestamp_utc": "2026-11-12T22:22:40.246372+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:40.246089+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 37
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 29
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:40.246115+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 211,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~421.63km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 8.9km/h towards SW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:40.246126+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5500,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-20",
+        "coordinates": {
+          "lat": 26.69513,
+          "lon": 90.33709
+        },
+        "level": "WATCH",
+        "fdi": 1.3,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-20-1794522162",
+          "timestamp_utc": "2026-11-12T22:22:42.512762+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:42.512526+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 38
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 30
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:42.512552+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 212,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~300.78km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 3.5km/h towards SSW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:42.512561+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5513,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-1",
+        "coordinates": {
+          "lat": 23.08169,
+          "lon": 88.19468
+        },
+        "level": "WATCH",
+        "fdi": 1.1,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-1-1794522164",
+          "timestamp_utc": "2026-11-12T22:22:44.614152+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:44.613910+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 39
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 31
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:44.613934+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~158.85km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 4.9km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:44.613944+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5461,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-5",
+        "coordinates": {
+          "lat": 26.13005,
+          "lon": 89.33672
+        },
+        "level": "WATCH",
+        "fdi": 1.7,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-5-1794522166",
+          "timestamp_utc": "2026-11-12T22:22:46.799250+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:46.799013+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 40
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 32
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:46.799045+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 212,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Sreemangal Tea Estates & Reserve Edge (~315.22km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 5.6km/h towards WSW\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:46.799053+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5552,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-11-0",
+        "coordinates": {
+          "lat": 22.99641,
+          "lon": 88.21967
+        },
+        "level": "WATCH",
+        "fdi": 1.2,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-11-0-1794522170",
+          "timestamp_utc": "2026-11-12T22:22:50.216229+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:50.215935+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 41
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 33
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:50.215968+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~152.76km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 4.9km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:50.215980+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5469,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-7",
+        "coordinates": {
+          "lat": 21.915,
+          "lon": 90.57521
+        },
+        "level": "WATCH",
+        "fdi": 1.0,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-7-1794522172",
+          "timestamp_utc": "2026-11-12T22:22:52.340240+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:52.339996+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 42
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 34
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:52.340025+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~118.44km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 5.6km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:52.340035+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5456,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      },
+      {
+        "hotspot_id": "FIRMS-VIIRS-2026-11-12-12",
+        "coordinates": {
+          "lat": 24.12281,
+          "lon": 88.89062
+        },
+        "level": "WATCH",
+        "fdi": 1.8,
+        "dispatch_report": {
+          "dispatch_id": "DISP-FIRMS-VIIRS-2026-11-12-12-1794522174",
+          "timestamp_utc": "2026-11-12T22:22:54.522725+00:00",
+          "alert_level": "WATCH",
+          "channels": {
+            "telegram": {
+              "channel": "telegram",
+              "status": "delivered",
+              "timestamp": "2026-11-12T22:22:54.522492+00:00",
+              "broadcast_targets": [
+                "5408879423",
+                "@bengalflare_live"
+              ],
+              "results": [
+                {
+                  "target": "5408879423",
+                  "status": "delivered",
+                  "message_id": 43
+                },
+                {
+                  "target": "@bengalflare_live",
+                  "status": "delivered",
+                  "message_id": 35
+                }
+              ]
+            },
+            "sms": {
+              "channel": "sms",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:54.522516+00:00",
+              "recipients_count": 2,
+              "recipients": [
+                "+8801700000000 (Forest Beat Officer)",
+                "+8801800000000 (Fire Station Duty)"
+              ],
+              "sms_length": 204,
+              "sms_preview": "[WILDFIRE WATCH (ELEVATED)]\nNear: Mongla / Sundarbans Buffer Zone (~196.51km)\nRisk: Elevated fire danger (Monitoring closely)\nWind: 5.1km/h towards S\nAction: Avoid open burning. Map: t.me/bengalflare_live",
+              "note": "SMS formatted and queued in gateway buffer."
+            },
+            "webhook": {
+              "channel": "webhook",
+              "status": "simulated",
+              "timestamp": "2026-11-12T22:22:54.522525+00:00",
+              "target": "simulated_endpoint",
+              "payload_bytes": 5464,
+              "note": "Webhook simulation active. Set DISASTER_WEBHOOK_URL to forward payloads live."
+            }
+          },
+          "all_delivered_or_simulated": true
+        }
+      }
+    ]
+  },
+  {
+    "scan_timestamp_utc": "2026-11-12T22:28:52.037784+00:00",
+    "total_hotspots_detected": 19,
+    "skipped_anti_spam_cooldown": 19,
+    "dispatched_count": 0,
+    "dispatches": []
   }
 ]

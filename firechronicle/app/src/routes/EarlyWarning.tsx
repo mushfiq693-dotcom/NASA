@@ -19,6 +19,7 @@ import type {
   LiveWeatherData,
   ThreatenedSettlement
 } from '../services/firmsService';
+import { dispatchTelegramAlert, isAlertDispatched } from '../services/telegramService';
 
 // Fix Vite Web Worker loading in MapLibre GL JS
 if (typeof window !== 'undefined') {
@@ -146,6 +147,10 @@ export const EarlyWarning: React.FC = () => {
   const [spreadGeoJson, setSpreadGeoJson] = useState<any>(null);
   const [exposedCommunities, setExposedCommunities] = useState<ThreatenedSettlement[]>([]);
 
+  // Telegram Early Warning Dispatch State
+  const [telegramStatus, setTelegramStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [isTelegramCooldown, setIsTelegramCooldown] = useState<boolean>(false);
+
   // 1. Initial Load of Real-Time NASA FIRMS Telemetry
   useEffect(() => {
     let isMounted = true;
@@ -252,6 +257,69 @@ export const EarlyWarning: React.FC = () => {
   useEffect(() => {
     recalculatePhysics();
   }, [recalculatePhysics]);
+
+  // Automated & Manual Telegram Early Warning Broadcast
+  const handleBroadcastTelegram = useCallback(async (force: boolean = false) => {
+    if (!activeHotspot) return;
+
+    if (!force && isAlertDispatched(activeHotspot.id)) {
+      setIsTelegramCooldown(true);
+      setTelegramStatus('sent');
+      return;
+    }
+
+    setTelegramStatus('sending');
+    try {
+      const topThreat = exposedCommunities.length > 0 ? exposedCommunities[0] : undefined;
+      const windDirStr = `${getCompassDirection(windDir)} (${windDir}°)`;
+      const res = await dispatchTelegramAlert({
+        hotspotId: activeHotspot.id,
+        locationName: activeHotspot.locationName || activeHotspot.district,
+        district: activeHotspot.district,
+        latitude: activeLat,
+        longitude: activeLon,
+        satellite: activeHotspot.satellite,
+        frpMw: activeFrp,
+        fdiScore: fdiScore,
+        dangerClass: dangerClass,
+        temperatureC: ambientTemp,
+        humidityPct: ambientRh,
+        windSpeedKmh: windSpeed,
+        windDirection: windDirStr,
+        fuelMoisturePct: fuelMoisture,
+        spreadRateKmh: spreadRate,
+        threatenedSettlement: topThreat ? `${topThreat.name} (${topThreat.distance_km} km)` : undefined,
+        timeToImpactHours: topThreat ? topThreat.time_to_impact_hours : undefined
+      }, force);
+
+      if (res.success) {
+        setTelegramStatus('sent');
+        setIsTelegramCooldown(true);
+      } else {
+        setTelegramStatus('error');
+      }
+    } catch (e) {
+      console.warn('Telegram broadcast notice:', e);
+      setTelegramStatus('error');
+    }
+  }, [activeHotspot, activeLat, activeLon, activeFrp, fdiScore, dangerClass, ambientTemp, ambientRh, windSpeed, windDir, spreadRate, fuelMoisture, exposedCommunities]);
+
+  // Check and auto-dispatch when active fire is loaded / selected if risk is elevated/moderate
+  useEffect(() => {
+    if (sourceMode === 'live_firms' && activeHotspot) {
+      if (isAlertDispatched(activeHotspot.id)) {
+        setIsTelegramCooldown(true);
+        setTelegramStatus('sent');
+      } else {
+        setIsTelegramCooldown(false);
+        setTelegramStatus('idle');
+        // Auto-dispatch if risk meets moderate threshold (FDI >= 18.0 or FRP >= 20.0 or fuel moisture <= 8.0)
+        if (fdiScore >= 18.0 || activeFrp >= 20.0 || fuelMoisture <= 8.0) {
+          handleBroadcastTelegram(false);
+        }
+      }
+    }
+  }, [selectedHotspotId, fdiScore, activeFrp, fuelMoisture, sourceMode, activeHotspot, handleBroadcastTelegram]);
 
   // 4. MapLibre Map Lifecycle
   useEffect(() => {
@@ -439,6 +507,46 @@ export const EarlyWarning: React.FC = () => {
           </button>
         </div>
       </header>
+
+      {/* TELEGRAM EARLY WARNING BROADCAST STATUS BAR */}
+      <div className="ew-telegram-bar">
+        <div className="ew-telegram-info">
+          <span className="ew-telegram-badge">
+            <span className="pulse-tg-icon">📡</span>
+            <span>TELEGRAM BOT: <strong>@bengalflare_live</strong></span>
+          </span>
+          <span className="ew-telegram-desc">
+            {telegramStatus === 'sending' 
+              ? 'Broadcasting urgent telemetry to Telegram subscribers...'
+              : isTelegramCooldown 
+              ? `✅ Alert Dispatched to Telegram Channel & Responders (${activeHotspot?.district || 'Active Hotspot'})`
+              : '⚡ Automated Telegram Early Warning is Armed & Active'}
+          </span>
+        </div>
+
+        <div className="ew-telegram-actions">
+          <a 
+            href="https://t.me/bengalflare_live" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="ew-tg-channel-btn"
+          >
+            📱 View @bengalflare_live
+          </a>
+          <button 
+            className={`ew-tg-broadcast-btn ${isTelegramCooldown ? 'cooldown' : ''}`}
+            onClick={() => handleBroadcastTelegram(true)}
+            disabled={telegramStatus === 'sending'}
+            title="Trigger immediate broadcast to Telegram channel and responders"
+          >
+            {telegramStatus === 'sending' 
+              ? '🛰️ Dispatching...' 
+              : isTelegramCooldown 
+              ? '🔁 Re-broadcast to Telegram' 
+              : '⚡ Broadcast Alert to Telegram'}
+          </button>
+        </div>
+      </div>
 
       {/* TOP USER-FRIENDLY STATUS CARDS */}
       <section className="ew-telemetry-grid">

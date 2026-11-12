@@ -7,5 +7,167 @@
     "level": "WATCH",
     "fdi_score": 0.8,
     "timestamp_utc": "2026-11-09T22:38:53.634630+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-8",
+    "latitude": 22.85005,
+    "longitude": 92.06215,
+    "frp": 31.95,
+    "level": "WATCH",
+    "fdi_score": 0.4,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-4",
+    "latitude": 25.66877,
+    "longitude": 89.77444,
+    "frp": 9.97,
+    "level": "WATCH",
+    "fdi_score": 2.8,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-3",
+    "latitude": 23.7903,
+    "longitude": 89.73877,
+    "frp": 4.97,
+    "level": "WATCH",
+    "fdi_score": 1.1,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-14",
+    "latitude": 24.31859,
+    "longitude": 90.04395,
+    "frp": 4.29,
+    "level": "WATCH",
+    "fdi_score": 2.0,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-6",
+    "latitude": 22.05395,
+    "longitude": 88.12314,
+    "frp": 4.18,
+    "level": "WATCH",
+    "fdi_score": 1.3,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-17",
+    "latitude": 26.23363,
+    "longitude": 91.50851,
+    "frp": 3.77,
+    "level": "WATCH",
+    "fdi_score": 4.1,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-10",
+    "latitude": 23.60252,
+    "longitude": 90.77708,
+    "frp": 3.72,
+    "level": "WATCH",
+    "fdi_score": 0.9,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-19",
+    "latitude": 26.42384,
+    "longitude": 90.90376,
+    "frp": 3.35,
+    "level": "WATCH",
+    "fdi_score": 5.5,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-2",
+    "latitude": 23.21158,
+    "longitude": 91.49137,
+    "frp": 3.04,
+    "level": "WATCH",
+    "fdi_score": 1.3,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-15",
+    "latitude": 26.04582,
+    "longitude": 92.02827,
+    "frp": 2.89,
+    "level": "WATCH",
+    "fdi_score": 1.2,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-9",
+    "latitude": 23.28137,
+    "longitude": 88.22512,
+    "frp": 2.86,
+    "level": "WATCH",
+    "fdi_score": 1.2,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-18",
+    "latitude": 26.3638,
+    "longitude": 88.21025,
+    "frp": 2.85,
+    "level": "WATCH",
+    "fdi_score": 5.9,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-20",
+    "latitude": 26.69513,
+    "longitude": 90.33709,
+    "frp": 2.74,
+    "level": "WATCH",
+    "fdi_score": 1.3,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-1",
+    "latitude": 23.08169,
+    "longitude": 88.19468,
+    "frp": 2.59,
+    "level": "WATCH",
+    "fdi_score": 1.1,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-5",
+    "latitude": 26.13005,
+    "longitude": 89.33672,
+    "frp": 2.53,
+    "level": "WATCH",
+    "fdi_score": 1.7,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-11-0",
+    "latitude": 22.99641,
+    "longitude": 88.21967,
+    "frp": 2.49,
+    "level": "WATCH",
+    "fdi_score": 1.2,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-7",
+    "latitude": 21.915,
+    "longitude": 90.57521,
+    "frp": 1.67,
+    "level": "WATCH",
+    "fdi_score": 1.0,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
+  },
+  {
+    "hotspot_id": "FIRMS-VIIRS-2026-11-12-12",
+    "latitude": 24.12281,
+    "longitude": 88.89062,
+    "frp": 1.55,
+    "level": "WATCH",
+    "fdi_score": 1.8,
+    "timestamp_utc": "2026-11-12T22:22:09.726300+00:00"
   }
 ]

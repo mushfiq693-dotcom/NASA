@@ -16,6 +16,7 @@ import { SharedMotionScene } from './motion/scene';
 import { RouteWipe } from './motion/RouteWipe';
 import { fetchLiveFirmsHotspots, fetchLiveWeather, calculateFDI } from './services/firmsService';
 import type { FirmsHotspot } from './services/firmsService';
+import { dispatchTelegramAlert } from './services/telegramService';
 
 interface EmergencyAlertState {
   hotspot: FirmsHotspot;
@@ -114,17 +115,36 @@ function App() {
             weather.wind_speed_kmh
           );
 
-          // Only dispatch prominent emergency alert if there is genuine elevated danger
-          // (prevents false alarms when conditions are humid / low danger)
-          if (score >= 40.0 || (topSpot.frp >= 60.0 && score >= 20.0)) {
+          // Dispatch emergency alert if there is moderate or elevated danger (FDI >= 18.0 or FRP >= 25.0 MW)
+          if (score >= 18.0 || topSpot.frp >= 25.0) {
+            const spreadDist = Number((weather.wind_speed_kmh * 0.12 * 3).toFixed(1));
             setEmergencyAlert({
               hotspot: topSpot,
               fdiScore: score,
               dangerClass: danger_class,
               windSpeed: weather.wind_speed_kmh,
               windDir: weather.wind_direction_deg,
-              spreadDistanceKm: Number((weather.wind_speed_kmh * 0.12 * 3).toFixed(1))
+              spreadDistanceKm: spreadDist
             });
+
+            // Autonomous Telegram Broadcast to @bengalflare_live & admin
+            dispatchTelegramAlert({
+              hotspotId: topSpot.id,
+              locationName: topSpot.locationName || topSpot.district,
+              district: topSpot.district,
+              latitude: topSpot.latitude,
+              longitude: topSpot.longitude,
+              satellite: topSpot.satellite,
+              frpMw: topSpot.frp,
+              fdiScore: score,
+              dangerClass: danger_class,
+              temperatureC: weather.temperature_c,
+              humidityPct: weather.relative_humidity_pct,
+              windSpeedKmh: weather.wind_speed_kmh,
+              windDirection: `${weather.wind_direction_deg}°`,
+              threatenedSettlement: topSpot.locationName ? `${topSpot.locationName} settlements` : undefined,
+              timeToImpactHours: 3.0
+            }).catch(e => console.warn('App level Telegram dispatch notice:', e));
 
             // Trigger native OS Browser Web Push Notification only if user has alerts turned ON and permission granted
             const isAlertsActive = typeof window !== 'undefined' && localStorage.getItem('bengalflare_alerts_enabled') !== 'false';

@@ -83,30 +83,51 @@ def is_within_cooldown(lat: float, lon: float, cooldown_hours: float = 6.0) -> b
             continue
     return False
 
-def fetch_latest_firms_hotspots(days: int = 1) -> List[Dict[str, Any]]:
-    """Polls real NASA FIRMS NRT active hotspots for Bangladesh."""
-    url = f"https://firms.modaps.eosdis.nasa.gov/api/country/csv/{FIRMS_MAP_KEY}/VIIRS_SNPP_NRT/BGD/{days}"
+def fetch_latest_firms_hotspots(days: int = 2) -> List[Dict[str, Any]]:
+    """
+    Polls real NASA FIRMS NRT active hotspots across NOAA-20 and Suomi-NPP 
+    for Bangladesh and border hill tracts using the regional bounding box.
+    """
+    bbox = "88.0,20.5,92.8,26.7"
     hotspots = []
-    try:
-        resp = requests.get(url, timeout=12)
-        if resp.status_code == 200 and "latitude" in resp.text:
-            df = pd.read_csv(io.StringIO(resp.text))
-            for idx, r in df.iterrows():
-                conf = str(r.get("confidence", "nominal")).lower()
-                if conf in ["l", "low"]:
-                    continue
-                hotspots.append({
-                    "id": f"FIRMS-VIIRS-{r.get('acq_date')}-{idx}",
-                    "latitude": float(r["latitude"]),
-                    "longitude": float(r["longitude"]),
-                    "frp": float(r.get("frp", 10.0)),
-                    "confidence": conf,
-                    "date": str(r.get("acq_date")),
-                    "time": str(r.get("acq_time", "0000"))
-                })
-            return hotspots
-    except Exception as e:
-        print(f"FIRMS online query note: {e}")
+    seen_coords = set()
+
+    # Query both NOAA-20 (primary operational) and S-NPP constellations
+    sources = ["VIIRS_NOAA20_NRT", "VIIRS_SNPP_NRT"]
+    for src in sources:
+        url = f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/{FIRMS_MAP_KEY}/{src}/{bbox}/{days}"
+        try:
+            resp = requests.get(url, timeout=12)
+            if resp.status_code == 200 and "latitude" in resp.text:
+                df = pd.read_csv(io.StringIO(resp.text))
+                for idx, r in df.iterrows():
+                    conf = str(r.get("confidence", "nominal")).lower()
+                    if conf in ["l", "low"]:
+                        continue
+                    lat_r = round(float(r["latitude"]), 4)
+                    lon_r = round(float(r["longitude"]), 4)
+                    coord_key = (lat_r, lon_r)
+                    if coord_key in seen_coords:
+                        continue
+                    seen_coords.add(coord_key)
+
+                    sat_name = "NOAA-20 (JPSS-1)" if "N20" in src else "Suomi-NPP"
+                    hotspots.append({
+                        "id": f"FIRMS-{src[:5]}-{r.get('acq_date')}-{idx}",
+                        "latitude": float(r["latitude"]),
+                        "longitude": float(r["longitude"]),
+                        "frp": float(r.get("frp", 10.0)),
+                        "confidence": conf,
+                        "satellite": sat_name,
+                        "date": str(r.get("acq_date")),
+                        "time": str(r.get("acq_time", "0000"))
+                    })
+        except Exception as e:
+            print(f"FIRMS {src} query note: {e}")
+
+    if hotspots:
+        # Sort by Fire Radiative Power (highest energy fires first)
+        return sorted(hotspots, key=lambda x: x["frp"], reverse=True)
 
     # Fallback to local verified fixtures if network unavailable
     fixture_path = PROJECT_ROOT / "app" / "public" / "fixtures" / "live_firms_fallback.json"
@@ -167,8 +188,8 @@ async def run_autonomous_scan(force_test: bool = False) -> Dict[str, Any]:
         fdi = alert.get("environmental_risk", {}).get("fdi", 0.0)
 
         # 3. Autonomous Dispatch Trigger Condition:
-        # Threat Level >= WATCH or FDI >= 45 or Red Flag conditions
-        if level in ["WATCH", "WARNING"] or is_red_flag or fdi >= 45.0 or force_test:
+        # Trigger on ADVISORY (Moderate Risk) and above, or FDI >= 18.0, or FRP >= 20.0, or Red Flag
+        if level in ["ADVISORY", "WATCH", "WARNING"] or is_red_flag or fdi >= 18.0 or frp >= 20.0 or force_test:
             dispatch_res = await dispatch_all_channels(alert)
 
             # Record in cooldown cache
